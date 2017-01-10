@@ -16,8 +16,7 @@ setup(
     version=version,
     author="Richard Hull",
     author_email="richard.hull@destructuring-bind.org",
-    description=("A component library to support SBC display drivers"
-                 "SSD1306, SSD1325, SSD1331 or SH1106 chipset"),
+    description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
     license="MIT",
     keywords="raspberry pi rpi oled display screen ssd1306 ssd1325 ssd1331 sh1106 spi i2c 128x64 128x32 96x16",
