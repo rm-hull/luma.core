@@ -1,0 +1,67 @@
+Luma.core
+================================================
+.. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
+   :target: https://travis-ci.org/rm-hull/luma.core
+
+.. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
+   :target: https://coveralls.io/github/rm-hull/luma.core?branch=master
+
+.. image:: https://img.shields.io/maintenance/yes/2017.svg?maxAge=2592000
+
+.. image:: https://img.shields.io/pypi/pyversions/luma.core.svg
+   :target: https://pypi.python.org/pypi/luma.core
+
+.. image:: https://img.shields.io/pypi/v/luma.core.svg
+   :target: https://pypi.python.org/pypi/luma.core
+
+**Luma.Core** is a component library providing a Pillow-compatible drawing
+canvas, and other functionality to support drawing primitives and
+text-rendering capabilities for small displays on the Raspberry Pi and other
+single board computers:
+
+* scrolling/panning capability,
+* terminal-style printing,
+* state management,
+* color/greyscale (where supported),
+* dithering to monochrome
+
+Device drivers extend **luma.core** to provide the correct initialization 
+sequences for specific physical OLED devices/chipsets.
+
+There are emulators that run in real-time (with pygame) and others that can
+take screenshots, or assemble animated GIFs, as per the examples below (source
+code for these is available in the `luma.oled examples
+<https://github.com/rm-hull/luma.oled/tree/master/examples>`_ directory:
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/clock_anim.gif?raw=true
+   :alt: clock
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/invaders_anim.gif?raw=true
+   :alt: invaders
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/crawl_anim.gif?raw=true
+   :alt: crawl
+
+License
+-------
+The MIT License (MIT)
+
+Copyright (c) 2017 Richard Hull & Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
