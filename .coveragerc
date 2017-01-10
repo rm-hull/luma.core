@@ -1,6 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
-source = oled
+source = luma.core
 omit =
     setup.py
     .tox/*
