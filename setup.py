@@ -19,7 +19,7 @@ setup(
     description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
     license="MIT",
-    keywords="raspberry pi rpi oled display screen ssd1306 ssd1325 ssd1331 sh1106 spi i2c 128x64 128x32 96x16",
+    keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c",
     url="https://github.com/rm-hull/luma.core",
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     packages=["luma.core"],
