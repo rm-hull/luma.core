@@ -16,7 +16,7 @@ setup(
     version=version,
     author="Richard Hull",
     author_email="richard.hull@destructuring-bind.org",
-    description=("A component library small library to support SBC display drivers"
+    description=("A component library to support SBC display drivers"
                  "SSD1306, SSD1325, SSD1331 or SH1106 chipset"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
     license="MIT",
