@@ -4,12 +4,10 @@
 import os
 from setuptools import setup
 
-import luma.core
-
 README = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 CONTRIB = open(os.path.join(os.path.dirname(__file__), "CONTRIBUTING.rst")).read()
 CHANGES = open(os.path.join(os.path.dirname(__file__), "CHANGES.rst")).read()
-version = luma.core.__version__
+version = "0.1.0"
 
 setup(
     name="luma.core",
@@ -22,6 +20,7 @@ setup(
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c",
     url="https://github.com/rm-hull/luma.core",
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
+    namespace_packages=["luma"],
     packages=["luma.core"],
     install_requires=["pillow", "smbus2", "spidev", "RPi.GPIO"],
     setup_requires=["pytest-runner"],
