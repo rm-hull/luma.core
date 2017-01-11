@@ -7,7 +7,7 @@ from setuptools import setup
 README = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 CONTRIB = open(os.path.join(os.path.dirname(__file__), "CONTRIBUTING.rst")).read()
 CHANGES = open(os.path.join(os.path.dirname(__file__), "CHANGES.rst")).read()
-version = "0.1.0"
+version = "0.1.1"
 
 setup(
     name="luma.core",
@@ -22,7 +22,7 @@ setup(
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     namespace_packages=["luma"],
     packages=["luma.core"],
-    install_requires=["pillow", "smbus2", "spidev", "RPi.GPIO"],
+    install_requires=["pillow", "smbus2"],
     setup_requires=["pytest-runner"],
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
     classifiers=[
