@@ -30,9 +30,9 @@ sequences for specific physical display devices/chipsets.
 
 There are several drivers for different classes of device available:
 
-* https://github.com/rm-hull/luma.oled/
-* https://github.com/rm-hull/luma.lcd/
-* https://github.com/rm-hull/luma.led_matrix/ (coming soon)
+* `luma.oled <https://github.com/rm-hull/luma.oled/>`_
+* `luma.lcd <https://github.com/rm-hull/luma.lcd/>`_
+* `luma.lex_matrix <https://github.com/rm-hull/luma.led_matrix/>`_ (coming soon)
 
 There are emulators that run in real-time (with pygame) and others that can
 take screenshots, or assemble animated GIFs, as per the examples below (source
