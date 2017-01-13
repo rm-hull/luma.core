@@ -109,7 +109,10 @@ def verify_spi_init(port, device, bus_speed=8000000, dc=24, rst=25):
 def test_spi_init():
     spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=942312, bcm_DC=17, bcm_RST=11)
     verify_spi_init(5, 2, 942312, 17, 11)
-    gpio.output.assert_called_once_with(11, gpio.HIGH)
+    gpio.output.assert_has_calls([
+        call(11, gpio.LOW),
+        call(11, gpio.HIGH)
+    ])
 
 
 def test_spi_command():
