@@ -198,8 +198,11 @@ class transformer(object):
     """
     def __init__(self, pygame, width, height, scale):
         self._pygame = pygame
+        self._input_size = (width, height)
         self._output_size = (width * scale, height * scale)
-        self.scale = scale
+        self._scale = scale
+        self._led_on = self._pygame.image.load(os.path.join(os.path.dirname(__file__), "images", "led_on.png"))
+        self._led_off = self._pygame.image.load(os.path.join(os.path.dirname(__file__), "images", "led_off.png"))
 
     def none(self, surface):
         """
@@ -212,7 +215,7 @@ class transformer(object):
         Scales using the AdvanceMAME Scale2X algorithm which does a
         'jaggie-less' scale of bitmap graphics.
         """
-        assert(self.scale == 2)
+        assert(self._scale == 2)
         return self._pygame.transform.scale2x(surface)
 
     def smoothscale(self, surface):
@@ -226,3 +229,19 @@ class transformer(object):
         Fast scale operation that does not sample the results
         """
         return self._pygame.transform.scale(surface, self._output_size)
+
+    def led_matrix(self, surface):
+        """
+        Transforms the input surface into an LED matrix (1 pixel = 1 LED)
+        """
+        scale = self._led_on.get_width()
+        w, h = self._input_size
+        pix = self._pygame.PixelArray(surface)
+        img = self._pygame.Surface((w * scale, h * scale))
+
+        for y in range(h):
+            for x in range(w):
+                led = self._led_on if pix[x, y] > 0 else self._led_off
+                img.blit(led, (x * scale, y * scale))
+
+        return img
