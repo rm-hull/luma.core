@@ -1,5 +1,6 @@
-Luma.core
-================================================
+luma.core
+=========
+
 .. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
    :target: https://travis-ci.org/rm-hull/luma.core
 
@@ -14,7 +15,7 @@ Luma.core
 .. image:: https://img.shields.io/pypi/v/luma.core.svg
    :target: https://pypi.python.org/pypi/luma.core
 
-**Luma.Core** is a component library providing a Pillow-compatible drawing
+**luma.core** is a component library providing a Pillow-compatible drawing
 canvas, and other functionality to support drawing primitives and
 text-rendering capabilities for small displays on the Raspberry Pi and other
 single board computers:
@@ -30,8 +31,8 @@ sequences for specific physical OLED devices/chipsets.
 
 There are emulators that run in real-time (with pygame) and others that can
 take screenshots, or assemble animated GIFs, as per the examples below (source
-code for these is available in the `luma.oled examples
-<https://github.com/rm-hull/luma.oled/tree/master/examples>`_ directory:
+code for these is available in the `luma.examples
+<https://github.com/rm-hull/luma.examples/tree/master/examples>`_ directory:
 
 .. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/clock_anim.gif?raw=true
    :alt: clock
