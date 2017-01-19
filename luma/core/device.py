@@ -62,8 +62,7 @@ class device(mixin.capabilities):
         :param level: Desired contrast level in the range of 0-255.
         :type level: int
         """
-        assert(level >= 0)
-        assert(level <= 255)
+        assert(0 <= level <= 255)
         self.command(self._const.SETCONTRAST, level)
 
     def cleanup(self):

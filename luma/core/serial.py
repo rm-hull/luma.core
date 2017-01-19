@@ -115,6 +115,7 @@ class spi(object):
         self._gpio.setmode(self._gpio.BCM)
         self._gpio.setup(self._bcm_DC, self._gpio.OUT)
         self._gpio.setup(self._bcm_RST, self._gpio.OUT)
+        self._gpio.output(self._bcm_RST, self._gpio.LOW)   # Reset device
         self._gpio.output(self._bcm_RST, self._gpio.HIGH)  # Keep RESET pulled high
 
     def __rpi_gpio__(self):
