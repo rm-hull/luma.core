@@ -22,6 +22,8 @@ setup(
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     namespace_packages=["luma"],
     packages=["luma.core"],
+    data_files=[("", ["luma/core/images/led_on.png",
+                      "luma/core/images/led_off.png"])],
     install_requires=["pillow", "smbus2", "spidev", "RPi.GPIO"],
     setup_requires=["pytest-runner"],
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
