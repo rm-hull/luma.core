@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | * Assert valid SPI bus speed                                        |            |
+| **0.1.12** | * Assert valid SPI bus speed                                        | 2017/01/21 |
 |            | * Don't report errors in shutdown                                   |            |
 |            | * Don't package as zip-safe                                         |            |
 |            | * Add 7-segment LED emulation transformer                           |            |
