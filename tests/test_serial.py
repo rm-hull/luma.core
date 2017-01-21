@@ -99,20 +99,25 @@ def test_i2c_cleanup():
 
 # SPI
 
-def verify_spi_init(port, device, bus_speed=8000000, dc=24, rst=25):
+def verify_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25):
     spidev.open.assert_called_once_with(port, device)
-    assert spidev.max_speed_hz == bus_speed
+    assert spidev.max_speed_hz == bus_speed_hz
     gpio.setmode.assert_called_once_with(gpio.BCM)
     gpio.setup.assert_has_calls([call(dc, gpio.OUT), call(rst, gpio.OUT)])
 
 
 def test_spi_init():
-    spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=942312, bcm_DC=17, bcm_RST=11)
-    verify_spi_init(5, 2, 942312, 17, 11)
+    spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=16000000, bcm_DC=17, bcm_RST=11)
+    verify_spi_init(5, 2, 16000000, 17, 11)
     gpio.output.assert_has_calls([
         call(11, gpio.LOW),
         call(11, gpio.HIGH)
     ])
+
+
+def test_spi_init_invalid_bus_speed():
+    with pytest.raises(AssertionError):
+        spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=942312)
 
 
 def test_spi_command():

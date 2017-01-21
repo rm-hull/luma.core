@@ -94,6 +94,7 @@ class spi(object):
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, bcm_DC=24, bcm_RST=25):
+        assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
         self._gpio = gpio or self.__rpi_gpio__()
         self._spi = spi or self.__spidev__()
 
