@@ -144,9 +144,7 @@ class pygame(emulator):
         self._pygame.display.set_caption("Luma.core Display Emulator")
         self._clock = self._pygame.time.Clock()
         self._fps = frame_rate
-        self._screen = self._pygame.display.set_mode((width * self.scale, height * self.scale))
-        self._screen.fill((0, 0, 0))
-        self._pygame.display.flip()
+        self._screen = None
 
     def _abort(self):
         keystate = self._pygame.key.get_pressed()
@@ -167,6 +165,8 @@ class pygame(emulator):
             sys.exit()
 
         surface = self.to_surface(image)
+        if self._screen is None:
+            self._screen = self._pygame.display.set_mode(surface.get_size())
         self._screen.blit(surface, (0, 0))
         self._pygame.display.flip()
 
@@ -203,6 +203,7 @@ class transformer(object):
         self._scale = scale
         self._led_on = self._pygame.image.load(os.path.join(os.path.dirname(__file__), "images", "led_on.png"))
         self._led_off = self._pygame.image.load(os.path.join(os.path.dirname(__file__), "images", "led_off.png"))
+        self._sevenseg = self._pygame.image.load(os.path.join(os.path.dirname(__file__), "images", "7-segment.png"))
 
     def none(self, surface):
         """
@@ -243,5 +244,29 @@ class transformer(object):
             for x in range(w):
                 led = self._led_on if pix[x, y] > 0 else self._led_off
                 img.blit(led, (x * scale, y * scale))
+
+        return img
+
+# 18,37
+    def seven_segment(self, surface):
+        w, h = self._input_size
+        cw, ch = 30, 50
+        pix = self._pygame.PixelArray(surface)
+        img = self._pygame.Surface((w * cw, h * ch // 8))
+
+        for x in range(w):
+            byte = 0
+            for y in range(h):
+                byte <<= 1
+                if pix[x, y] > 0:
+                    byte |= 1
+
+            # Drop any values > 127
+            byte &= 0x7F
+
+            i = (byte % 16) * cw
+            j = (byte // 16) * ch
+
+            img.blit(self._sevenseg, (x * cw, 0), area=self._pygame.Rect(i, j, cw, ch))
 
         return img
