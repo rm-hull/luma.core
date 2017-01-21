@@ -22,7 +22,14 @@ class device(mixin.capabilities):
     def __init__(self, const=None, serial_interface=None):
         self._const = const or luma.core.const.common
         self._serial_interface = serial_interface or i2c()
-        atexit.register(self.cleanup)
+
+        def shutdown_hook():
+            try:
+                self.cleanup()
+            except:
+                pass
+
+        atexit.register(shutdown_hook)
 
     def command(self, *cmd):
         """
@@ -66,6 +73,15 @@ class device(mixin.capabilities):
         self.command(self._const.SETCONTRAST, level)
 
     def cleanup(self):
+        """
+        Attempt to switch the device off or put into low power mode (this
+        helps prolong the life of the device), clear the screen and close
+        resources associated with the underlying serial interface.
+
+        This is a managed function, which is called when the python processs
+        is being shutdown, so shouldn't usually need be called directly in
+        application code.
+        """
         self.hide()
         self.clear()
         self._serial_interface.cleanup()
