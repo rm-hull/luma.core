@@ -5,7 +5,7 @@
 import atexit
 
 from luma.core.serial import i2c
-import luma.core.mixin as mixin
+from luma.core import mixin
 import luma.core.const
 
 
