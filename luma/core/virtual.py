@@ -6,7 +6,7 @@ import time
 
 from PIL import Image, ImageDraw, ImageFont
 
-import luma.core.mixin as mixin
+from luma.core import mixin
 from luma.core.threadpool import threadpool
 
 
