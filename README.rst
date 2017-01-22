@@ -1,4 +1,10 @@
-luma.core
+luma.core **|** 
+`luma.examples <https://github.com/rm-hull/luma.examples>`_ **|** 
+`luma.lcd <https://github.com/rm-hull/luma.lcd>`_ **|** 
+`luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`_ **|** 
+`luma.oled <https://github.com/rm-hull/luma.oled>`_ 
+
+Luma.Core
 =========
 
 .. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
