@@ -247,7 +247,6 @@ class transformer(object):
 
         return img
 
-# 18,37
     def seven_segment(self, surface):
         w, h = self._input_size
         cw, ch = 30, 50
