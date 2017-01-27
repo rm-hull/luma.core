@@ -122,8 +122,9 @@ class gifanim(emulator):
                                      append_images=self._images[1:],
                                      optimize=True, format="GIF")
 
+            file_size = os.stat(self._filename).st_size
             logger.debug("Wrote {0} frames to file: {1} ({2} bytes)".format(
-                len(self._images), self._filename, os.stat(self._filename).st_size))
+                self._count, self._filename, file_size))
 
 
 class pygame(emulator):
