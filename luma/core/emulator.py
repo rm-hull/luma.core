@@ -91,7 +91,7 @@ class gifanim(emulator):
         self._max_frames = max_frames
         self._filename = filename
         self._loop = loop
-        self._duration = duration
+        self._duration = int(duration * 1000),
         atexit.register(self.write_animation)
 
     def display(self, image):
@@ -118,7 +118,7 @@ class gifanim(emulator):
             logger.debug("Please wait... building animated GIF")
             with open(self._filename, "w+b") as fp:
                 self._images[0].save(fp, save_all=True, loop=self._loop,
-                                     duration=int(self._duration * 1000),
+                                     duration=self._duration,
                                      append_images=self._images[1:],
                                      optimize=True, format="GIF")
 
