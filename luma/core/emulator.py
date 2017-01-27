@@ -91,7 +91,7 @@ class gifanim(emulator):
         self._max_frames = max_frames
         self._filename = filename
         self._loop = loop
-        self._duration = int(duration * 1000),
+        self._duration = int(duration * 1000)
         atexit.register(self.write_animation)
 
     def display(self, image):
