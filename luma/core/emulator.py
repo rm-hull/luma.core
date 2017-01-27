@@ -91,7 +91,7 @@ class gifanim(emulator):
         self._max_frames = max_frames
         self._filename = filename
         self._loop = loop
-        self._duration = duration
+        self._duration = int(duration * 1000)
         atexit.register(self.write_animation)
 
     def display(self, image):
@@ -114,15 +114,17 @@ class gifanim(emulator):
             sys.exit(0)
 
     def write_animation(self):
-        logger.debug("Please wait... building animated GIF")
-        with open(self._filename, "w+b") as fp:
-            self._images[0].save(fp, save_all=True, loop=self._loop,
-                                 duration=int(self._duration * 1000),
-                                 append_images=self._images[1:],
-                                 format="GIF")
+        if len(self._images) > 0:
+            logger.debug("Please wait... building animated GIF")
+            with open(self._filename, "w+b") as fp:
+                self._images[0].save(fp, save_all=True, loop=self._loop,
+                                     duration=self._duration,
+                                     append_images=self._images[1:],
+                                     optimize=True, format="GIF")
 
-        logger.debug("Wrote {0} frames to file: {1} ({2} bytes)".format(
-            len(self._images), self._filename, os.stat(self._filename).st_size))
+            file_size = os.stat(self._filename).st_size
+            logger.debug("Wrote {0} frames to file: {1} ({2} bytes)".format(
+                self._count, self._filename, file_size))
 
 
 class pygame(emulator):

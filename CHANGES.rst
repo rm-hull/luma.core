@@ -5,6 +5,8 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | *Upcoming* | * Use spidev's writebytes() rather than xfer2()                     |            |
+|            | * Dont write GIF animation if nothing was displayed                 |            |
+|            | * Attempt to optimize palette when saving GIF animations            |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.1.13** | * Fix bug in setup script                                           | 2017/01/23 |
 +------------+---------------------------------------------------------------------+------------+
