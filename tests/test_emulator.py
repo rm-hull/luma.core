@@ -6,7 +6,6 @@
 import hashlib
 import os.path
 from tempfile import NamedTemporaryFile
-
 from luma.core.emulator import capture, gifanim, dummy
 from luma.core.render import canvas
 
@@ -79,3 +78,10 @@ def test_gifanim_write():
 
     device.write_animation()
     assert md5(reference) == md5(fname)
+
+
+def test_gifanim_noimages():
+    fname = NamedTemporaryFile(suffix=".gif").name
+    device = gifanim(filename=fname)
+    device.write_animation()
+    assert not os.path.exists(fname)
