@@ -137,7 +137,7 @@ class spi(object):
         Sends a command or sequence of commands through to the SPI device.
         """
         self._gpio.output(self._bcm_DC, self._cmd_mode)
-        self._spi.xfer2(list(cmd))
+        self._spi.writebytes(list(cmd))
 
     def data(self, data):
         """
@@ -147,7 +147,7 @@ class spi(object):
         self._gpio.output(self._bcm_DC, self._data_mode)
         i = 0
         n = len(data)
-        write = self._spi.xfer2
+        write = self._spi.writebytes
         while i < n:
             write(data[i:i + 4096])
             i += 4096

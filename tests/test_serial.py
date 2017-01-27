@@ -126,7 +126,7 @@ def test_spi_command():
     serial.command(*cmds)
     verify_spi_init(9, 1)
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.LOW)])
-    spidev.xfer2.assert_called_once_with(cmds)
+    spidev.writebytes.assert_called_once_with(cmds)
 
 
 def test_spi_data():
@@ -135,7 +135,7 @@ def test_spi_data():
     serial.data(data)
     verify_spi_init(9, 1)
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.HIGH)])
-    spidev.xfer2.assert_called_once_with(data)
+    spidev.writebytes.assert_called_once_with(data)
 
 
 def test_spi_cleanup():
