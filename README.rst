@@ -43,7 +43,7 @@ There are several drivers for different classes of device available:
 
 There are emulators that run in real-time (with pygame) and others that can
 take screenshots, or assemble animated GIFs, as per the examples below. Source
-code for these is available in the `examples
+code for these are available in the `examples
 <https://github.com/rm-hull/luma.examples/tree/master/examples>`_
 directory of the ``luma.examples`` repository.
 
