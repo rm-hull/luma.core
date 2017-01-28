@@ -42,9 +42,10 @@ There are several drivers for different classes of device available:
 * `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix/>`_
 
 There are emulators that run in real-time (with pygame) and others that can
-take screenshots, or assemble animated GIFs, as per the examples below (source
-code for these is available in the `luma.examples
-<https://github.com/rm-hull/luma.examples/tree/master/examples>`_ directory:
+take screenshots, or assemble animated GIFs, as per the examples below. Source
+code for these are available in the `examples
+<https://github.com/rm-hull/luma.examples/tree/master/examples>`_
+directory of the ``luma.examples`` repository.
 
 .. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/clock_anim.gif?raw=true
    :alt: clock
