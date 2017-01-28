@@ -37,6 +37,8 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Education",
         "Topic :: System :: Hardware",
+        "Topic :: System :: Hardware :: Hardware Drivers",
+        "Topic :: Software Development :: Libraries :: pygame",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
