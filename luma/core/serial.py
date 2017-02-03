@@ -162,14 +162,13 @@ class spi(object):
 
 class noop(object):
     """
-    Does nothing, used for pseudo-devices / emulators, which dont have a serial
-    interface.
+    Does nothing, used for pseudo-devices / emulators / anything really
     """
-    def command(self, *cmd):
+    def __getattr__(self, attr):
+        return self.noop
+
+    def __setattr__(self, attr, val):
         pass
 
-    def data(self, data):
-        pass
-
-    def cleanup(self):
+    def noop(*args, **kwargs):
         pass
