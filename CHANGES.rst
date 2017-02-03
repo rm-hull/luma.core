@@ -4,7 +4,10 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | * Use spidev's writebytes() rather than xfer2()                     |            |
+| *Upcoming* | *TBC*                                                               |            |
++------------+---------------------------------------------------------------------+------------+
+| **0.1.14** | * Use a more flexible no-op implementation                          | 2017/02/03 |
+|            | * Use spidev's writebytes() rather than xfer2()                     |            |
 |            | * Dont write GIF animation if nothing was displayed                 |            |
 |            | * Attempt to optimize palette when saving GIF animations            |            |
 +------------+---------------------------------------------------------------------+------------+
