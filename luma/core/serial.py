@@ -87,13 +87,29 @@ class spi(object):
     Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
     interface to provide data and command methods.
 
-     * The DC pin (Data/Command select) defaults to GPIO 24 (BCM).
-     * The RST pin (Reset) defaults to GPIO 25 (BCM).
-
+    :param spi: SPI interface (must be compatible with py-spidev)
+    :param gpio: GPIO interface (must be compatible with RPi.GPIO). For slaves
+        that dont need reset or D/C functionality, supply a ``noop()``
+        implementation instead.
+    :param port: SPI port, defaults to 0
+    :type port: int
+    :param device: SPI device, defaults to 0
+    :type device: int
+    :param bus_speed_hz: SPI bus speed, defaults to 8MHz
+    :type device: int
+    :param transfer_size: Max bytes to transfer in one go. Some implementations
+        only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
+        4096 (default).
+    :type device: int
+    :param bcm_DC: The BCM pin to connect data/command select (DC) to (defaults to 24).
+    :type bcm_DC: int
+    :param bcm_RST: The BCM pin to connect reset (RES / RST) to (defaults to 24).
+    :type bcm_RST: int
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
-                 bus_speed_hz=8000000, bcm_DC=24, bcm_RST=25):
+                 bus_speed_hz=8000000, transfer_size=4096,
+                 bcm_DC=24, bcm_RST=25):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
         self._gpio = gpio or self.__rpi_gpio__()
         self._spi = spi or self.__spidev__()
@@ -102,11 +118,11 @@ class spi(object):
             self._spi.open(port, device)
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
-                # FileNotFoundError
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
             else:
                 raise
 
+        self._transfer_size = transfer_size
         self._spi.max_speed_hz = bus_speed_hz
         self._bcm_DC = bcm_DC
         self._bcm_RST = bcm_RST
@@ -147,10 +163,11 @@ class spi(object):
         self._gpio.output(self._bcm_DC, self._data_mode)
         i = 0
         n = len(data)
+        tx_sz = self._transfer_size
         write = self._spi.writebytes
         while i < n:
-            write(data[i:i + 4096])
-            i += 4096
+            write(data[i:i + tx_sz])
+            i += tx_sz
 
     def cleanup(self):
         """
