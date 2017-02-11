@@ -26,7 +26,7 @@ setup(
     package_data={"luma.core.images": ["luma/core/images/led_on.png",
                                        "luma/core/images/led_off.png",
                                        "luma/core/images/7-segment.png"]},
-    install_requires=["pillow", "smbus2", "spidev", "RPi.GPIO"],
+    install_requires=["pillow>=4.0.0", "smbus2", "spidev", "RPi.GPIO"],
     setup_requires=["pytest-runner"],
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
     zip_safe=False,

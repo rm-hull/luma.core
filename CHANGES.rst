@@ -4,7 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | * Configurable ``transfer_size`` on SPI writes                      |            |
+| *Upcoming* | * Require at least Pillow 4.0.0                                     |            |
+|            | * Configurable ``transfer_size`` on SPI writes                      |            |
 |            | * Documentation updates                                             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.1.14** | * Use a more flexible no-op implementation                          | 2017/02/03 |
