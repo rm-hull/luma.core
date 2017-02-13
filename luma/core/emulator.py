@@ -257,7 +257,7 @@ class transformer(object):
 
         for x in range(w):
             byte = 0
-            for y in range(h):
+            for y in range(h - 1):
                 byte <<= 1
                 if pix[x, y] > 0:
                     byte |= 1
@@ -268,6 +268,6 @@ class transformer(object):
             i = (byte % 16) * cw
             j = (byte // 16) * ch
 
-            img.blit(self._sevenseg, (x * cw, 0), area=self._pygame.Rect(i, j, cw, ch))
+            img.blit(self._sevenseg, ((w - x - 1) * cw, 0), area=self._pygame.Rect(i, j, cw, ch))
 
         return img
