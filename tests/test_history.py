@@ -7,8 +7,8 @@
 import pytest
 
 from luma.core.render import canvas
+from luma.core.device import dummy
 from luma.core.virtual import history
-from luma.core.emulator import dummy
 
 import baseline_data
 
