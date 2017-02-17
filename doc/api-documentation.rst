@@ -8,22 +8,12 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-    
 :mod:`luma.core.device`
 """""""""""""""""""""""
 .. automodule:: luma.core.device
     :members:
     :undoc-members:
     :show-inheritance:
-
-
-:mod:`luma.core.emulator`
-"""""""""""""""""""""""""
-.. automodule:: luma.core.emulator
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 :mod:`luma.core.error`
 """"""""""""""""""""""
@@ -32,14 +22,12 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-
 :mod:`luma.core.mixin`
 """"""""""""""""""""""
 .. automodule:: luma.core.mixin
     :members:
     :undoc-members:
     :show-inheritance:
-
 
 :mod:`luma.core.render`
 """""""""""""""""""""""
@@ -48,7 +36,6 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-
 :mod:`luma.core.serial`
 """""""""""""""""""""""
 .. automodule:: luma.core.serial
@@ -56,14 +43,12 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-
 :mod:`luma.core.threadpool`
 """""""""""""""""""""""""""
 .. automodule:: luma.core.threadpool
     :members:
     :undoc-members:
     :show-inheritance:
-
 
 :mod:`luma.core.virtual`
 """"""""""""""""""""""""

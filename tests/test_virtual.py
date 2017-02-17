@@ -4,21 +4,14 @@
 # See LICENSE.rst for details.
 
 import time
-import hashlib
 import os.path
-from tempfile import NamedTemporaryFile
-from PIL import Image
+from PIL import Image, ImageChops
 
-from luma.core.emulator import capture
+from luma.core.device import dummy
 from luma.core.render import canvas
 from luma.core.virtual import range_overlap, hotspot, snapshot, viewport
 
 import baseline_data
-
-
-def md5(fname):
-    with open(fname, 'rb') as fp:
-        return hashlib.md5(fp.read()).hexdigest()
 
 
 def overlap(box1, box2):
@@ -109,13 +102,13 @@ def test_snapshot_last_updated():
 
 
 def test_viewport_set_position():
-    reference = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        'set_position.png'))
+    reference = Image.open(
+        os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'reference',
+            'set_position.png')))
 
-    fname = NamedTemporaryFile(suffix=".png").name
-    device = capture(file_template=fname, transform="none")
+    device = dummy()
     virtual = viewport(device, 200, 200)
 
     # Use the same drawing primitives as the demo
@@ -123,17 +116,18 @@ def test_viewport_set_position():
         baseline_data.primitives(virtual, draw)
 
     virtual.set_position((20, 30))
-    assert md5(reference) == md5(fname)
+    bbox = ImageChops.difference(reference, device.image).getbbox()
+    assert bbox is None
 
 
 def test_viewport_hotspot():
-    reference = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        'hotspot.png'))
+    reference = Image.open(
+        os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'reference',
+            'hotspot.png')))
 
-    fname = NamedTemporaryFile(suffix=".png").name
-    device = capture(file_template=fname, transform="none")
+    device = dummy()
     virtual = viewport(device, 200, 200)
 
     def draw_fn(draw, width, height):
@@ -144,4 +138,5 @@ def test_viewport_hotspot():
     virtual.add_hotspot(widget, (19, 56))
     virtual.set_position((28, 30))
 
-    assert md5(reference) == md5(fname)
+    bbox = ImageChops.difference(reference, device.image).getbbox()
+    assert bbox is None

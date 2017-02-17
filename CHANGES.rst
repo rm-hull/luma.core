@@ -5,6 +5,7 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | *Upcoming* | * Fix bug in seven_segment transform (display correct char)         |            |
+|            | * Moved emulator code to ``rm-hull/luma.emulator`` github repo      |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.1.15** | * Require at least Pillow 4.0.0                                     | 2017/02/11 |
 |            | * Configurable ``transfer_size`` on SPI writes                      |            |

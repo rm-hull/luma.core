@@ -4,7 +4,7 @@
 
 import atexit
 
-from luma.core.serial import i2c
+from luma.core.serial import i2c, noop
 from luma.core import mixin
 import luma.core.const
 
@@ -85,3 +85,24 @@ class device(mixin.capabilities):
         self.hide()
         self.clear()
         self._serial_interface.cleanup()
+
+
+class dummy(device):
+    """
+    Pseudo-device that acts like a physical display, except that it does nothing
+    other than retain a copy of the displayed image. It is mostly useful for
+    testing. Supports 24-bit color depth.
+    """
+    def __init__(self, width=128, height=64, rotate=0, mode="RGB", **kwargs):
+        super(dummy, self).__init__(serial_interface=noop())
+        self.capabilities(width, height, rotate, mode)
+        self.image = None
+
+    def display(self, image):
+        """
+        Takes a :py:mod:`PIL.Image` and makes a copy of it for later
+        use/inspection.
+        """
+        assert(image.size == self.size)
+
+        self.image = self.preprocess(image).copy()
