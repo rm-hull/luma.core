@@ -1,4 +1,5 @@
 luma.core **|** 
+`luma.emulator <https://github.com/rm-hull/luma.emulator>`__ **|** 
 `luma.examples <https://github.com/rm-hull/luma.examples>`__ **|** 
 `luma.lcd <https://github.com/rm-hull/luma.lcd>`__ **|** 
 `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|** 
@@ -40,6 +41,7 @@ There are several drivers for different classes of device available:
 * `luma.oled <https://github.com/rm-hull/luma.oled/>`_
 * `luma.lcd <https://github.com/rm-hull/luma.lcd/>`_
 * `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix/>`_
+* `luma.emulator <https://github.com/rm-hull/luma.emulator/>`_
 
 There are emulators that run in real-time (with pygame) and others that can
 take screenshots, or assemble animated GIFs, as per the examples below. Source
