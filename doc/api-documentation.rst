@@ -14,10 +14,25 @@ API Documentation
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
 
 :mod:`luma.core.error`
 """"""""""""""""""""""
 .. automodule:: luma.core.error
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`luma.core.legacy`
+"""""""""""""""""""""""
+.. automodule:: luma.core.legacy
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`luma.core.legacy.font`
+""""""""""""""""""""""""""""
+.. automodule:: luma.core.legacy.font
     :members:
     :undoc-members:
     :show-inheritance:
