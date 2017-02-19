@@ -21,7 +21,7 @@ setup(
     url="https://github.com/rm-hull/luma.core",
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     namespace_packages=["luma"],
-    packages=["luma.core"],
+    packages=["luma.core", "luma.core.legacy"],
     install_requires=["pillow>=4.0.0", "smbus2", "spidev", "RPi.GPIO"],
     setup_requires=["pytest-runner"],
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],

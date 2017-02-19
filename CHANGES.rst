@@ -6,7 +6,7 @@ ChangeLog
 +============+=====================================================================+============+
 | *Upcoming* | *TBC*                                                               |            |
 +------------+---------------------------------------------------------------------+------------+
-| **0.3.0**  | * Imported legacy font handling from ``rm-hull/luma.led_matrix``    | 2017/02/19 |
+| **0.3.1**  | * Imported legacy font handling from ``rm-hull/luma.led_matrix``    | 2017/02/19 |
 +------------+---------------------------------------------------------------------+------------+
 | **0.2.0**  | * Fix bug in seven_segment transform (display correct char)         | 2017/02/17 |
 |            | * Moved emulator code to ``rm-hull/luma.emulator`` github repo      |            |
