@@ -27,7 +27,7 @@ setup(
     namespace_packages=["luma"],
     packages=["luma.core", "luma.core.legacy"],
     install_requires=["pillow>=4.0.0", "smbus2", "spidev", "RPi.GPIO"],
-    setup_requires=[] + pytest_runner
+    setup_requires=[] + pytest_runner,
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
     zip_safe=False,
     classifiers=[
