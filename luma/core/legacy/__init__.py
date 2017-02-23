@@ -34,7 +34,7 @@ def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.0
         w, h = textsize(msg, font)
 
     x = device.width
-    virtual = viewport(device, width=w + x + x, height=h)
+    virtual = viewport(device, width=w + x + x, height=device.height)
 
     with canvas(virtual) as draw:
         text(draw, (x, y_offset), msg, font=font, fill=fill)
