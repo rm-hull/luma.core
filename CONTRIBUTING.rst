@@ -21,3 +21,5 @@ Contributors
 * Roger Dahl (@rogerdahl)
 * Václav Šmilauer (@eudoxos)
 * Claus Bjerre (@bjerrep)
+* Unattributed (@bkntrx)
+* Unattributed (@7754359337)
