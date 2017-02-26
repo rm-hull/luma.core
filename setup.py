@@ -5,10 +5,16 @@ import os
 import sys
 from setuptools import setup
 
-README = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
-CONTRIB = open(os.path.join(os.path.dirname(__file__), "CONTRIBUTING.rst")).read()
-CHANGES = open(os.path.join(os.path.dirname(__file__), "CHANGES.rst")).read()
-version = open(os.path.join(os.path.dirname(__file__), "VERSION.txt")).read().strip()
+
+def read_file(fname):
+    with open(os.path.join(os.path.dirname(__file__), fname)) as r:
+        return r.read()
+
+
+README = read_file("README.rst")
+CONTRIB = read_file("CONTRIBUTING.rst")
+CHANGES = read_file("CHANGES.rst")
+version = read_file("VERSION.txt").strip()
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
@@ -27,7 +33,7 @@ setup(
     namespace_packages=["luma"],
     packages=["luma.core", "luma.core.legacy"],
     install_requires=["pillow>=4.0.0", "smbus2", "spidev", "RPi.GPIO"],
-    setup_requires=[] + pytest_runner,
+    setup_requires=pytest_runner,
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
     zip_safe=False,
     classifiers=[
@@ -38,7 +44,6 @@ setup(
         "Topic :: Education",
         "Topic :: System :: Hardware",
         "Topic :: System :: Hardware :: Hardware Drivers",
-        "Topic :: Software Development :: Libraries :: pygame",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
