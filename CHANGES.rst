@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | *TBC*                                                               |            |
+| *Upcoming* | * Add spritesheet and framerate_regulator functionality             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.3.2*** | * Bug fix: ``legacy.show_message`` wrong device height              | 2017/02/24 |
 |            | * Add Cyrillic chars to legacy font                                 |            |

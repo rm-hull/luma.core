@@ -2,10 +2,9 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import time
-
 from luma.core.render import canvas
 from luma.core.virtual import viewport
+from luma.core.sprite_system import framerate_regulator
 from luma.core.legacy.font import DEFAULT_FONT
 
 
@@ -29,6 +28,7 @@ def text(draw, xy, text, fill=None, font=None):
 
 
 def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.03):
+    regulator = framerate_regulator(fps=1.0 / scroll_delay)
     font = font or DEFAULT_FONT
     with canvas(device) as draw:
         w, h = textsize(msg, font)
@@ -42,5 +42,5 @@ def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.0
     i = 0
     while i < w + x:
         virtual.set_position((i, 0))
+        regulator.sleep()
         i += 1
-        time.sleep(scroll_delay)
