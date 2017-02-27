@@ -45,7 +45,6 @@ class capabilities(object):
 
     def preprocess(self, image):
         """
-
         Provides a preprocessing facility (which may be overridden) whereby the supplied image is
         rotated according to the device's rotate capability. If this method is
         overridden, it is important to call the super
