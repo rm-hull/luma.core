@@ -13,7 +13,7 @@ class device(mixin.capabilities):
     """
     Base class for display driver classes
 
-    .. warning::
+    .. note::
         Direct use of the :func:`command` and :func:`data` methods are
         discouraged: Screen updates should be effected through the
         :func:`display` method, or preferably with the

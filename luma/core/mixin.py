@@ -6,7 +6,26 @@ from PIL import Image
 
 
 class capabilities(object):
+    """
+    This class should be 'mixed-in' to any :py:class:`luma.core.device.device`
+    display implementation that should have "device-like" capabilities.
+    """
     def capabilities(self, width, height, rotate, mode="1"):
+        """
+        Assigns attributes such as ``width``, ``height``, ``size`` and
+        ``bounding_box`` correctly oriented from the supplied parameters.
+
+        :param width: the device width
+        :type width: int
+        :param height: the device height
+        :type height: int
+        :param rotate: an integer value of 0 (default), 1, 2 or 3 only, where 0 is
+            no rotation, 1 is rotate 90° clockwise, 2 is 180° rotation and 3
+            represents 270° rotation.
+        :type rotate: int
+        :param mode: the supported color model, one of "1", "RGB" or "RGBA" only.
+        :type mode: str
+        """
         assert mode in ("1", "RGB", "RGBA")
         assert rotate in (0, 1, 2, 3)
         self._w = width
@@ -25,6 +44,17 @@ class capabilities(object):
         self.display(Image.new(self.mode, self.size))
 
     def preprocess(self, image):
+        """
+
+        Provides a preprocessing facility (which may be overridden) whereby the supplied image is
+        rotated according to the device's rotate capability. If this method is
+        overridden, it is important to call the super
+
+        :param image: An image to pre-process
+        :type image: PIL.Image.Image
+        :returns: A new processed image
+        :rtype image: PIL.Image.Image
+        """
         if self.rotate == 0:
             return image
 
@@ -32,4 +62,9 @@ class capabilities(object):
         return image.rotate(angle, expand=True).crop((0, 0, self._w, self._h))
 
     def display(self, image):
+        """
+        Should be overridden in subclassed implementations.
+
+        :raises NotImplementedError:
+        """
         raise NotImplementedError()
