@@ -81,7 +81,7 @@ class i2c(object):
         data is larger than this, it is sent in chunks.
 
         :param data: a data sequence
-        :type data: list, bytebuffer
+        :type data: list, bytearray
         """
         i = 0
         n = len(data)
@@ -180,7 +180,7 @@ class spi(object):
         If the data is more than 4Kb in size, it is sent in chunks.
 
         :param data: a data sequence
-        :type data: list, bytebuffer
+        :type data: list, bytearray
         """
         self._gpio.output(self._bcm_DC, self._data_mode)
         i = 0
