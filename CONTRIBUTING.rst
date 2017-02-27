@@ -10,7 +10,7 @@ levels high.
 
 GitHub
 ^^^^^^
-The source code is available to clone at: https://github.com/rm-hull/luma.core.git
+The source code is available to clone at: https://github.com/rm-hull/luma.core
 
 Contributors
 ^^^^^^^^^^^^
