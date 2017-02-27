@@ -4,7 +4,9 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | * Add spritesheet and framerate_regulator functionality             |            |
+| *Upcoming* | *TBC*                                                               |            |
++------------+---------------------------------------------------------------------+------------+
+| **0.4.0**  | * Add spritesheet and framerate_regulator functionality             | 2017/02/27 |
 |            | * Add full-frame and diff-to-previous framebuffer implementations   |            |
 |            | * Remove unnecessary travis/tox dependencies                        |            |
 +------------+---------------------------------------------------------------------+------------+
