@@ -28,27 +28,34 @@ class diff_to_previous(object):
     """
     def __init__(self, device):
         self.image = Image.new(device.mode, device.size, "white")
+        self.bounding_box = None
 
-    def update(self, image):
+    def redraw_required(self, image):
         """
-        Calculates the difference from the previous image, setting ``bbox`` and
-        ``image`` attributes, and priming :py:func:`getdata`.
+        Calculates the difference from the previous image, setting ``bounding_box``,
+        and ``image`` attributes, and priming :py:func:`getdata`.
 
         :param image: An image to render
         :type image: PIL.Image.Image
+        :returns: ``True`` or ``False``
         """
-        self.bbox = ImageChops.difference(self.image, image).getbbox()
-        if self.bbox is not None:
+        self.bounding_box = ImageChops.difference(self.image, image).getbbox()
+        if self.bounding_box is not None:
             self.image = image.copy()
+            return True
+        else:
+            return False
 
     def getdata(self):
         """
         A sequence of pixel data relating to the changes that occurred
-        since the last time :py:func:`update` was last called.
+        since the last time :py:func:`redraw_required` was last called.
 
-        :returns: A sequence of pixels
+        :returns: A sequence of pixels or ``None``
+        :rtype: iterable
         """
-        return self.image.crop(self.bbox).getdata() if self.bbox else []
+        if self.bounding_box:
+            return self.image.crop(self.bounding_box).getdata()
 
 
 class full_frame(object):
@@ -63,23 +70,26 @@ class full_frame(object):
     :type device: luma.core.device.device
     """
     def __init__(self, device):
-        self.bbox = (0, 0, device.width, device.height)
+        self.bounding_box = (0, 0, device.width, device.height)
 
-    def update(self, image):
+    def redraw_required(self, image):
         """
         Caches the image ready for getting the sequence of pixel data with
         :py:func:`getdata`.
 
         :param image: An image to render
         :type image: PIL.Image.Image
+        :returns: ``True`` or ``False``
         """
         self.image = image
+        return True
 
     def getdata(self):
         """
-        A sequence of pixels representing the full image supplied to the
-        :py:func:`update` method.
+        A sequence of pixels representing the full image supplied when the
+        :py:func:`redraw_required` method was last called.
 
         :returns: A sequence of pixels
+        :rtype: iterable
         """
         return self.image.getdata()
