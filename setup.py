@@ -35,6 +35,11 @@ setup(
     install_requires=["pillow>=4.0.0", "smbus2", "spidev", "RPi.GPIO"],
     setup_requires=pytest_runner,
     tests_require=["mock", "pytest", "pytest-cov", "python-coveralls"],
+    extras_require={
+        'docs': [
+            'sphinx >= 1.5.1'
+        ]
+    },
     zip_safe=False,
     classifiers=[
         "License :: OSI Approved :: MIT License",
