@@ -31,7 +31,9 @@ single board computers:
 * terminal-style printing,
 * state management,
 * color/greyscale (where supported),
-* dithering to monochrome
+* dithering to monochrome,
+* sprite animation,
+* flexible framebuffering (depending on device capabilities)
 
 Device drivers extend **luma.core** to provide the correct initialization 
 sequences for specific physical display devices/chipsets.

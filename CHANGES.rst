@@ -5,6 +5,8 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | *Upcoming* | * Add spritesheet and framerate_regulator functionality             |            |
+|            | * Add full-frame and diff-to-previous framebuffer implementations   |            |
+|            | * Remove unnecessary travis/tox dependencies                        |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.3.2*** | * Bug fix: ``legacy.show_message`` wrong device height              | 2017/02/24 |
 |            | * Add Cyrillic chars to legacy font                                 |            |

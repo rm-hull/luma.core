@@ -23,6 +23,13 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
+:mod:`luma.core.framebuffer`
+""""""""""""""""""""""""""""
+.. automodule:: luma.core.framebuffer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`luma.core.legacy`
 """""""""""""""""""""""
 .. automodule:: luma.core.legacy
