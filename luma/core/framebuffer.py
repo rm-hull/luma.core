@@ -32,8 +32,10 @@ class diff_to_previous(object):
 
     def redraw_required(self, image):
         """
-        Calculates the difference from the previous image, setting ``bounding_box``,
-        and ``image`` attributes, and priming :py:func:`getdata`.
+        Calculates the difference from the previous image, return a boolean
+        indicating whether a redraw is required. A side effect is that
+        ``bounding_box`` and ``image`` attributes are updated accordingly, as is
+        priming :py:func:`getdata`.
 
         :param image: An image to render
         :type image: PIL.Image.Image
@@ -75,11 +77,11 @@ class full_frame(object):
     def redraw_required(self, image):
         """
         Caches the image ready for getting the sequence of pixel data with
-        :py:func:`getdata`.
+        :py:func:`getdata`. This method always returns affirmatively.
 
         :param image: An image to render
         :type image: PIL.Image.Image
-        :returns: ``True`` or ``False``
+        :returns: ``True`` always.
         """
         self.image = image
         return True

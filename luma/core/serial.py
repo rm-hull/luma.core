@@ -2,6 +2,11 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Encapsulates sending commands and data over a serial interface, whether that
+is I²C, SPI or bitbanging GPIO.
+"""
+
 import errno
 
 import luma.core.error
@@ -9,15 +14,19 @@ import luma.core.error
 
 class i2c(object):
     """
-    Wrap an `I2C <https://en.wikipedia.org/wiki/I%C2%B2C>`_ interface to
-    provide data and command methods.
+    Wrap an `I²C <https://en.wikipedia.org/wiki/I%C2%B2C>`_ (Inter-Integrated
+    Circuit) interface to provide :py:func:`data` and :py:func:`command` methods.
 
-    :param bus: I2C bus instance.
+    :param bus: a *smbus* implementation, if `None` is supplied (default),
+        `smbus2 <https://https://pypi.python.org/pypi/smbus2/0.1.4>`_ is used.
+        Typically this is overridden in tests, or if there is a specific
+        reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
+        over smbus2
     :type bus:
-    :param port: I2C port number.
+    :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
-    :param address: I2C address.
-    :type address:
+    :param address: I²C address, default: 0x3C.
+    :type address: int
     :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
     :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
     :raises luma.core.error.DevicePermissionError: Permission to access I2C device
@@ -56,17 +65,23 @@ class i2c(object):
 
     def command(self, *cmd):
         """
-        Sends a command or sequence of commands through to the I2C address
+        Sends a command or sequence of commands through to the I²C address
         - maximum allowed is 32 bytes in one go.
+
+        :param cmd: a spread of commands
+        :type cmd: int
         """
         assert(len(cmd) <= 32)
         self._bus.write_i2c_block_data(self._addr, self._cmd_mode, list(cmd))
 
     def data(self, data):
         """
-        Sends a data byte or sequence of data bytes through to the I2C
+        Sends a data byte or sequence of data bytes through to the I²C
         address - maximum allowed in one transaction is 32 bytes, so if
         data is larger than this, it is sent in chunks.
+
+        :param data: a data sequence
+        :type data: list, bytearray
         """
         i = 0
         n = len(data)
@@ -77,7 +92,7 @@ class i2c(object):
 
     def cleanup(self):
         """
-        Clean up I2C resources
+        Clean up I²C resources
         """
         self._bus.close()
 
@@ -85,22 +100,23 @@ class i2c(object):
 class spi(object):
     """
     Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
-    interface to provide data and command methods.
+    (Serial Peripheral Interface) bus to provide :py:func:`data` and
+    :py:func:`command` methods.
 
-    :param spi: SPI interface (must be compatible with py-spidev)
-    :param gpio: GPIO interface (must be compatible with RPi.GPIO). For slaves
-        that dont need reset or D/C functionality, supply a ``noop()``
+    :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
+    :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
+        For slaves that dont need reset or D/C functionality, supply a :py:class`noop`
         implementation instead.
-    :param port: SPI port, defaults to 0
+    :param port: SPI port, usually 0 (default) or 1.
     :type port: int
-    :param device: SPI device, defaults to 0
+    :param device: SPI device, usually 0 (default) or 1.
     :type device: int
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz
     :type device: int
     :param transfer_size: Max bytes to transfer in one go. Some implementations
         only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
-    :type device: int
+    :type transfer_size: int
     :param bcm_DC: The BCM pin to connect data/command select (DC) to (defaults to 24).
     :type bcm_DC: int
     :param bcm_RST: The BCM pin to connect reset (RES / RST) to (defaults to 24).
@@ -151,6 +167,9 @@ class spi(object):
     def command(self, *cmd):
         """
         Sends a command or sequence of commands through to the SPI device.
+
+        :param cmd: a spread of commands
+        :type cmd: int
         """
         self._gpio.output(self._bcm_DC, self._cmd_mode)
         self._spi.writebytes(list(cmd))
@@ -159,6 +178,9 @@ class spi(object):
         """
         Sends a data byte or sequence of data bytes through to the SPI device.
         If the data is more than 4Kb in size, it is sent in chunks.
+
+        :param data: a data sequence
+        :type data: list, bytearray
         """
         self._gpio.output(self._bcm_DC, self._data_mode)
         i = 0
@@ -182,10 +204,10 @@ class noop(object):
     Does nothing, used for pseudo-devices / emulators / anything really
     """
     def __getattr__(self, attr):
-        return self.noop
+        return self.__noop
 
     def __setattr__(self, attr, val):
         pass
 
-    def noop(*args, **kwargs):
+    def __noop(*args, **kwargs):
         pass
