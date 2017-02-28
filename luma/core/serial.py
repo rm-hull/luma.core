@@ -199,6 +199,78 @@ class spi(object):
         self._gpio.cleanup()
 
 
+class spi_3wire(object):
+    """
+    Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
+    (Serial Peripheral Interface) bus to provide :py:func:`data` and
+    :py:func:`command` methods.
+
+    :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
+    :param port: SPI port, usually 0 (default) or 1.
+    :type port: int
+    :param device: SPI device, usually 0 (default) or 1.
+    :type device: int
+    :param bus_speed_hz: SPI bus speed, defaults to 8MHz
+    :type device: int
+    :param transfer_size: Max bytes to transfer in one go. Some implementations
+        only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
+        4096 (default).
+    :type transfer_size: int
+    :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
+    """
+    def __init__(self, spi=None, port=0, device=0,
+                 bus_speed_hz=8000000, transfer_size=4096):
+        assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
+        self._spi = spi or self.__spidev__()
+
+        try:
+            self._spi.open(port, device)
+        except (IOError, OSError) as e:
+            if e.errno == errno.ENOENT:
+                raise luma.core.error.DeviceNotFoundError('SPI device not found')
+            else:
+                raise
+
+        self._transfer_size = transfer_size
+        self._spi.max_speed_hz = bus_speed_hz
+        self._spi.bits_per_word = 9
+
+    def __spidev__(self):
+        import spidev
+        return spidev.SpiDev()
+
+    def command(self, *cmd):
+        """
+        Sends a command or sequence of commands through to the SPI device.
+
+        :param cmd: a spread of commands
+        :type cmd: int
+        """
+        self._spi.writebytes(list(cmd))
+
+    def data(self, data):
+        """
+        Sends a data byte or sequence of data bytes through to the SPI device.
+        If the data is more than 4Kb in size, it is sent in chunks.
+
+        :param data: a data sequence
+        :type data: list, bytearray
+        """
+        i = 0
+        n = len(data)
+        tx_sz = self._transfer_size
+        write = self._spi.writebytes
+        while i < n:
+            write([x | 0x100 for x in data[i:i + tx_sz]])
+            i += tx_sz
+
+    def cleanup(self):
+        """
+        Clean up SPI resources
+        """
+        self._spi.close()
+
+
 class noop(object):
     """
     Does nothing, used for pseudo-devices / emulators / anything really
