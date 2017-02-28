@@ -52,7 +52,7 @@ class capabilities(object):
         :param image: An image to pre-process
         :type image: PIL.Image.Image
         :returns: A new processed image
-        :rtype image: PIL.Image.Image
+        :rtype: PIL.Image.Image
         """
         if self.rotate == 0:
             return image
