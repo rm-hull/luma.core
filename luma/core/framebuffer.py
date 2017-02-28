@@ -65,7 +65,6 @@ class diff_to_previous(object):
 
         return self.bounding_box
 
-
     def getdata(self):
         """
         A sequence of pixel data relating to the changes that occurred
