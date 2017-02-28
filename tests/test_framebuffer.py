@@ -27,6 +27,7 @@ def test_full_frame():
     assert len(pix1) == 16
     assert pix1 == [0xFF] * 4 + [0x00] * 12
     assert framebuffer.bounding_box == (0, 0, 4, 4)
+    assert framebuffer.inflate_bbox() == (0, 0, 4, 4)
 
     assert framebuffer.redraw_required(im2)
     pix2 = list(framebuffer.getdata())
@@ -48,12 +49,14 @@ def test_diff_to_previous():
     assert len(pix1) == 12
     assert pix1 == [0x00] * 12
     assert framebuffer.bounding_box == (0, 1, 4, 4)
+    assert framebuffer.inflate_bbox() == (0, 1, 4, 4)
 
     assert framebuffer.redraw_required(im2)
     pix2 = list(framebuffer.getdata())
     assert len(pix2) == 3
     assert pix2 == [0xFF] * 3
     assert framebuffer.bounding_box == (0, 1, 1, 4)
+    assert framebuffer.inflate_bbox() == (0, 1, 4, 4)
 
     assert not framebuffer.redraw_required(im2)
     assert framebuffer.getdata() is None

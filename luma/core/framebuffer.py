@@ -48,6 +48,24 @@ class diff_to_previous(object):
         else:
             return False
 
+    def inflate_bbox(self):
+        """
+        Realign the left and right edges of the bounding box such that they are
+        inflated to align modulo 4.
+
+        This method is optional, and used mainly to accomodate devices with
+        COM/SEG GDDRAM structures that store pixels in 4-bit nibbles.
+        """
+        left, top, right, bottom = self.bounding_box
+        self.bounding_box = (
+            left & 0xFFFC,
+            top,
+            right if right % 4 == 0 else (right & 0xFFFC) + 0x04,
+            bottom)
+
+        return self.bounding_box
+
+
     def getdata(self):
         """
         A sequence of pixel data relating to the changes that occurred
@@ -85,6 +103,12 @@ class full_frame(object):
         """
         self.image = image
         return True
+
+    def inflate_bbox(self):
+        """
+        Just return the original bounding box without any inflation.
+        """
+        return self.bounding_box
 
     def getdata(self):
         """
