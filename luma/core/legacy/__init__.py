@@ -40,7 +40,7 @@ def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.0
         text(draw, (x, y_offset), msg, font=font, fill=fill)
 
     i = 0
-    while i < w + x:
+    while i <= w + x:
         virtual.set_position((i, 0))
         regulator.sleep()
         i += 1
