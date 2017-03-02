@@ -11,6 +11,7 @@ import errno
 
 import luma.core.error
 
+__all__ = ["i2c", "spi"]
 
 class i2c(object):
     """
