@@ -108,7 +108,7 @@ class spi(object):
 
     :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that dont need reset or D/C functionality, supply a :py:class`noop`
+        For slaves that dont need reset or D/C functionality, supply a :py:class:`noop`
         implementation instead.
     :param port: SPI port, usually 0 (default) or 1.
     :type port: int
