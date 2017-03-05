@@ -10,43 +10,50 @@ from luma.core.sprite_system import framerate_regulator
 
 
 def test_init_default():
-    before = time.time()
     regulator = framerate_regulator()
+    assert regulator.start_time is None
+    assert regulator.last_time is None
+    assert regulator.called == 0
+    before = time.time()
+    with regulator:
+        pass
     after = time.time()
 
     assert regulator.max_sleep_time == 1 / 16.67
     assert before <= regulator.start_time <= after
-    assert regulator.start_time == regulator.last_time
-    assert regulator.called == 0
+    assert regulator.called == 1
 
 
 def test_init_unlimited():
-    before = time.time()
     regulator = framerate_regulator(fps=0)
+    before = time.time()
+    with regulator:
+        pass
     after = time.time()
 
     assert regulator.max_sleep_time == -1
     assert before <= regulator.start_time <= after
-    assert regulator.start_time == regulator.last_time
-    assert regulator.called == 0
+    assert regulator.called == 1
 
 
 def test_init_30fps():
+    regulator = framerate_regulator(fps=30)
     before = time.time()
-    regulator = framerate_regulator(fps=30.00)
+    with regulator:
+        pass
     after = time.time()
 
     assert regulator.max_sleep_time == 1 / 30.00
     assert before <= regulator.start_time <= after
-    assert regulator.start_time == regulator.last_time
-    assert regulator.called == 0
+    assert regulator.called == 1
 
 
 def test_sleep():
-    before = time.time()
     regulator = framerate_regulator(fps=100.00)
+    before = time.time()
     for _ in range(200):
-        regulator.sleep()
+        with regulator:
+            pass
     after = time.time()
 
     assert regulator.called == 200

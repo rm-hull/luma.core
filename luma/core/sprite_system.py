@@ -175,11 +175,20 @@ class framerate_regulator(object):
             fps = -1
 
         self.max_sleep_time = 1.0 / fps
-        self.start_time = time.time()
-        self.last_time = self.start_time
+        self.total_transit_time = 0
         self.called = 0
+        self.start_time = None
+        self.last_time = None
 
-    def sleep(self):
+    def __enter__(self):
+        self.enter_time = time.time()
+        if not self.start_time:
+            self.start_time = self.enter_time
+            self.last_time = self.enter_time
+
+        return self
+
+    def __exit__(self, *args):
         """
         Sleeps for a variable amount of time (dependent on when it was last
         called), to give a consistent frame rate. If it cannot meet the desired
@@ -187,11 +196,13 @@ class framerate_regulator(object):
         it simply exits without blocking.
         """
         self.called += 1
-        elapsed = time.time() - self.last_time
-        sleep_for = self.max_sleep_time - elapsed
+        self.total_transit_time += time.time() - self.enter_time
+        if self.max_sleep_time >= 0:
+            elapsed = time.time() - self.last_time
+            sleep_for = self.max_sleep_time - elapsed
 
-        if sleep_for > 0:
-            time.sleep(sleep_for)
+            if sleep_for > 0:
+                time.sleep(sleep_for)
 
         self.last_time = time.time()
 
@@ -203,3 +214,7 @@ class framerate_regulator(object):
         """
         elapsed = time.time() - self.start_time
         return self.called / elapsed
+
+    def average_transit_time(self):
+        return self.total_transit_time * 1000.0 / self.called
+
