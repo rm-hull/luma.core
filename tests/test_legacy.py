@@ -17,7 +17,7 @@ from luma.core.legacy.font import proportional, CP437_FONT, LCD_FONT
 def test_textsize():
     """
     The bounding box of the text, as drawn in the specified font, is correctly
-    calculated. 
+    calculated.
     """
     assert textsize("Hello world") == (88, 8)
     assert textsize("Hello world", font=proportional(CP437_FONT)) == (75, 8)
