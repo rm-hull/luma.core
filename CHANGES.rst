@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | * **BREAKING CHANGES:** Rework ``framework_regulator`` class        |            |
+| **0.5.0**  | * **BREAKING CHANGES:** Rework ``framework_regulator`` class        | 2017/03/05 |
 |            | * Documentation updates                                             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.4.4**  | * Bug fix: ``legacy.show_message`` off-by-one bug                   | 2017/03/02 |
