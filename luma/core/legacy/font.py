@@ -2,6 +2,10 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Fixed-width font definitions
+"""
+
 
 class proportional(object):
     """
@@ -10,7 +14,6 @@ class proportional(object):
     with scrolling messages, as interspace columns are squeezed to a
     single pixel.
     """
-
     def __init__(self, font):
         self.font = font
 
@@ -31,8 +34,8 @@ class proportional(object):
         return arr[first:last]
 
 
-# bit patterns for the CP437 font
-# see https://en.wikipedia.org/wiki/Code_page_437 for details
+#: Bit patterns for the CP437 font,
+#: see https://en.wikipedia.org/wiki/Code_page_437 for details.
 CP437_FONT = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0x00
     [0x7E, 0x81, 0x95, 0xB1, 0xB1, 0x95, 0x81, 0x7E],  # 0x01
@@ -290,16 +293,15 @@ CP437_FONT = [
     [0x00, 0x19, 0x1D, 0x17, 0x12, 0x00, 0x00, 0x00],  # 0xFD
     [0x00, 0x00, 0x3C, 0x3C, 0x3C, 0x3C, 0x00, 0x00],  # 0xFE
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFF
-]  # end of CP437_FONT
+]
 
-# -----------------------------------------------------------
-# Bit patterns for SINCLAIR_FONT
-# (based on the character set from the Sinclair ZX Spectrum)
-# Source: www.henningkarlsen.com/electronics/r_fonts.php
-# Transposed by JLCArchibald
-# Note: Only contains characters 0x20 - 0x7E inclusive
-#       All others will appear as blanks
-
+#: Bit patterns for SINCLAIR_FONT
+#: (based on the character set from the Sinclair ZX Spectrum).
+#: Source: www.henningkarlsen.com/electronics/r_fonts.php,
+#: transposed by JLCArchibald.
+#:
+#: NOTE: Only contains characters 0x20 - 0x7E inclusive.
+#: All others will appear as blanks
 SINCLAIR_FONT = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0x00
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0x01
@@ -557,16 +559,15 @@ SINCLAIR_FONT = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFD
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFE
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFF
-]  # end of SINCLAIR_FONT
+]
 
-# -----------------------------------------------------------
-# Bit patterns for LCD_FONT
-# Source: www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=69880
-# Transposed by JLCArchibald
-# Note: Only contains characters 0x20 - 0x7F inclusive
-#       and Cyrillic uppercase chars 0x81, 0x90 - 0xAF
-#       All others will appear as blanks
-
+#: Bit patterns for LCD_FONT,
+#: source: http://www.avrfreaks.net/forum/code-57-512-and-712-fonts?name=PNphpBB2&file=viewtopic&t=69880,
+#: transposed by JLCArchibald.
+#:
+#: NOTE: Only contains characters 0x20 - 0x7F inclusive
+#: and Cyrillic uppercase chars 0x81, 0x90 - 0xAF.
+#: All others will appear as blanks.
 LCD_FONT = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0x00
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0x01
@@ -824,12 +825,10 @@ LCD_FONT = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFD
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFE
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0xFF
-]  # end of LCD_FONT
+]
 
-# -----------------------------------------------------------
-# bit patterns for the Cyrillic Ukrainian font
-# Transposed by Taras (@tarasius)
-
+#: Bit patterns for the Cyrillic Ukrainian font,
+#: transposed by Taras (@tarasius).
 UKR_FONT = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],  # 0x00
     [0x7E, 0x81, 0x95, 0xB1, 0xB1, 0x95, 0x81, 0x7E],  # 0x01
@@ -1087,15 +1086,14 @@ UKR_FONT = [
     [0x00, 0x44, 0x54, 0x54, 0x54, 0x7C, 0x38, 0x00],  # 0xFD
     [0x7C, 0x7C, 0x10, 0x38, 0x7C, 0x44, 0x7C, 0x38],  # 0xFE
     [0x00, 0x48, 0x7C, 0x34, 0x14, 0x7C, 0x7C, 0x00],  # 0xFF
-]  # end of UKR_FONT
+]
 
-# -----------------------------------------------------------
-# Bit patterns for TINY_FONT
-# Source: http://www.dafont.com/tiny.font
-# Transposed by Richard Hull
-# Note: Only contains characters 0x20 - 0x7F inclusive
-#       All others will appear as blanks
-
+#: Bit patterns for TINY_FONT,
+#: source: http://www.dafont.com/tiny.font,
+#: transposed by Richard Hull.
+#:
+#: NOTE: Only contains characters 0x20 - 0x7F inclusive.
+#: All others will appear as blanks
 TINY_FONT = [
     [0x00, 0x00, 0x00, 0x00],  # 0x00
     [0x00, 0x00, 0x00, 0x00],  # 0x01
@@ -1353,7 +1351,7 @@ TINY_FONT = [
     [0x00, 0x00, 0x00, 0x00],  # 0xFD
     [0x00, 0x00, 0x00, 0x00],  # 0xFE
     [0x00, 0x00, 0x00, 0x00],  # 0xFF
-]  # end of TINY_FONT
+]
 
 
 DEFAULT_FONT = CP437_FONT
