@@ -57,7 +57,5 @@ def test_show_message():
     """
     Scroll a message right-to-left across the devices display.
     """
-    draw = Mock(unsafe=True)
     device = dummy()
     show_message(device, 'text')
-    draw.point.assert_not_called()
