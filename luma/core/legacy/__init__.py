@@ -15,30 +15,30 @@ from luma.core.sprite_system import framerate_regulator
 from luma.core.legacy.font import DEFAULT_FONT
 
 
-def textsize(text, font=None):
+def textsize(txt, font=None):
     """
     Calculates the bounding box of the text, as drawn in the specified font.
     This method is most useful for when the
     :py:class:`~luma.core.legacy.font.proportional` wrapper is used.
 
-    :param text: the text string to calculate the bounds for
-    :type text: str
+    :param txt: the text string to calculate the bounds for
+    :type txt: str
     :param font: the font (from :py:mod:`luma.core.legacy.font`) to use
     """
     font = font or DEFAULT_FONT
-    src = [c for ascii_code in text for c in font[ord(ascii_code)]]
+    src = [c for ascii_code in txt for c in font[ord(ascii_code)]]
     return (len(src), 8)
 
 
-def text(draw, xy, text, fill=None, font=None):
+def text(draw, xy, txt, fill=None, font=None):
     """
     Draw a legacy font starting at :py:attr:`x`, :py:attr:`y` using the
     prescribed fill and font.
 
     :param draw: a valid canvas to draw the text onto.
     :type draw: PIL.ImageDraw
-    :param text: the text string to display (must be ASCII only)
-    :type text: str
+    :param txt: the text string to display (must be ASCII only)
+    :type txt: str
     :param xy: an (x, y) tuple denoting the top-left corner to draw the text
     :type xy: tuple
     :param fill: the fill color to use (standard Pillow color name or RGB tuple)
@@ -46,7 +46,7 @@ def text(draw, xy, text, fill=None, font=None):
     """
     font = font or DEFAULT_FONT
     x, y = xy
-    for ch in text:
+    for ch in txt:
         for byte in font[ord(ch)]:
             for j in range(8):
                 if byte & 0x01 > 0:
@@ -56,13 +56,13 @@ def text(draw, xy, text, fill=None, font=None):
             x += 1
 
 
-def show_message(device, text, y_offset=0, fill=None, font=None, scroll_delay=0.03):
+def show_message(device, txt, y_offset=0, fill=None, font=None, scroll_delay=0.03):
     """
     Scrolls a message right-to-left across the devices display.
 
     :param device: the device to scroll across
-    :param text: the text message to display (must be ASCII only)
-    :type text: str
+    :param txt: the text message to display (must be ASCII only)
+    :type txt: str
     :param y_offset: the row to use to display the text
     :type y_offset: int
     :param fill: the fill color to use (standard Pillow color name or RGB tuple)
@@ -73,13 +73,13 @@ def show_message(device, text, y_offset=0, fill=None, font=None, scroll_delay=0.
     regulator = framerate_regulator(fps=1.0 / scroll_delay)
     font = font or DEFAULT_FONT
     with canvas(device) as draw:
-        w, h = textsize(text, font)
+        w, h = textsize(txt, font)
 
     x = device.width
     virtual = viewport(device, width=w + x + x, height=device.height)
 
     with canvas(virtual) as draw:
-        text(draw, (x, y_offset), text, font=font, fill=fill)
+        text(draw, (x, y_offset), txt, font=font, fill=fill)
 
     i = 0
     while i <= w + x:
