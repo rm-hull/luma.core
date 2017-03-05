@@ -64,6 +64,8 @@ class capabilities(object):
         """
         Should be overridden in subclassed implementations.
 
+        :param image: An image to display
+        :type image: PIL.Image.Image
         :raises NotImplementedError:
         """
         raise NotImplementedError()

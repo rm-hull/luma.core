@@ -211,10 +211,19 @@ class framerate_regulator(object):
         Calculates the effective frames-per-second - this should largely
         correlate to the desired FPS supplied in the constructor, but no
         guarantees are given.
+
+        :returns: the effective frame rate
+        :rtype: float
         """
         elapsed = time.time() - self.start_time
         return self.called / elapsed
 
     def average_transit_time(self):
-        return self.total_transit_time * 1000.0 / self.called
+        """
+        Calculates the average transit time between the enter and exit methods,
+        and return the time in milliseconds
 
+        :returns: the average transit in milliseconds
+        :rtype: float
+        """
+        return self.total_transit_time * 1000.0 / self.called
