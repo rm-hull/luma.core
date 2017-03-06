@@ -36,3 +36,11 @@ class DeviceDisplayModeError(Error):
     """
     Exception raised when an invalid device display mode is detected.
     """
+
+
+class UnsupportedPlatform(Error):
+    """
+    Exception raised when trying to use the library on an incompatible system.
+
+    .. versionadded:: 0.5.2
+    """
