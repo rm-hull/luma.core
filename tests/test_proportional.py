@@ -25,3 +25,8 @@ def test_space_char():
 def test_doublequote_char():
     font = proportional(CP437_FONT)
     assert font[ord('"')] == [7, 7, 0, 7, 7, 0]
+
+
+def test_trim_not_nonzero():
+    font = proportional(CP437_FONT)
+    assert font._trim([0, 0, 0, 0]) == []
