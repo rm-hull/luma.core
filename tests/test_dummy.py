@@ -35,3 +35,22 @@ def test_portrait():
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
     assert bbox is None
+
+
+def test_dither():
+    reference = Image.open(
+        os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'reference',
+            'dither.png')))
+
+    device = dummy(mode="1")
+
+    with canvas(device, dither=True) as draw:
+        draw.rectangle((0, 0, 64, 32), fill="red")
+        draw.rectangle((64, 0, 128, 32), fill="yellow")
+        draw.rectangle((0, 32, 64, 64), fill="blue")
+        draw.rectangle((64, 32, 128, 64), fill="white")
+
+    bbox = ImageChops.difference(reference, device.image).getbbox()
+    assert bbox is None
