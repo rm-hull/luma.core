@@ -3,6 +3,10 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for the :py:mod:`luma.core.serial` module.
+"""
+
 try:
     from unittest.mock import patch, call, Mock
 except ImportError:

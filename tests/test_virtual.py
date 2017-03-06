@@ -3,6 +3,10 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for the :py:mod:`luma.core.virtual` module.
+"""
+
 import time
 import os.path
 from PIL import Image, ImageChops
