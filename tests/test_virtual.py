@@ -141,6 +141,7 @@ def test_viewport_hotspot():
 
     virtual.add_hotspot(widget, (19, 56))
     virtual.set_position((28, 30))
+    virtual.remove_hotspot(widget, (19, 56))
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
     assert bbox is None
