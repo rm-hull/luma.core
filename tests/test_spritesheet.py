@@ -3,6 +3,9 @@
 # Copyright (c) 2014-17 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for the :py:class:`luma.core.sprite_system.spritesheet` class.
+"""
 
 import pytest
 import PIL

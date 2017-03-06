@@ -63,7 +63,7 @@ class i2c(object):
                 # PermissionError
                 raise luma.core.error.DevicePermissionError(
                     'I2C device permission denied: {}'.format(e.filename))
-            else:
+            else:  # pragma: no cover
                 raise
 
     def command(self, *cmd):
@@ -139,7 +139,7 @@ class spi(object):
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
-            else:
+            else:  # pragma: no cover
                 raise
 
         self._transfer_size = transfer_size

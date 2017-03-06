@@ -9,22 +9,33 @@ try:
 except ImportError:
     from mock import call, Mock
 
-from luma.core.legacy import text, textsize
+from luma.core.device import dummy
+from luma.core.legacy import text, textsize, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, LCD_FONT
 
 
 def test_textsize():
+    """
+    The bounding box of the text, as drawn in the specified font, is correctly
+    calculated.
+    """
     assert textsize("Hello world") == (88, 8)
     assert textsize("Hello world", font=proportional(CP437_FONT)) == (75, 8)
 
 
 def test_text_space():
+    """
+    Draw a space character.
+    """
     draw = Mock(unsafe=True)
     text(draw, (2, 2), " ", fill="white")
     draw.point.assert_not_called()
 
 
 def test_text_char():
+    """
+    Draw a text character.
+    """
     draw = Mock(unsafe=True)
     text(draw, (2, 2), "L", font=LCD_FONT, fill="white")
     draw.point.assert_has_calls([
@@ -40,3 +51,11 @@ def test_text_char():
         call((5, 8), fill='white'),
         call((6, 8), fill='white')
     ])
+
+
+def test_show_message():
+    """
+    Scroll a message right-to-left across the devices display.
+    """
+    device = dummy()
+    show_message(device, 'text', scroll_delay=0.0)

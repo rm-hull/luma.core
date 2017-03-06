@@ -3,6 +3,11 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for the :py:class:`luma.core.virtual.viewport` class and associated
+helpers.
+"""
+
 import time
 import os.path
 from PIL import Image, ImageChops
@@ -137,6 +142,7 @@ def test_viewport_hotspot():
 
     virtual.add_hotspot(widget, (19, 56))
     virtual.set_position((28, 30))
+    virtual.remove_hotspot(widget, (19, 56))
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
     assert bbox is None

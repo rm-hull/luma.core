@@ -9,6 +9,7 @@ Tests for the :py:class:`luma.core.device.dummy` class.
 
 import os.path
 from PIL import Image, ImageChops
+
 from luma.core.render import canvas
 from luma.core.device import dummy
 
@@ -20,6 +21,8 @@ def test_capture_noops():
     # All these should have no effect
     device.hide()
     device.show()
+    device.cleanup()
+    device.contrast(123)
     device.command(1, 2, 4, 4)
     device.data([1, 2, 4, 4])
 
