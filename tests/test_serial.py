@@ -41,8 +41,9 @@ def fib(n):
 
 def test_i2c_init_device_not_found():
     port = 200
+    address = 0x710
     with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
-        i2c(port=port, address=0x710)
+        i2c(port=port, address=address)
     assert str(ex.value) == 'I2C device not found: /dev/i2c-{}'.format(port)
 
 
@@ -53,9 +54,10 @@ def test_i2c_init_device_permission_error():
 
 
 def test_i2c_init_device_address_error():
+    address = 'foo'
     with pytest.raises(luma.core.error.DeviceAddressError) as ex:
-        i2c(address='foo')
-    assert str(ex.value) == 'I2C device address invalid: foo'
+        i2c(address=address)
+    assert str(ex.value) == 'I2C device address invalid: {}'.format(address)
 
 
 def test_i2c_init_no_bus():
