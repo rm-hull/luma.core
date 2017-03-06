@@ -3,8 +3,13 @@
 # Copyright (c) 2014-17 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for the :py:class:`luma.core.sprite_system.framerate_regulator` class.
+"""
 
 import time
+
+import pytest
 
 from luma.core.sprite_system import framerate_regulator
 
@@ -58,3 +63,15 @@ def test_sleep():
 
     assert regulator.called == 200
     assert after - before >= 2.0
+
+
+def test_effective_FPS():
+    regulator = framerate_regulator(fps=30)
+    with pytest.raises(TypeError):
+        regulator.effective_FPS()
+
+
+def test_average_transit_time():
+    regulator = framerate_regulator(fps=30)
+    with pytest.raises(ZeroDivisionError):
+        regulator.average_transit_time()
