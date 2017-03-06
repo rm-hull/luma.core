@@ -56,13 +56,13 @@ def text(draw, xy, txt, fill=None, font=None):
             x += 1
 
 
-def show_message(device, txt, y_offset=0, fill=None, font=None, scroll_delay=0.03):
+def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.03):
     """
     Scrolls a message right-to-left across the devices display.
 
     :param device: the device to scroll across
-    :param txt: the text message to display (must be ASCII only)
-    :type txt: str
+    :param msg: the text message to display (must be ASCII only)
+    :type msg: str
     :param y_offset: the row to use to display the text
     :type y_offset: int
     :param fill: the fill color to use (standard Pillow color name or RGB tuple)
@@ -73,13 +73,13 @@ def show_message(device, txt, y_offset=0, fill=None, font=None, scroll_delay=0.0
     regulator = framerate_regulator(fps=1.0 / scroll_delay)
     font = font or DEFAULT_FONT
     with canvas(device) as draw:
-        w, h = textsize(txt, font)
+        w, h = textsize(msg, font)
 
     x = device.width
     virtual = viewport(device, width=w + x + x, height=device.height)
 
     with canvas(virtual) as draw:
-        text(draw, (x, y_offset), txt, font=font, fill=fill)
+        text(draw, (x, y_offset), msg, font=font, fill=fill)
 
     i = 0
     while i <= w + x:
