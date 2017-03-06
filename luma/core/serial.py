@@ -125,6 +125,7 @@ class spi(object):
     :param bcm_RST: The BCM pin to connect reset (RES / RST) to (defaults to 24).
     :type bcm_RST: int
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
+    :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, transfer_size=4096,
@@ -158,8 +159,13 @@ class spi(object):
         # RPi.GPIO _really_ doesn't like being run on anything other than
         # a Raspberry Pi... this is imported here so we can swap out the
         # implementation for a mock
-        import RPi.GPIO
-        return RPi.GPIO
+        try:
+            import RPi.GPIO
+            return RPi.GPIO
+        except RuntimeError as e:
+            if str(e) == 'This module can only be run on a Raspberry Pi!':
+                raise luma.core.error.UnsupportedPlatform(
+                    'GPIO access not available')
 
     def __spidev__(self):
         # spidev cant compile on macOS, so use a similar technique to
