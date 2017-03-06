@@ -33,7 +33,8 @@ def test_portrait():
     device = dummy(rotate=1)
 
     # Use the same drawing primitives as the demo
-    with canvas(device) as draw:
+    # Enable dither for extra test coverage
+    with canvas(device, dither=True) as draw:
         baseline_data.primitives(device, draw)
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
