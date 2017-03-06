@@ -4,8 +4,8 @@
 # See LICENSE.rst for details.
 
 import os.path
-
 from PIL import Image, ImageChops
+
 from luma.core.render import canvas
 from luma.core.device import dummy
 
@@ -33,8 +33,7 @@ def test_portrait():
     device = dummy(rotate=1)
 
     # Use the same drawing primitives as the demo
-    # Enable dither for extra test coverage
-    with canvas(device, dither=True) as draw:
+    with canvas(device) as draw:
         baseline_data.primitives(device, draw)
 
     bbox = ImageChops.difference(reference, device.image).getbbox()

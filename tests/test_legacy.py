@@ -58,4 +58,4 @@ def test_show_message():
     Scroll a message right-to-left across the devices display.
     """
     device = dummy()
-    show_message(device, 'text')
+    show_message(device, 'text', scroll_delay=0.0)

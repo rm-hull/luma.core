@@ -4,7 +4,8 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:mod:`luma.core.virtual` module.
+Tests for the :py:class:`luma.core.virtual.viewport` class and associated
+helpers.
 """
 
 import time
@@ -13,8 +14,7 @@ from PIL import Image, ImageChops
 
 from luma.core.device import dummy
 from luma.core.render import canvas
-from luma.core.virtual import (range_overlap, hotspot, snapshot, viewport,
-    terminal)
+from luma.core.virtual import range_overlap, hotspot, snapshot, viewport
 
 import baseline_data
 
@@ -146,10 +146,3 @@ def test_viewport_hotspot():
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
     assert bbox is None
-
-
-def test_terminal_println():
-    device = dummy()
-    ter = terminal(device)
-
-    ter.println('foo\rbar\bspam\teggs\n')

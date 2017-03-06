@@ -70,7 +70,8 @@ def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.0
     :param scroll_delay: the number of seconds to delay between scrolling
     :type scroll_delay: float
     """
-    regulator = framerate_regulator(fps=1.0 / scroll_delay)
+    fps = 0 if scroll_delay == 0 else 1.0 / scroll_delay
+    regulator = framerate_regulator(fps)
     font = font or DEFAULT_FONT
     with canvas(device) as draw:
         w, h = textsize(msg, font)

@@ -227,22 +227,21 @@ class terminal(object):
         If the ``animate`` flag was set to True (default), then each character
         is flushed to the device, giving the effect of 1970's teletype device.
         """
-        for line in str(text).split("\n"):
-            for char in line:
-                if char == '\r':
-                    self.carriage_return()
+        for char in str(text):
+            if char == '\r':
+                self.carriage_return()
 
-                elif char == '\n':
-                    self.newline()
+            elif char == '\n':
+                self.newline()
 
-                elif char == '\b':
-                    self.backspace()
+            elif char == '\b':
+                self.backspace()
 
-                elif char == '\t':
-                    self.tab()
+            elif char == '\t':
+                self.tab()
 
-                else:
-                    self.putch(char, flush=self.animate)
+            else:
+                self.putch(char, flush=self.animate)
 
     def putch(self, ch, flush=True):
         """
