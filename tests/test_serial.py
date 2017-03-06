@@ -151,3 +151,9 @@ def test_spi_init_device_not_found():
     with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
         spi(gpio=gpio, spi=spidev.SpiDev())
     assert str(ex.value) == 'SPI device not found'
+
+
+def test_spi_unsupported_gpio_platform():
+    with pytest.raises(luma.core.error.UnsupportedPlatform) as ex:
+        spi(spi=spidev, port=9, device=1)
+    assert str(ex.value) == 'GPIO access not available'
