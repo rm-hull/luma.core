@@ -3,6 +3,10 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Tests for the :py:class:`luma.core.device.dummy` class.
+"""
+
 import os.path
 from PIL import Image, ImageChops
 from luma.core.render import canvas
