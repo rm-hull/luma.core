@@ -13,7 +13,8 @@ from PIL import Image, ImageChops
 
 from luma.core.device import dummy
 from luma.core.render import canvas
-from luma.core.virtual import range_overlap, hotspot, snapshot, viewport
+from luma.core.virtual import (range_overlap, hotspot, snapshot, viewport,
+    terminal)
 
 import baseline_data
 
@@ -145,3 +146,10 @@ def test_viewport_hotspot():
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
     assert bbox is None
+
+
+def test_terminal_println():
+    device = dummy()
+    ter = terminal(device)
+
+    ter.println('foo\rbar\bspam\teggs\n')
