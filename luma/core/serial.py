@@ -11,6 +11,8 @@ import errno
 
 import luma.core.error
 
+from luma.core import lib
+
 
 __all__ = ["i2c", "spi"]
 
@@ -111,6 +113,8 @@ class i2c(object):
         self._bus.close()
 
 
+@lib.spidev
+@lib.rpi_gpio
 class spi(object):
     """
     Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
@@ -165,24 +169,6 @@ class spi(object):
         self._gpio.setup(self._bcm_RST, self._gpio.OUT)
         self._gpio.output(self._bcm_RST, self._gpio.LOW)   # Reset device
         self._gpio.output(self._bcm_RST, self._gpio.HIGH)  # Keep RESET pulled high
-
-    def __rpi_gpio__(self):
-        # RPi.GPIO _really_ doesn't like being run on anything other than
-        # a Raspberry Pi... this is imported here so we can swap out the
-        # implementation for a mock
-        try:
-            import RPi.GPIO
-            return RPi.GPIO
-        except RuntimeError as e:
-            if str(e) == 'This module can only be run on a Raspberry Pi!':
-                raise luma.core.error.UnsupportedPlatform(
-                    'GPIO access not available')
-
-    def __spidev__(self):
-        # spidev cant compile on macOS, so use a similar technique to
-        # initialize (mainly so the tests run unhindered)
-        import spidev
-        return spidev.SpiDev()
 
     def command(self, *cmd):
         """
