@@ -21,7 +21,7 @@ class i2c(object):
     Circuit) interface to provide :py:func:`data` and :py:func:`command` methods.
 
     :param bus: a *smbus* implementation, if `None` is supplied (default),
-        `smbus2 <https://https://pypi.python.org/pypi/smbus2>`_ is used.
+        `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
         reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
         over smbus2
