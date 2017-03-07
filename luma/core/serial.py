@@ -59,7 +59,7 @@ class i2c(object):
                 # FileNotFoundError
                 raise luma.core.error.DeviceNotFoundError(
                     'I2C device not found: {}'.format(e.filename))
-            elif e.errno == errno.EPERM or e.errno == errno.EACCES:
+            elif e.errno in [errno.EPERM, errno.EACCES]:
                 # PermissionError
                 raise luma.core.error.DevicePermissionError(
                     'I2C device permission denied: {}'.format(e.filename))
@@ -81,7 +81,7 @@ class i2c(object):
             self._bus.write_i2c_block_data(self._addr, self._cmd_mode,
                                            list(cmd))
         except OSError as e:
-            if e.errno == errno.EREMOTEIO or e.errno == errno.EIO:
+            if e.errno in [errno.EREMOTEIO, errno.EIO]:
                 # I/O error
                 raise luma.core.error.DeviceNotFoundError(
                     'I2C device not found on address: {}'.format(self._addr))
