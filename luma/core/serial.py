@@ -81,8 +81,8 @@ class i2c(object):
             self._bus.write_i2c_block_data(self._addr, self._cmd_mode,
                                            list(cmd))
         except OSError as e:
-            if e.errno == errno.EREMOTEIO:
-                # Remote I/O error
+            if e.errno == errno.EREMOTEIO or e.errno == errno.EIO:
+                # I/O error
                 raise luma.core.error.DeviceNotFoundError(
                     'I2C device not found on address: {}'.format(self._addr))
             else:  # pragma: no cover
