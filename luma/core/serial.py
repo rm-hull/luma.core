@@ -63,6 +63,10 @@ class i2c(object):
                 # PermissionError
                 raise luma.core.error.DevicePermissionError(
                     'I2C device permission denied: {}'.format(e.filename))
+            elif e.errno == errno.EREMOTEIO:
+                # Remote I/O error
+                raise luma.core.error.DeviceNotFoundError(
+                    'I2C device not found on address: {}'.format(address))
             else:  # pragma: no cover
                 raise
 
