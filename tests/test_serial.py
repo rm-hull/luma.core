@@ -54,9 +54,14 @@ def test_i2c_init_device_not_found():
 
 
 def test_i2c_init_device_permission_error():
-    with pytest.raises(luma.core.error.DevicePermissionError) as ex:
-        i2c()
-    assert str(ex.value) == 'I2C device permission denied: /dev/i2c-1'
+    port = 1
+    try:
+        i2c(port=1)
+
+    except luma.core.error.DevicePermissionError as ex:
+        # permission error: device exists but no permission
+        assert str(ex) == 'I2C device permission denied: /dev/i2c-{}'.format(
+            port)
 
 
 def test_i2c_init_device_address_error():
@@ -175,12 +180,14 @@ def test_spi_cleanup():
 
 def test_spi_init_device_not_found():
     import spidev
+    port = 1234
     with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
-        spi(gpio=gpio, spi=spidev.SpiDev())
+        spi(gpio=gpio, spi=spidev.SpiDev(), port=1234)
     assert str(ex.value) == 'SPI device not found'
 
 
 def test_spi_unsupported_gpio_platform():
-    with pytest.raises(luma.core.error.UnsupportedPlatform) as ex:
+    try:
         spi(spi=spidev, port=9, device=1)
-    assert str(ex.value) == 'GPIO access not available'
+    except luma.core.error.UnsupportedPlatform as ex:
+        assert str(ex) == 'GPIO access not available'
