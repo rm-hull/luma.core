@@ -2,8 +2,6 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-from functools import wraps
-
 import luma.core.error
 
 
@@ -39,4 +37,3 @@ def rpi_gpio(Class):
 def spidev(Class):
     setattr(Class, __spidev__.__name__, __spidev__)
     return Class
-
