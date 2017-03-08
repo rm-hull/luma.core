@@ -11,6 +11,8 @@ import errno
 
 import luma.core.error
 
+from luma.core import lib
+
 
 __all__ = ["i2c", "spi"]
 
@@ -21,7 +23,7 @@ class i2c(object):
     Circuit) interface to provide :py:func:`data` and :py:func:`command` methods.
 
     :param bus: a *smbus* implementation, if `None` is supplied (default),
-        `smbus2 <https://https://pypi.python.org/pypi/smbus2/0.1.4>`_ is used.
+        `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
         reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
         over smbus2
@@ -59,7 +61,7 @@ class i2c(object):
                 # FileNotFoundError
                 raise luma.core.error.DeviceNotFoundError(
                     'I2C device not found: {}'.format(e.filename))
-            elif e.errno == errno.EPERM or e.errno == errno.EACCES:
+            elif e.errno in [errno.EPERM, errno.EACCES]:
                 # PermissionError
                 raise luma.core.error.DevicePermissionError(
                     'I2C device permission denied: {}'.format(e.filename))
@@ -73,9 +75,20 @@ class i2c(object):
 
         :param cmd: a spread of commands
         :type cmd: int
+        :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
         """
         assert(len(cmd) <= 32)
-        self._bus.write_i2c_block_data(self._addr, self._cmd_mode, list(cmd))
+
+        try:
+            self._bus.write_i2c_block_data(self._addr, self._cmd_mode,
+                                           list(cmd))
+        except OSError as e:
+            if e.errno in [errno.EREMOTEIO, errno.EIO]:
+                # I/O error
+                raise luma.core.error.DeviceNotFoundError(
+                    'I2C device not found on address: {}'.format(self._addr))
+            else:  # pragma: no cover
+                raise
 
     def data(self, data):
         """
@@ -100,6 +113,8 @@ class i2c(object):
         self._bus.close()
 
 
+@lib.spidev
+@lib.rpi_gpio
 class spi(object):
     """
     Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
@@ -154,24 +169,6 @@ class spi(object):
         self._gpio.setup(self._bcm_RST, self._gpio.OUT)
         self._gpio.output(self._bcm_RST, self._gpio.LOW)   # Reset device
         self._gpio.output(self._bcm_RST, self._gpio.HIGH)  # Keep RESET pulled high
-
-    def __rpi_gpio__(self):
-        # RPi.GPIO _really_ doesn't like being run on anything other than
-        # a Raspberry Pi... this is imported here so we can swap out the
-        # implementation for a mock
-        try:
-            import RPi.GPIO
-            return RPi.GPIO
-        except RuntimeError as e:
-            if str(e) == 'This module can only be run on a Raspberry Pi!':
-                raise luma.core.error.UnsupportedPlatform(
-                    'GPIO access not available')
-
-    def __spidev__(self):
-        # spidev cant compile on macOS, so use a similar technique to
-        # initialize (mainly so the tests run unhindered)
-        import spidev
-        return spidev.SpiDev()
 
     def command(self, *cmd):
         """
