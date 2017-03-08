@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| TBD        | * Raise ``error.UnsupportedPlatform`` if RPi.GPIO is not available  |            |
+| **0.5.2**  | * Raise ``error.UnsupportedPlatform`` if RPi.GPIO is not available  | 2017/03/08 |
 |            | * Bug fix to ``luma.core.virtual.terminal`` to handle multiple \\n  |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.5.1**  | * Bug fix: ``legacy.show_message`` regression                       | 2017/03/05 |
