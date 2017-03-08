@@ -2,8 +2,6 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-from functools import wraps
-
 import luma.core.error
 
 
@@ -31,17 +29,11 @@ def __rpi_gpio__(self):
                 'GPIO access not available')
 
 
-def rpi_gpio(f):
-    @wraps(f)
-    def wrapper(*args, **kwds):
-        f.__rpi_gpio__ = classmethod(__rpi_gpio__)
-        return f(*args, **kwds)
-    return wrapper
+def rpi_gpio(Class):
+    setattr(Class, __rpi_gpio__.__name__, __rpi_gpio__)
+    return Class
 
 
-def spidev(f):
-    @wraps(f)
-    def wrapper(*args, **kwds):
-        f.__spidev__ = classmethod(__spidev__)
-        return f(*args, **kwds)
-    return wrapper
+def spidev(Class):
+    setattr(Class, __spidev__.__name__, __spidev__)
+    return Class
