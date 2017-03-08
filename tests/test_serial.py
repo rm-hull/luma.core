@@ -56,7 +56,7 @@ def test_i2c_init_device_not_found():
 def test_i2c_init_device_permission_error():
     port = 1
     try:
-        i2c(port=1)
+        i2c(port=port)
 
     except luma.core.error.DevicePermissionError as ex:
         # permission error: device exists but no permission
@@ -182,7 +182,7 @@ def test_spi_init_device_not_found():
     import spidev
     port = 1234
     with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
-        spi(gpio=gpio, spi=spidev.SpiDev(), port=1234)
+        spi(gpio=gpio, spi=spidev.SpiDev(), port=port)
     assert str(ex.value) == 'SPI device not found'
 
 
