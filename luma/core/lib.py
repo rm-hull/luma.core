@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2017 Richard Hull and contributors
+# See LICENSE.rst for details.
+
 from functools import wraps
 
 import luma.core.error
@@ -21,7 +25,8 @@ def __rpi_gpio__(self):
         import RPi.GPIO
         return RPi.GPIO
     except RuntimeError as e:
-        if str(e) == 'This module can only be run on a Raspberry Pi!':
+        if str(e) in ['This module can only be run on a Raspberry Pi!',
+                      'Module not imported correctly!']:
             raise luma.core.error.UnsupportedPlatform(
                 'GPIO access not available')
 
