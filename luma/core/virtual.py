@@ -6,7 +6,7 @@ import time
 
 from PIL import Image, ImageDraw, ImageFont
 
-from luma.core import mixin
+from luma.core import mixin, ansi_color
 from luma.core.threadpool import threadpool
 
 
@@ -184,8 +184,8 @@ class terminal(object):
     def __init__(self, device, font=None, color="white", bgcolor="black", tabstop=4, line_height=None, animate=True):
         self._device = device
         self.font = font or ImageFont.load_default()
-        self.color = color
-        self.bgcolor = bgcolor
+        self.default_fgcolor = color
+        self.default_bgcolor = bgcolor
         self.animate = animate
         self.tabstop = tabstop
 
@@ -199,7 +199,8 @@ class terminal(object):
         self.width = device.width // self._cw
         self.height = device.height // self._ch
         self.size = (self.width, self.height)
-        self._backing_image = Image.new(self._device.mode, self._device.size, self.bgcolor)
+        self.reset()
+        self._backing_image = Image.new(self._device.mode, self._device.size, self._bgcolor)
         self._canvas = ImageDraw.Draw(self._backing_image)
         self.clear()
 
@@ -208,7 +209,8 @@ class terminal(object):
         Clears the display and resets the cursor position to (0, 0).
         """
         self._cx, self._cy = (0, 0)
-        self._canvas.rectangle(self._device.bounding_box, fill=self.bgcolor)
+        self._canvas.rectangle(self._device.bounding_box,
+                               fill=self.default_bgcolor)
         self.flush()
 
     def println(self, text=""):
@@ -222,44 +224,51 @@ class terminal(object):
     def puts(self, text):
         """
         Prints the supplied text, handling special character codes for carriage
-        return (\\r), newline (\\n), backspace (\\b) and tab (\\t).
+        return (\\r), newline (\\n), backspace (\\b) and tab (\\t). ANSI color
+        codes are also supported.
 
         If the ``animate`` flag was set to True (default), then each character
         is flushed to the device, giving the effect of 1970's teletype device.
         """
-        for char in str(text):
-            if char == '\r':
-                self.carriage_return()
+        for directive in ansi_color.parse_str(text):
+            method = self.__getattribute__(directive[0])
+            args = directive[1:]
+            method(*args)
 
-            elif char == '\n':
-                self.newline()
-
-            elif char == '\b':
-                self.backspace()
-
-            elif char == '\t':
-                self.tab()
-
-            else:
-                self.putch(char, flush=self.animate)
-
-    def putch(self, ch, flush=True):
+    def putch(self, char):
         """
         Prints the specific character, which must be a valid printable ASCII
-        value in the range 32..127 only.
+        value in the range 32..127 only, or one of carriage return (\\r),
+        newline (\\n), backspace (\\b) or tab (\\t).
         """
-        assert(32 <= ord(ch) <= 127)
+        if char == '\r':
+            self.carriage_return()
 
-        w = self.font.getsize(ch)[0]
-        if self._cx + w >= self._device.width:
+        elif char == '\n':
             self.newline()
 
-        self.erase()
-        self._canvas.text((self._cx, self._cy), text=ch, font=self.font, fill=self.color)
+        elif char == '\b':
+            self.backspace()
 
-        self._cx += w
-        if flush:
-            self.flush()
+        elif char == '\t':
+            self.tab()
+
+        else:
+            assert(32 <= ord(char) <= 127)
+
+            w = self.font.getsize(char)[0]
+            if self._cx + w >= self._device.width:
+                self.newline()
+
+            self.erase()
+            self._canvas.text((self._cx, self._cy),
+                              text=char,
+                              font=self.font,
+                              fill=self._fgcolor)
+
+            self._cx += w
+            if self.animate:
+                self.flush()
 
     def carriage_return(self):
         """
@@ -274,7 +283,7 @@ class terminal(object):
         """
         soft_tabs = self.tabstop - ((self._cx // self._cw) % self.tabstop)
         for _ in range(soft_tabs):
-            self.putch(" ", flush=False)
+            self.putch(" ")
 
     def newline(self):
         """
@@ -288,7 +297,8 @@ class terminal(object):
             # Simulate a vertical scroll
             copy = self._backing_image.crop((0, self._ch, self._device.width, self._device.height))
             self._backing_image.paste(copy, (0, 0))
-            self._canvas.rectangle((0, copy.height, self._device.width, self._device.height), fill=self.bgcolor)
+            self._canvas.rectangle((0, copy.height, self._device.width, self._device.height),
+                                   fill=self._bgcolor)
         else:
             self._cy += self._ch
 
@@ -313,13 +323,46 @@ class terminal(object):
         Erase the contents of the cursor's current postion without moving the
         cursor's position.
         """
-        self._canvas.rectangle((self._cx, self._cy, self._cx + self._cw, self._cy + self._ch), fill=self.bgcolor)
+        bounds = (self._cx, self._cy, self._cx + self._cw, self._cy + self._ch)
+        self._canvas.rectangle(bounds, fill=self._bgcolor)
 
     def flush(self):
         """
         Cause the current backing store to be rendered on the nominated device.
         """
         self._device.display(self._backing_image)
+
+    def foreground_color(self, value):
+        """
+        Sets the foreground color
+
+        :param value: new color value, either string name or RGB tuple.
+        :type value: str or tuple
+        """
+        self._fgcolor = value
+
+    def background_color(self, value):
+        """
+        Sets the foreground color
+
+        :param value: new color value, either string name or RGB tuple.
+        :type value: str or tuple
+        """
+        self._bgcolor = value
+
+    def reset(self):
+        """
+        Resets the foreground and background color value back to the original
+        when initialised.
+        """
+        self._fgcolor = self.default_fgcolor
+        self._bgcolor = self.default_bgcolor
+
+    def reverse_colors(self):
+        """
+        Flips the foreground and ackground colors
+        """
+        self._bgcolor, self._fgcolor = self._fgcolor, self._bgcolor
 
 
 class history(mixin.capabilities):
