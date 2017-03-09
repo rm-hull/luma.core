@@ -95,17 +95,16 @@ def test_i2c_command_device_not_found_error():
     cmds = [3, 1, 4, 2]
     expected_error = OSError()
 
-    with patch.object(errorbus, 'write_i2c_block_data') as broken_command:
-        for error_code in [errno.EREMOTEIO, errno.EIO]:
-            expected_error.errno = error_code
-            broken_command.side_effect = expected_error
+    for error_code in [errno.EREMOTEIO, errno.EIO]:
+        expected_error.errno = error_code
+        errorbus.write_i2c_block_data.side_effect = expected_error
 
-            serial = i2c(bus=errorbus, address=address)
-            with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
-                serial.command(*cmds)
+        serial = i2c(bus=errorbus, address=address)
+        with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
+            serial.command(*cmds)
 
-            assert str(ex.value) == 'I2C device not found on address: {}'.format(
-                address)
+        assert str(ex.value) == 'I2C device not found on address: {}'.format(
+            address)
 
 
 def test_i2c_data():
