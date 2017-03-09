@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) 2017 Richard Hull and contributors
+# See LICENSE.rst for details.
+
+"""
+Tests for the :py:mod:`luma.core.ansi_color` module.
+"""
+
+import pytest
+from luma.core.ansi_color import parse_str
+
+
+def test_parse_str_no_escape():
+    gen = parse_str("hello world")
+    assert next(gen) == ["putch", "h"]
+    assert next(gen) == ["putch", "e"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["putch", "w"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", "r"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "d"]
+
+    with pytest.raises(StopIteration):
+        next(gen)
+
+
+def test_parse_str_valid_ansi_colors():
+    gen = parse_str("hello \033[31mworld\33[0m")
+    assert next(gen) == ["putch", "h"]
+    assert next(gen) == ["putch", "e"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["foreground_color", "red"]
+    assert next(gen) == ["putch", "w"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", "r"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "d"]
+    assert next(gen) == ["reset"]
+
+    with pytest.raises(StopIteration):
+        next(gen)
+
+
+def test_parse_str_multiple_ansi_colors():
+    gen = parse_str("hello \033[32;46mworld\33[7;0m")
+    assert next(gen) == ["putch", "h"]
+    assert next(gen) == ["putch", "e"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["foreground_color", "green"]
+    assert next(gen) == ["background_color", "cyan"]
+    assert next(gen) == ["putch", "w"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", "r"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "d"]
+    assert next(gen) == ["reverse_colors"]
+    assert next(gen) == ["reset"]
+
+    with pytest.raises(StopIteration):
+        next(gen)
+
+
+def test_parse_str_unknown_ansi_colors_ignored():
+    gen = parse_str("hello \033[27mworld")
+    assert next(gen) == ["putch", "h"]
+    assert next(gen) == ["putch", "e"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["putch", "w"]
+    assert next(gen) == ["putch", "o"]
+    assert next(gen) == ["putch", "r"]
+    assert next(gen) == ["putch", "l"]
+    assert next(gen) == ["putch", "d"]
+
+    with pytest.raises(StopIteration):
+        next(gen)

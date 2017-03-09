@@ -98,3 +98,21 @@ def test_alt_colors():
 
     bbox = ImageChops.difference(reference, device.image).getbbox()
     assert bbox is None
+
+
+def test_ansi_colors():
+    reference = Image.open(
+        os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'reference',
+            'ansi_colors.png')))
+
+    device = dummy()
+    term = terminal(device)
+
+    term.println("hello \033[31mworld\33[0m")
+    term.println("this is \033[7mreversed\033[7m!")
+    term.println("\033[45;37mYellow\033[0m \033[43;30mMagenta")
+
+    bbox = ImageChops.difference(reference, device.image).getbbox()
+    assert bbox is None
