@@ -10,6 +10,7 @@ Simplified sprite animation framework.
 """
 
 import time
+
 from PIL import Image
 
 
@@ -121,6 +122,9 @@ class spritesheet(object):
         The number of frames in the sprite sheet
         """
         return self.frames.count
+
+    def close(self):
+        self.image.close()
 
     def animate(self, seq_name):
         """
