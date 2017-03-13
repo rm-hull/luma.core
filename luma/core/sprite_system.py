@@ -10,6 +10,7 @@ Simplified sprite animation framework.
 """
 
 import time
+
 from PIL import Image
 
 
@@ -66,7 +67,9 @@ class spritesheet(object):
     Loosely based on http://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
     """
     def __init__(self, image, frames, animations):
-        self.image = Image.open(image)
+        with open(image, 'rb') as fp:
+            self.image = Image.open(fp)
+            self.image.load()
         self.frames = dict_wrapper(frames)
         self.animations = dict_wrapper(animations)
         # Reframe the sprite map in terms of the registration point (if set)

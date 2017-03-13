@@ -9,7 +9,7 @@ helpers.
 """
 
 import time
-import os.path
+
 from PIL import Image, ImageChops
 
 from luma.core.device import dummy
@@ -17,6 +17,7 @@ from luma.core.render import canvas
 from luma.core.virtual import range_overlap, hotspot, snapshot, viewport
 
 import baseline_data
+from helpers import get_reference_image
 
 
 def overlap(box1, box2):
@@ -107,42 +108,38 @@ def test_snapshot_last_updated():
 
 
 def test_viewport_set_position():
-    reference = Image.open(
-        os.path.abspath(os.path.join(
-            os.path.dirname(__file__),
-            'reference',
-            'set_position.png')))
+    img_path = get_reference_image('set_position.png')
 
-    device = dummy()
-    virtual = viewport(device, 200, 200)
+    with open(img_path, 'rb') as p:
+        reference = Image.open(p)
+        device = dummy()
+        virtual = viewport(device, 200, 200)
 
-    # Use the same drawing primitives as the demo
-    with canvas(virtual) as draw:
-        baseline_data.primitives(virtual, draw)
+        # Use the same drawing primitives as the demo
+        with canvas(virtual) as draw:
+            baseline_data.primitives(virtual, draw)
 
-    virtual.set_position((20, 30))
-    bbox = ImageChops.difference(reference, device.image).getbbox()
-    assert bbox is None
+        virtual.set_position((20, 30))
+        bbox = ImageChops.difference(reference, device.image).getbbox()
+        assert bbox is None
 
 
 def test_viewport_hotspot():
-    reference = Image.open(
-        os.path.abspath(os.path.join(
-            os.path.dirname(__file__),
-            'reference',
-            'hotspot.png')))
+    img_path = get_reference_image('hotspot.png')
 
-    device = dummy()
-    virtual = viewport(device, 200, 200)
+    with open(img_path, 'rb') as p:
+        reference = Image.open(p)
+        device = dummy()
+        virtual = viewport(device, 200, 200)
 
-    def draw_fn(draw, width, height):
-        baseline_data.primitives(device, draw)
+        def draw_fn(draw, width, height):
+            baseline_data.primitives(device, draw)
 
-    widget = hotspot(device.width, device.height, draw_fn)
+        widget = hotspot(device.width, device.height, draw_fn)
 
-    virtual.add_hotspot(widget, (19, 56))
-    virtual.set_position((28, 30))
-    virtual.remove_hotspot(widget, (19, 56))
+        virtual.add_hotspot(widget, (19, 56))
+        virtual.set_position((28, 30))
+        virtual.remove_hotspot(widget, (19, 56))
 
-    bbox = ImageChops.difference(reference, device.image).getbbox()
-    assert bbox is None
+        bbox = ImageChops.difference(reference, device.image).getbbox()
+        assert bbox is None

@@ -12,6 +12,7 @@ import errno
 import luma.core.error
 
 from luma.core import lib
+from luma.core.util import deprecation
 
 
 __all__ = ["i2c", "spi"]
@@ -135,17 +136,30 @@ class spi(object):
         only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
-    :param bcm_DC: The BCM pin to connect data/command select (DC) to (defaults to 24).
+    :param gpio_DC: The GPIO pin to connect data/command select (DC) to (defaults to 24).
+    :type gpio_DC: int
+    :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 24).
+    :type gpio_RST: int
+    :param bcm_DC: Deprecated. Use ``gpio_DC`` instead.
     :type bcm_DC: int
-    :param bcm_RST: The BCM pin to connect reset (RES / RST) to (defaults to 24).
+    :param bcm_RST:  Deprecated. Use ``gpio_RST`` instead.
     :type bcm_RST: int
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, transfer_size=4096,
-                 bcm_DC=24, bcm_RST=25):
+                 gpio_DC=24, gpio_RST=25, bcm_DC=None, bcm_RST=None):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
+
+        if bcm_DC is not None:
+            deprecation('bcm_DC argument is deprecated in favor of gpio_DC and will be removed in 1.0.0')
+            gpio_DC = bcm_DC
+
+        if bcm_RST is not None:
+            deprecation('bcm_RST argument is deprecated in favor of gpio_RST and will be removed in 1.0.0')
+            gpio_RST = bcm_RST
+
         self._gpio = gpio or self.__rpi_gpio__()
         self._spi = spi or self.__spidev__()
 
@@ -159,16 +173,16 @@ class spi(object):
 
         self._transfer_size = transfer_size
         self._spi.max_speed_hz = bus_speed_hz
-        self._bcm_DC = bcm_DC
-        self._bcm_RST = bcm_RST
+        self._gpio_DC = gpio_DC
+        self._gpio_RST = gpio_RST
         self._cmd_mode = self._gpio.LOW    # Command mode = Hold low
         self._data_mode = self._gpio.HIGH  # Data mode = Pull high
 
         self._gpio.setmode(self._gpio.BCM)
-        self._gpio.setup(self._bcm_DC, self._gpio.OUT)
-        self._gpio.setup(self._bcm_RST, self._gpio.OUT)
-        self._gpio.output(self._bcm_RST, self._gpio.LOW)   # Reset device
-        self._gpio.output(self._bcm_RST, self._gpio.HIGH)  # Keep RESET pulled high
+        self._gpio.setup(self._gpio_DC, self._gpio.OUT)
+        self._gpio.setup(self._gpio_RST, self._gpio.OUT)
+        self._gpio.output(self._gpio_RST, self._gpio.LOW)   # Reset device
+        self._gpio.output(self._gpio_RST, self._gpio.HIGH)  # Keep RESET pulled high
 
     def command(self, *cmd):
         """
@@ -177,7 +191,7 @@ class spi(object):
         :param cmd: a spread of commands
         :type cmd: int
         """
-        self._gpio.output(self._bcm_DC, self._cmd_mode)
+        self._gpio.output(self._gpio_DC, self._cmd_mode)
         self._spi.writebytes(list(cmd))
 
     def data(self, data):
@@ -188,7 +202,7 @@ class spi(object):
         :param data: a data sequence
         :type data: list, bytearray
         """
-        self._gpio.output(self._bcm_DC, self._data_mode)
+        self._gpio.output(self._gpio_DC, self._data_mode)
         i = 0
         n = len(data)
         tx_sz = self._transfer_size
