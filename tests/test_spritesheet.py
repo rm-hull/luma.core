@@ -7,8 +7,6 @@
 Tests for the :py:class:`luma.core.sprite_system.spritesheet` class.
 """
 
-from contextlib import contextmanager
-
 import pytest
 import PIL
 
@@ -42,7 +40,6 @@ data = {
 }
 
 
-@contextmanager
 def closing(thing):
     try:
         yield thing
@@ -51,98 +48,98 @@ def closing(thing):
 
 
 def test_init():
-    with closing(spritesheet(**data)) as sheet:
-        # Reframed by 2px
-        assert sheet.width == 640
-        assert sheet.height == 134
-        assert sheet.frames.count == 20
-        assert sheet.frames.width == 64
-        assert sheet.frames.height == 67
-        assert sheet.frames.size == (64, 67)
-        assert sheet.cache == {}
+    sheet = spritesheet(**data)
+    # Reframed by 2px
+    assert sheet.width == 640
+    assert sheet.height == 134
+    assert sheet.frames.count == 20
+    assert sheet.frames.width == 64
+    assert sheet.frames.height == 67
+    assert sheet.frames.size == (64, 67)
+    assert sheet.cache == {}
 
 
 def test_len():
-    with closing(spritesheet(**data)) as sheet:
-        assert len(sheet) == sheet.frames.count
+    sheet = spritesheet(**data)
+    assert len(sheet) == sheet.frames.count
 
 
 def test_caching():
-    with closing(spritesheet(**data)) as sheet:
-        assert sheet.cache == {}
-        frame = sheet[17]
-        assert list(sheet.cache.keys()) == [17]
-        assert sheet.cache[17] == frame
+    sheet = spritesheet(**data)
+    assert sheet.cache == {}
+    frame = sheet[17]
+    assert list(sheet.cache.keys()) == [17]
+    assert sheet.cache[17] == frame
 
 
 def test_get():
     w = 64
     h = 67
-    with closing(spritesheet(**data)) as sheet:
-        frame = sheet[16]
-        expected = sheet.image.crop((w * 6, h * 1, w * 7, h * 2))
-        assert frame == expected
+    sheet = spritesheet(**data)
+    frame = sheet[16]
+    expected = sheet.image.crop((w * 6, h * 1, w * 7, h * 2))
+    assert frame == expected
 
 
 def test_get_string():
-    with closing(spritesheet(**data)) as sheet:
-        with pytest.raises(TypeError):
-            sheet['banana']
+    sheet = spritesheet(**data)
+    with pytest.raises(TypeError):
+        sheet['banana']
 
 
 def test_get_outofrange():
-    with closing(spritesheet(**data)) as sheet:
-        with pytest.raises(IndexError):
-            sheet[-2]
-        with pytest.raises(IndexError):
-            sheet[3002]
+    sheet = spritesheet(**data)
+    with pytest.raises(IndexError):
+        sheet[-2]
+    with pytest.raises(IndexError):
+        sheet[3002]
 
 
 def test_animate_unknown_seq():
-    with closing(spritesheet(**data)) as sheet:
-        with pytest.raises(AttributeError):
-            list(sheet.animate("unknown"))
+    sheet = spritesheet(**data)
+    with pytest.raises(AttributeError):
+        list(sheet.animate("unknown"))
 
 
 def test_animate_finite_seq():
-    with closing(spritesheet(**data)) as sheet:
-        frames = list(sheet.animate("run-left"))
-        assert len(frames) == 10
-        for i, frame in enumerate(frames):
-            assert isinstance(frame, PIL.Image.Image)
-            assert sheet[i] == frame
+    sheet = spritesheet(**data)
+    frames = list(sheet.animate("run-left"))
+    assert len(frames) == 10
+    for i, frame in enumerate(frames):
+        assert isinstance(frame, PIL.Image.Image)
+        assert sheet[i] == frame
 
 
 def test_animate_slow_seq():
-    with closing(spritesheet(**data)) as sheet:
-        frames = list(sheet.animate("run-slow"))
-        assert len(frames) == 20
-        for i, frame in enumerate(frames):
-            assert isinstance(frame, PIL.Image.Image)
-            assert sheet[i // 2] == frame
+    sheet = spritesheet(**data)
+    frames = list(sheet.animate("run-slow"))
+    assert len(frames) == 20
+    for i, frame in enumerate(frames):
+        assert isinstance(frame, PIL.Image.Image)
+        assert sheet[i // 2] == frame
 
 
 def test_animate_infinite_seq():
-    with closing(spritesheet(**data)) as sheet:
-        runner = sheet.animate("run-right")
-        frames = []
-        for _ in range(50):
-            frames.append(next(runner))
+    sheet = spritesheet(**data)
+    runner = sheet.animate("run-right")
+    frames = []
+    for _ in range(50):
+        frames.append(next(runner))
 
-        expected = list(range(19, 9, -1)) * 5
+    expected = list(range(19, 9, -1)) * 5
 
-        for i, frame_ref in enumerate(expected):
-            assert isinstance(frames[i], PIL.Image.Image)
-            assert sheet[frame_ref] == frames[i]
+    for i, frame_ref in enumerate(expected):
+        assert isinstance(frames[i], PIL.Image.Image)
+        assert sheet[frame_ref] == frames[i]
 
 
 def test_animate_subroutine():
-    with closing(spritesheet(**data)) as sheet:
-        frames = list(sheet.animate("composite"))
+    sheet = spritesheet(**data)
+    frames = list(sheet.animate("composite"))
 
-        expected = [1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 4, 5, 6, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    expected = [1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 4, 5, 6, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-        assert len(frames) == 26
-        for i, frame_ref in enumerate(expected):
-            assert isinstance(frames[i], PIL.Image.Image)
-            assert sheet[frame_ref] == frames[i]
+    assert len(frames) == 26
+    for i, frame_ref in enumerate(expected):
+        assert isinstance(frames[i], PIL.Image.Image)
+        assert sheet[frame_ref] == frames[i]
