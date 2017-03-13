@@ -136,9 +136,9 @@ class spi(object):
         only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
-    :param gpio_DC: The BCM pin to connect data/command select (DC) to (defaults to 24).
+    :param gpio_DC: The GPIO pin to connect data/command select (DC) to (defaults to 24).
     :type gpio_DC: int
-    :param gpio_RST: The BCM pin to connect reset (RES / RST) to (defaults to 24).
+    :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 24).
     :type gpio_RST: int
     :param bcm_DC: Deprecated. Use ``gpio_DC`` instead.
     :type bcm_DC: int
