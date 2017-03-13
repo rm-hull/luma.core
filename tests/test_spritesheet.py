@@ -40,13 +40,6 @@ data = {
 }
 
 
-def closing(thing):
-    try:
-        yield thing
-    finally:
-        thing.close()
-
-
 def test_init():
     sheet = spritesheet(**data)
     # Reframed by 2px
