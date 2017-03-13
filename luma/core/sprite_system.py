@@ -67,7 +67,8 @@ class spritesheet(object):
     Loosely based on http://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
     """
     def __init__(self, image, frames, animations):
-        self.image = Image.open(image)
+        self._img = open(image, 'rb')
+        self.image = Image.open(self._img)
         self.frames = dict_wrapper(frames)
         self.animations = dict_wrapper(animations)
         # Reframe the sprite map in terms of the registration point (if set)
@@ -124,7 +125,7 @@ class spritesheet(object):
         return self.frames.count
 
     def close(self):
-        self.image.close()
+        self._img.close()
 
     def animate(self, seq_name):
         """
