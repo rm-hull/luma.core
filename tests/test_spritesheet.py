@@ -12,6 +12,7 @@ import PIL
 
 from luma.core.sprite_system import spritesheet
 
+
 data = {
     'image': "tests/reference/runner.png",
     'frames': {
