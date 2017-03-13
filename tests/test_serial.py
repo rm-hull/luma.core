@@ -138,12 +138,32 @@ def verify_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25):
 
 
 def test_spi_init():
-    spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=16000000, bcm_DC=17, bcm_RST=11)
-    verify_spi_init(5, 2, 16000000, 17, 11)
+    port = 5
+    device = 2
+    dc = 17
+    rst = 11
+    spi(gpio=gpio, spi=spidev, port=port, device=device, bus_speed_hz=16000000,
+        gpio_DC=dc, gpio_RST=rst)
+    verify_spi_init(port, device, 16000000, dc, rst)
     gpio.output.assert_has_calls([
-        call(11, gpio.LOW),
-        call(11, gpio.HIGH)
+        call(rst, gpio.LOW),
+        call(rst, gpio.HIGH)
     ])
+
+
+def test_spi_init_params_deprecated():
+    port = 5
+    device = 2
+    bus_speed = 16000000
+    dc = 80
+    rst = 90
+    msg1 = 'bcm_DC argument is deprecated in favor of gpio_DC and will be removed in 1.0.0'
+    msg2 = 'bcm_RST argument is deprecated in favor of gpio_RST and will be removed in 1.0.0'
+    with pytest.deprecated_call() as c:
+        spi(gpio=gpio, spi=spidev, port=port, device=device,
+            bus_speed_hz=bus_speed, bcm_DC=dc, bcm_RST=rst)
+        assert str(c.list[0].message) == msg1
+        assert str(c.list[1].message) == msg2
 
 
 def test_spi_init_invalid_bus_speed():
