@@ -178,7 +178,6 @@ class spi(object):
         self._cmd_mode = self._gpio.LOW    # Command mode = Hold low
         self._data_mode = self._gpio.HIGH  # Data mode = Pull high
 
-        self._gpio.setmode(self._gpio.BCM)
         self._gpio.setup(self._gpio_DC, self._gpio.OUT)
         self._gpio.setup(self._gpio_RST, self._gpio.OUT)
         self._gpio.output(self._gpio_RST, self._gpio.LOW)   # Reset device

@@ -133,7 +133,7 @@ def test_i2c_cleanup():
 def verify_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25):
     spidev.open.assert_called_once_with(port, device)
     assert spidev.max_speed_hz == bus_speed_hz
-    gpio.setmode.assert_called_once_with(gpio.BCM)
+    gpio.setmode.assert_not_called()
     gpio.setup.assert_has_calls([call(dc, gpio.OUT), call(rst, gpio.OUT)])
 
 

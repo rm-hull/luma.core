@@ -20,8 +20,9 @@ def __rpi_gpio__(self):
     # a Raspberry Pi... this is imported here so we can swap out the
     # implementation for a mock
     try:
-        import RPi.GPIO
-        return RPi.GPIO
+        import RPi.GPIO as GPIO
+        GPIO.setmode(GPIO.BCM)
+        return GPIO
     except RuntimeError as e:
         if str(e) in ['This module can only be run on a Raspberry Pi!',
                       'Module not imported correctly!']:
