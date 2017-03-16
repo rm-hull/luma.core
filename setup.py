@@ -40,7 +40,11 @@ setup(
         'docs': [
             'sphinx >= 1.5.3'
         ],
-        'test': test_deps
+        'test': test_deps,
+        'qa': [
+            'flake8',
+            'rstcheck'
+        ]
     },
     zip_safe=False,
     classifiers=[
