@@ -5,6 +5,7 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | **0.6.1**  | * Deprecate spi params                                              | 2017/03/13 |
+|            | * Fix resource leak in spritesheet                                  |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.6.0**  | * Terminal supports ANSI Color escape codes                         | 2017/03/13 |
 |            | * Catch & rethrow IOErrors                                          |            |
