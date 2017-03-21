@@ -9,6 +9,11 @@ Test helpers.
 
 import os.path
 
+try:
+    from unittest.mock import patch, call, Mock
+except ImportError:
+    from mock import patch, call, Mock  # noqa: F401
+
 
 def get_reference_image(fname):
     return os.path.abspath(os.path.join(
