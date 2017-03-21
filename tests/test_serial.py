@@ -124,6 +124,7 @@ def test_i2c_data_chunked():
 
 def test_i2c_cleanup():
     serial = i2c(bus=smbus, address=0x9F)
+    serial._managed = True
     serial.cleanup()
     smbus.close.assert_called_once_with()
 
@@ -199,6 +200,7 @@ def test_spi_data():
 
 def test_spi_cleanup():
     serial = spi(gpio=gpio, spi=spidev, port=9, device=1)
+    serial._managed = True
     serial.cleanup()
     verify_spi_init(9, 1)
     spidev.close.assert_called_once_with()

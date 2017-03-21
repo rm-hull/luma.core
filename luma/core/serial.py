@@ -15,7 +15,7 @@ from luma.core import lib
 from luma.core.util import deprecation
 
 
-__all__ = ["i2c", "spi"]
+__all__ = ["i2c", "spi", "bitbang"]
 
 
 class i2c(object):
@@ -56,6 +56,7 @@ class i2c(object):
                 'I2C device address invalid: {}'.format(address))
 
         try:
+            self._managed = bus is None
             self._bus = bus or smbus2.SMBus(port)
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
@@ -111,12 +112,91 @@ class i2c(object):
         """
         Clean up I²C resources
         """
-        self._bus.close()
+        if self._managed:
+            self._bus.close()
+
+
+@lib.rpi_gpio
+class bitbang(object):
+
+    def __init__(self, gpio=None, transfer_size=4096, **kwargs):
+
+        self._transfer_size = transfer_size
+        self._managed = gpio is None
+        self._gpio = gpio or self.__rpi_gpio__()
+
+        self._SCLK = self._configure(kwargs.get("SCLK"))
+        self._SDA = self._configure(kwargs.get("SDA"))
+        self._CE = self._configure(kwargs.get("CE"))
+        self._DC = self._configure(kwargs.get("DC"))
+        self._RST = self._configure(kwargs.get("RST"))
+        self._cmd_mode = self._gpio.LOW     # Command mode = Hold low
+        self._data_mode = self._gpio.HIGH   # Data mode = Pull high
+
+        if self._RST is not None:
+            self._gpio.output(self._RST, self._gpio.LOW)   # Reset device
+            self._gpio.output(self._RST, self._gpio.HIGH)  # Keep RESET pulled high
+
+    def _configure(self, pin):
+        if pin is not None:
+            self._gpio.setup(pin, self._gpio.OUT)
+            return pin
+
+    def command(self, *cmd):
+        """
+        Sends a command or sequence of commands through to the SPI device.
+
+        :param cmd: a spread of commands
+        :type cmd: int
+        """
+        if self._DC:
+            self._gpio.output(self._DC, self._cmd_mode)
+
+        self._write_bytes(list(cmd))
+
+    def data(self, data):
+        """
+        Sends a data byte or sequence of data bytes through to the SPI device.
+        If the data is more than :py:attr:`transfer_size` bytes, it is sent in chunks.
+
+        :param data: a data sequence
+        :type data: list, bytearray
+        """
+        if self._DC:
+            self._gpio.output(self._DC, self._data_mode)
+
+        i = 0
+        n = len(data)
+        tx_sz = self._transfer_size
+        while i < n:
+            self._write_bytes(data[i:i + tx_sz])
+            i += tx_sz
+
+    def _write_bytes(self, data):
+        gpio = self._gpio
+        if self._CE:
+            gpio.output(self._CE, gpio.LOW)  # Active low
+
+        for byte in data:
+            for _ in range(8):
+                gpio.output(self._SDA, byte & 0x80)
+                gpio.output(self._SCLK, gpio.HIGH)
+                byte <<= 1
+                gpio.output(self._SCLK, gpio.LOW)
+
+        if self._CE:
+            gpio.output(self._CE, gpio.HIGH)
+
+    def cleanup(self):
+        """
+        Clean up GPIO resources if managed
+        """
+        if self._managed:
+            self._gpio.cleanup()
 
 
 @lib.spidev
-@lib.rpi_gpio
-class spi(object):
+class spi(bitbang):
     """
     Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
     (Serial Peripheral Interface) bus to provide :py:func:`data` and
@@ -160,10 +240,10 @@ class spi(object):
             deprecation('bcm_RST argument is deprecated in favor of gpio_RST and will be removed in 1.0.0')
             gpio_RST = bcm_RST
 
-        self._gpio = gpio or self.__rpi_gpio__()
-        self._spi = spi or self.__spidev__()
+        bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
 
         try:
+            self._spi = spi or self.__spidev__()
             self._spi.open(port, device)
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
@@ -171,51 +251,18 @@ class spi(object):
             else:  # pragma: no cover
                 raise
 
-        self._transfer_size = transfer_size
         self._spi.max_speed_hz = bus_speed_hz
-        self._gpio_DC = gpio_DC
-        self._gpio_RST = gpio_RST
-        self._cmd_mode = self._gpio.LOW    # Command mode = Hold low
-        self._data_mode = self._gpio.HIGH  # Data mode = Pull high
 
-        self._gpio.setup(self._gpio_DC, self._gpio.OUT)
-        self._gpio.setup(self._gpio_RST, self._gpio.OUT)
-        self._gpio.output(self._gpio_RST, self._gpio.LOW)   # Reset device
-        self._gpio.output(self._gpio_RST, self._gpio.HIGH)  # Keep RESET pulled high
-
-    def command(self, *cmd):
-        """
-        Sends a command or sequence of commands through to the SPI device.
-
-        :param cmd: a spread of commands
-        :type cmd: int
-        """
-        self._gpio.output(self._gpio_DC, self._cmd_mode)
-        self._spi.writebytes(list(cmd))
-
-    def data(self, data):
-        """
-        Sends a data byte or sequence of data bytes through to the SPI device.
-        If the data is more than 4Kb in size, it is sent in chunks.
-
-        :param data: a data sequence
-        :type data: list, bytearray
-        """
-        self._gpio.output(self._gpio_DC, self._data_mode)
-        i = 0
-        n = len(data)
-        tx_sz = self._transfer_size
-        write = self._spi.writebytes
-        while i < n:
-            write(data[i:i + tx_sz])
-            i += tx_sz
+    def _write_bytes(self, data):
+        print("_write_bytes({0})".format(data))
+        self._spi.writebytes(data)
 
     def cleanup(self):
         """
         Clean up SPI & GPIO resources
         """
         self._spi.close()
-        self._gpio.cleanup()
+        super(spi, self).cleanup()
 
 
 class noop(object):
