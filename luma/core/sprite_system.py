@@ -13,6 +13,8 @@ import time
 
 from PIL import Image
 
+from luma.core.util import monotonic
+
 
 class dict_wrapper(object):
     """
@@ -184,7 +186,7 @@ class framerate_regulator(object):
         self.last_time = None
 
     def __enter__(self):
-        self.enter_time = time.time()
+        self.enter_time = monotonic()
         if not self.start_time:
             self.start_time = self.enter_time
             self.last_time = self.enter_time
@@ -199,15 +201,15 @@ class framerate_regulator(object):
         it simply exits without blocking.
         """
         self.called += 1
-        self.total_transit_time += time.time() - self.enter_time
+        self.total_transit_time += monotonic() - self.enter_time
         if self.max_sleep_time >= 0:
-            elapsed = time.time() - self.last_time
+            elapsed = monotonic() - self.last_time
             sleep_for = self.max_sleep_time - elapsed
 
             if sleep_for > 0:
                 time.sleep(sleep_for)
 
-        self.last_time = time.time()
+        self.last_time = monotonic()
 
     def effective_FPS(self):
         """
@@ -218,7 +220,7 @@ class framerate_regulator(object):
         :returns: the effective frame rate
         :rtype: float
         """
-        elapsed = time.time() - self.start_time
+        elapsed = monotonic() - self.start_time
         return self.called / elapsed
 
     def average_transit_time(self):

@@ -43,6 +43,11 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
+# Eclipse
+.project
+.pydevproject
+.settings/
+
 # Translations
 *.mo
 *.pot

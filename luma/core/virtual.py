@@ -6,6 +6,7 @@ import time
 
 from PIL import Image, ImageDraw, ImageFont
 
+from luma.core.util import monotonic
 from luma.core import mixin, ansi_color
 from luma.core.threadpool import threadpool
 
@@ -169,11 +170,11 @@ class snapshot(hotspot):
         """
         Only requests a redraw after ``interval`` seconds have elapsed
         """
-        return time.time() - self.last_updated > self.interval
+        return monotonic() - self.last_updated > self.interval
 
     def paste_into(self, image, xy):
         super(snapshot, self).paste_into(image, xy)
-        self.last_updated = time.time()
+        self.last_updated = monotonic()
 
 
 class terminal(object):
@@ -181,7 +182,8 @@ class terminal(object):
     Provides a terminal-like interface to a device (or a device-like object
     that has :class:`mixin.capabilities` characteristics).
     """
-    def __init__(self, device, font=None, color="white", bgcolor="black", tabstop=4, line_height=None, animate=True):
+    def __init__(self, device, font=None, color="white", bgcolor="black",
+                 tabstop=4, line_height=None, animate=True):
         self._device = device
         self.font = font or ImageFont.load_default()
         self.default_fgcolor = color
