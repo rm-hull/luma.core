@@ -3,7 +3,6 @@
 # See LICENSE.rst for details.
 
 import os
-import sys
 import time
 import warnings
 import ctypes.util
@@ -13,6 +12,7 @@ __all__ = ["deprecation", "monotonic"]
 
 
 try:
+    # only available since python 3.3
     monotonic = time.monotonic
 except AttributeError:
     try:
@@ -29,23 +29,12 @@ except AttributeError:
         _fields_ = (('tv_sec', ctypes.c_long),
                     ('tv_nsec', ctypes.c_long))
 
-    if sys.platform.startswith('linux'):
-        CLOCK_MONOTONIC = 1
-    elif sys.platform.startswith('freebsd'):
-        CLOCK_MONOTONIC = 4
-    elif sys.platform.startswith('sunos5'):
-        CLOCK_MONOTONIC = 4
-    elif 'bsd' in sys.platform:
-        CLOCK_MONOTONIC = 3
-    elif sys.platform.startswith('aix'):
-        CLOCK_MONOTONIC = ctypes.c_longlong(10)
-
     def monotonic():
         """
-        Monotonic clock, cannot go backward.
+        Monotonic clock that cannot go backward.
         """
         ts = timespec()
-        if clock_gettime(CLOCK_MONOTONIC, ctypes.pointer(ts)):
+        if clock_gettime(1, ctypes.pointer(ts)):
             errno = ctypes.get_errno()
             raise OSError(errno, os.strerror(errno))
         return ts.tv_sec + ts.tv_nsec / 1.0e9
