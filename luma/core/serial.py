@@ -228,5 +228,5 @@ class noop(object):
     def __setattr__(self, attr, val):  # pragma: no cover
         pass
 
-    def __noop(*args, **kwargs):
+    def __noop(self, *args, **kwargs):
         pass
