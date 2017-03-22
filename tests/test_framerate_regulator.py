@@ -7,8 +7,6 @@
 Tests for the :py:class:`luma.core.sprite_system.framerate_regulator` class.
 """
 
-import pytest
-
 from luma.core.util import monotonic
 from luma.core.sprite_system import framerate_regulator
 
