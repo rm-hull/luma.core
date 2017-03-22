@@ -18,7 +18,12 @@ version = read_file("VERSION.txt").strip()
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
-test_deps = ["mock", "pytest", "pytest-cov", "pytest-warnings"]
+test_deps = [
+    'mock;python_version<"3.3"',
+    "pytest",
+    "pytest-cov",
+    "pytest-warnings"
+]
 
 setup(
     name="luma.core",
@@ -34,10 +39,11 @@ setup(
     namespace_packages=["luma"],
     packages=["luma.core", "luma.core.legacy"],
     install_requires=[
-        "pillow>=4.0.0",
-        "smbus2",
-        "spidev",
-        "RPi.GPIO"
+        'pillow>=4.0.0',
+        'smbus2',
+        'spidev',
+        'RPi.GPIO',
+        'monotonic;python_version<"3.3"'
     ],
     setup_requires=pytest_runner,
     tests_require=test_deps,
