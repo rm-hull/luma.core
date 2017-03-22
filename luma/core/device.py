@@ -23,7 +23,7 @@ class device(mixin.capabilities):
         self._const = const or luma.core.const.common
         self._serial_interface = serial_interface or i2c()
 
-        def shutdown_hook():
+        def shutdown_hook():  # pragma: no cover
             try:
                 self.cleanup()
             except:

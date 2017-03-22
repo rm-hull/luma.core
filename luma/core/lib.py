@@ -8,7 +8,7 @@ import luma.core.error
 __all__ = ["rpi_gpio", "spidev"]
 
 
-def __spidev__(self):
+def __spidev__(self):  # pragma: no cover
     # spidev cant compile on macOS, so use a similar technique to
     # initialize (mainly so the tests run unhindered)
     import spidev
@@ -19,7 +19,7 @@ def __rpi_gpio__(self):
     # RPi.GPIO _really_ doesn't like being run on anything other than
     # a Raspberry Pi... this is imported here so we can swap out the
     # implementation for a mock
-    try:
+    try:  # pragma: no cover
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         return GPIO

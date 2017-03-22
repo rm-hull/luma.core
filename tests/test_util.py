@@ -30,7 +30,6 @@ def test_deprecation():
 
     with pytest.deprecated_call() as c:
         d = DeprecatedClass()
-
         assert str(c.list[0].message) == d.msg
 
 
@@ -45,7 +44,8 @@ def test_get_display_types():
     """
     Enumerate display types.
     """
-    assert list(util.get_display_types().keys()) == ['oled', 'lcd', 'led_matrix', 'emulator']
+    assert list(util.get_display_types().keys()) == [
+        'oled', 'lcd', 'led_matrix', 'emulator']
 
 
 def test_get_choices_unknown_module():
@@ -61,7 +61,6 @@ def test_load_config_file_parse():
     load_config parses a text file and returns a list of arguments.
     """
     result = util.load_config(test_config_file)
-
     assert result == [
         '--display=capture',
         '--width=800',
@@ -82,6 +81,6 @@ def test_create_parser():
             'bar': ['c', 'd'],
             'emulator': ['e', 'f']
         }
-        parser = util.create_parser('test parser')
+        parser = util.create_parser(description='test')
         args = parser.parse_args(['-f', test_config_file])
         assert args.config == test_config_file
