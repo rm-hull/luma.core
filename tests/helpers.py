@@ -23,4 +23,4 @@ def get_reference_file(fname):
 
 
 def get_reference_image(fname):
-    return get_reference_file(fname)
+    return get_reference_file(os.path.join('images', fname))

@@ -14,7 +14,7 @@ from luma.core.sprite_system import spritesheet
 
 
 data = {
-    'image': "tests/reference/runner.png",
+    'image': "tests/reference/images/runner.png",
     'frames': {
         'width': 64,
         'height': 67,
