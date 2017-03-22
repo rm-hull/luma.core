@@ -66,11 +66,11 @@ def test_sleep():
 
 def test_effective_FPS():
     regulator = framerate_regulator(fps=30)
-    with pytest.raises(TypeError):
-        regulator.effective_FPS()
+    assert regulator.effective_FPS() == 0
 
 
 def test_average_transit_time():
     regulator = framerate_regulator(fps=30)
-    with pytest.raises(ZeroDivisionError):
-        regulator.average_transit_time()
+    with regulator:
+        pass
+    assert regulator.average_transit_time() > 0
