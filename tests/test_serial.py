@@ -9,15 +9,13 @@ Tests for the :py:mod:`luma.core.serial` module.
 
 import errno
 
-try:
-    from unittest.mock import patch, call, Mock
-except ImportError:
-    from mock import patch, call, Mock
-
 import pytest
 import smbus2
 from luma.core.serial import i2c, spi
 import luma.core.error
+
+from helpers import Mock, patch, call
+
 
 smbus = Mock(unsafe=True)
 spidev = Mock(unsafe=True)

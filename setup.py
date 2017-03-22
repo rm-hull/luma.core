@@ -43,7 +43,7 @@ setup(
     tests_require=test_deps,
     extras_require={
         'docs': [
-            'sphinx >= 1.5.3'
+            'sphinx >= 1.5.1'
         ],
         'test': test_deps,
         'qa': [

@@ -21,10 +21,7 @@ class worker(Thread):
     def run(self):
         while True:
             func, args, kargs = self.tasks.get()
-            try:
-                func(*args, **kargs)
-            except Exception as e:
-                print(e)
+            func(*args, **kargs)
             self.tasks.task_done()
 
 
