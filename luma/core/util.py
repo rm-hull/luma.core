@@ -14,8 +14,8 @@ from collections import OrderedDict
 
 
 __all__ = ["deprecation", "monotonic", "get_choices", "get_interface_types",
-    "get_display_types", "load_config", "make_serial", "create_device",
-    "create_parser"]
+    "get_display_types", "get_transformer_choices", "load_config",
+    "make_serial", "create_device", "create_parser"]
 
 
 try:
@@ -111,6 +111,14 @@ def get_display_types():
             namespace))
 
     return display_types
+
+
+def get_transformer_choices():
+    """
+    :rtype: list
+    """
+    from luma.emulator.render import transformer
+    return [fn for fn in dir(transformer) if fn[0:2] != "__"]
 
 
 def load_config(path):
@@ -230,8 +238,8 @@ def create_parser(description):
     misc_group.add_argument('--bgr', type=bool, default=False, help='Set to True if LCD pixels laid out in BGR (ST7735 displays only)', choices=[True, False])
 
     if len(display_types["emulator"]) > 0:
-        import luma.emulator.render
-        transformer_choices = [fn for fn in dir(luma.emulator.render.transformer) if fn[0:2] != "__"]
+        transformer_choices = get_transformer_choices()
+
         emulator_group = parser.add_argument_group('Emulator')
         emulator_group.add_argument('--transform', type=str, default='scale2x', help='Scaling transform to apply (emulator only)', choices=transformer_choices)
         emulator_group.add_argument('--scale', type=int, default=2, help='Scaling factor to apply (emulator only)')
@@ -239,10 +247,10 @@ def create_parser(description):
         emulator_group.add_argument('--loop', type=int, default=0, help='Repeat loop, zero=forever (gifanim emulator only)')
         emulator_group.add_argument('--max-frames', type=int, help='Maximum frames to record (gifanim emulator only)')
 
-    try:
+    try:  # pragma: no cover
         import argcomplete
         argcomplete.autocomplete(parser)
-    except ImportError:  # pragma: no cover
+    except ImportError:
         pass
 
     return parser

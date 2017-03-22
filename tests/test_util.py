@@ -7,11 +7,13 @@
 Tests for the :py:mod:`luma.core.util` module.
 """
 
+import sys
+
 import pytest
 
 from luma.core import util
 
-from helpers import get_reference_file, patch
+from helpers import get_reference_file, patch, Mock
 
 
 test_config_file = get_reference_file('config-test.txt')
@@ -72,11 +74,13 @@ def test_create_parser():
     """
     create_parser returns an argument parser instance.
     """
+    sys.modules['luma.emulator.render'] = Mock()
+
     with patch('luma.core.util.get_display_types') as mocka:
         mocka.return_value = {
             'foo': ['a', 'b'],
             'bar': ['c', 'd'],
-            'emulator': []
+            'emulator': ['e', 'f']
         }
         parser = util.create_parser('test parser')
         args = parser.parse_args(['-f', test_config_file])
