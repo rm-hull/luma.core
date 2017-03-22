@@ -45,8 +45,7 @@ def test_get_display_types():
     """
     Enumerate display types.
     """
-    assert list(util.get_display_types().keys()) == [
-        'oled', 'lcd', 'led_matrix', 'emulator']
+    assert list(util.get_display_types().keys()) == util.get_supported_libraries()
 
 
 def test_get_choices_unknown_module():
