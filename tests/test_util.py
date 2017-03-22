@@ -74,6 +74,7 @@ def test_create_parser():
     """
     create_parser returns an argument parser instance.
     """
+    sys.modules['luma.emulator'] = Mock()
     sys.modules['luma.emulator.render'] = Mock()
 
     with patch('luma.core.util.get_display_types') as mocka:
