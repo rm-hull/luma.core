@@ -12,6 +12,7 @@ import sys
 import pytest
 
 from luma.core import util
+from luma.core.serial import __all__ as iface_types
 
 from helpers import get_reference_file, patch, Mock
 
@@ -37,7 +38,7 @@ def test_get_interface_types():
     """
     Enumerate interface types.
     """
-    assert util.get_interface_types() == ["i2c", "spi"]
+    assert util.get_interface_types() == iface_types
 
 
 def test_get_display_types():
