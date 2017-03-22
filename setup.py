@@ -34,10 +34,11 @@ setup(
     namespace_packages=["luma"],
     packages=["luma.core", "luma.core.legacy"],
     install_requires=[
-        "pillow>=4.0.0",
-        "smbus2",
-        "spidev",
-        "RPi.GPIO"
+        'pillow>=4.0.0',
+        'smbus2',
+        'spidev',
+        'RPi.GPIO',
+        'monotonic;python_version<"3.3"'
     ],
     setup_requires=pytest_runner,
     tests_require=test_deps,
