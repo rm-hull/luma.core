@@ -22,7 +22,7 @@ addons:
     packages:
     - i2c-tools
 
-install: pip install -U pip tox coveralls
+install: pip install -U setuptools pip tox coveralls
 script: tox -vv
 after_success:
   - coveralls
