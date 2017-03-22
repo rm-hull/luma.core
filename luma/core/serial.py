@@ -254,7 +254,6 @@ class spi(bitbang):
         self._spi.max_speed_hz = bus_speed_hz
 
     def _write_bytes(self, data):
-        print("_write_bytes({0})".format(data))
         self._spi.writebytes(data)
 
     def cleanup(self):
