@@ -13,9 +13,9 @@ import ctypes.util
 from collections import OrderedDict
 
 
-__all__ = ["deprecation", "monotonic", "get_choices", "get_interface_types",
-    "get_display_types", "get_transformer_choices", "load_config",
-    "make_serial", "create_device", "create_parser"]
+__all__ = ["deprecation", "monotonic", "get_choices", "get_supported_libraries",
+    "get_interface_types", "get_display_types", "get_transformer_choices",
+    "load_config", "make_serial", "create_device", "create_parser"]
 
 
 try:
@@ -89,6 +89,15 @@ def get_choices(module_name):
         return []
 
 
+def get_supported_libraries():
+    """
+    Get list of supported libraries for the parser.
+
+    :rtype: list
+    """
+    return ['oled', 'lcd', 'led_matrix', 'emulator']
+
+
 def get_interface_types():
     """
     Get list of available interface types, e.g. ``['spi', 'i2c']``.
@@ -106,7 +115,7 @@ def get_display_types():
     :rtype: OrderedDict
     """
     display_types = OrderedDict()
-    for namespace in ['oled', 'lcd', 'led_matrix', 'emulator']:
+    for namespace in get_supported_libraries():
         display_types[namespace] = get_choices('luma.{0}.device'.format(
             namespace))
 
