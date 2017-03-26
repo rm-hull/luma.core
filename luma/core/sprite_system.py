@@ -10,10 +10,12 @@ Simplified sprite animation framework.
 """
 
 import time
+try:
+    monotonic = time.monotonic
+except AttributeError:
+    from monotonic import monotonic
 
 from PIL import Image
-
-from luma.core.util import monotonic
 
 
 class dict_wrapper(object):
