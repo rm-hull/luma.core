@@ -13,7 +13,7 @@ import smbus2
 from luma.core.serial import i2c
 import luma.core.error
 
-from helpers import Mock, call
+from helpers import Mock, patch, call
 
 smbus = Mock(unsafe=True)
 
