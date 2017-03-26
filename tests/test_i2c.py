@@ -8,16 +8,12 @@ Tests for the :py:class:`luma.core.serial.i2c` class.
 """
 
 import errno
-
-try:
-    from unittest.mock import patch, call, Mock
-except ImportError:
-    from mock import patch, call, Mock
-
 import pytest
 import smbus2
 from luma.core.serial import i2c
 import luma.core.error
+
+from helpers import Mock, call
 
 smbus = Mock(unsafe=True)
 

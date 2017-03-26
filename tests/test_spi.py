@@ -7,14 +7,12 @@
 Tests for the :py:class:`luma.core.serial.spi` class.
 """
 
-try:
-    from unittest.mock import call, Mock
-except ImportError:
-    from mock import call, Mock
-
 import pytest
 from luma.core.serial import spi
 import luma.core.error
+
+from helpers import Mock, call
+
 
 spidev = Mock(unsafe=True)
 gpio = Mock(unsafe=True)

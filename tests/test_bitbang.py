@@ -7,13 +7,10 @@
 Tests for the :py:class:`luma.core.serial.bitbang` class.
 """
 
-try:
-    from unittest.mock import call, Mock
-except ImportError:
-    from mock import call, Mock
-
 from luma.core.serial import bitbang
 import luma.core.error
+
+from helpers import Mock, call
 
 gpio = Mock(unsafe=True)
 

@@ -86,6 +86,13 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
+:mod:`luma.core.util`
+""""""""""""""""""""""""
+.. automodule:: luma.core.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`luma.core.virtual`
 """"""""""""""""""""""""
 .. automodule:: luma.core.virtual

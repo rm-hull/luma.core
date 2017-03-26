@@ -3,15 +3,11 @@
 # Copyright (c) 2014-17 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-
-try:
-    from unittest.mock import call, Mock
-except ImportError:
-    from mock import call, Mock
-
 from luma.core.device import dummy
 from luma.core.legacy import text, textsize, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, LCD_FONT
+
+from helpers import Mock, call
 
 
 def test_textsize():
