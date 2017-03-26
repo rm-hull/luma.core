@@ -118,7 +118,31 @@ class i2c(object):
 
 @lib.rpi_gpio
 class bitbang(object):
+    """
+    Wraps an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
+    (Serial Peripheral Interface) bus to provide :py:func:`data` and
+    :py:func:`command` methods. This is a software implementation and is thus
+    a lot slower than the default SPI interface. Don't use this class directly
+    unless there is a good reason!
 
+    :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
+        For slaves that dont need reset or D/C functionality, supply a :py:class:`noop`
+        implementation instead.
+    :param transfer_size: Max bytes to transfer in one go. Some implementations
+        only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
+        4096 (default).
+    :type transfer_size: int
+    :param SCLK The GPIO pin to connect the SPI clock to.
+    :type SCLK: int
+    :param SDA The GPIO pin to connect the SPI data (MOSI) line to.
+    :type SDA: int
+    :param CE The GPIO pin to connect the SPI chip enable (CE) line to.
+    :type SDA: int
+    :param DC: The GPIO pin to connect data/command select (DC) to.
+    :type DC: int
+    :param RST: The GPIO pin to connect reset (RES / RST) to.
+    :type RST: int
+    """
     def __init__(self, gpio=None, transfer_size=4096, **kwargs):
 
         self._transfer_size = transfer_size
@@ -218,7 +242,7 @@ class spi(bitbang):
     :type transfer_size: int
     :param gpio_DC: The GPIO pin to connect data/command select (DC) to (defaults to 24).
     :type gpio_DC: int
-    :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 24).
+    :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 25).
     :type gpio_RST: int
     :param bcm_DC: Deprecated. Use ``gpio_DC`` instead.
     :type bcm_DC: int
