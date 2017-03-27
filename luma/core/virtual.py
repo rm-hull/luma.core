@@ -3,10 +3,13 @@
 # See LICENSE.rst for details.
 
 import time
+try:
+    monotonic = time.monotonic
+except AttributeError:
+    from monotonic import monotonic
 
 from PIL import Image, ImageDraw, ImageFont
 
-from luma.core.util import monotonic
 from luma.core import mixin, ansi_color
 from luma.core.threadpool import threadpool
 

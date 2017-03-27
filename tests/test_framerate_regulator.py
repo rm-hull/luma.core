@@ -7,7 +7,11 @@
 Tests for the :py:class:`luma.core.sprite_system.framerate_regulator` class.
 """
 
-from luma.core.util import monotonic
+import time
+try:
+    monotonic = time.monotonic
+except AttributeError:
+    from monotonic import monotonic
 from luma.core.sprite_system import framerate_regulator
 
 
