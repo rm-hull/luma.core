@@ -152,15 +152,18 @@ def create_parser(description):
     display_types = get_display_types()
     display_choices = [display for k, v in display_types.items() for display in v]
     interface_types = get_interface_types()
-    framebuffer_choices = get_choices("luma.core.framebuffer")
+    framebuffer_choices = get_choices('luma.core.framebuffer')
+    rotation_choices = [0, 1, 2, 3]
+    block_orientation_choices = [0, 90, -90]
+    color_choices = ['1', 'RGB', 'RGBA']
 
     general_group = parser.add_argument_group('General')
     general_group.add_argument('--config', '-f', type=str, help='Load configuration settings from a file')
-    general_group.add_argument('--display', '-d', type=str, default=display_choices[0], help='Display type, supports real devices or emulators', choices=display_choices)
+    general_group.add_argument('--display', '-d', type=str, default=display_choices[0], help='Display type, supports real devices or emulators. Allowed values are: {0}'.format(', '.join(display_choices)), choices=display_choices, metavar='')
     general_group.add_argument('--width', type=int, default=128, help='Width of the device in pixels')
     general_group.add_argument('--height', type=int, default=64, help='Height of the device in pixels')
-    general_group.add_argument('--rotate', '-r', type=int, default=0, help='Rotation factor', choices=[0, 1, 2, 3])
-    general_group.add_argument('--interface', '-i', type=str, default=interface_types[0], help='Serial interface type', choices=interface_types)
+    general_group.add_argument('--rotate', '-r', type=int, default=0, help='Rotation factor. Allowed values are: {0}'.format(', '.join([str(x) for x in rotation_choices])), choices=rotation_choices, metavar='')
+    general_group.add_argument('--interface', '-i', type=str, default=interface_types[0], help='Serial interface type. Allowed values are: {0}'.format(', '.join(interface_types)), choices=interface_types, metavar='')
 
     i2c_group = parser.add_argument_group('I2C')
     i2c_group.add_argument('--i2c-port', type=int, default=1, help='I2C bus number')
@@ -177,16 +180,16 @@ def create_parser(description):
     gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544 devices only)')
 
     misc_group = parser.add_argument_group('Misc')
-    misc_group.add_argument('--block-orientation', type=int, default=0, help='Fix 90° phase error (MAX7219 LED matrix only)', choices=[0, 90, -90])
-    misc_group.add_argument('--mode', type=str, default='RGB', help='Colour mode (SSD1322, SSD1325 and emulator only)', choices=['1', 'RGB', 'RGBA'])
-    misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help='Framebuffer implementation (SSD1331, SSD1322, ST7735 displays only)', choices=framebuffer_choices)
-    misc_group.add_argument('--bgr', type=bool, default=False, help='Set to True if LCD pixels laid out in BGR (ST7735 displays only)', choices=[True, False])
+    misc_group.add_argument('--block-orientation', type=int, default=0, help='Fix 90° phase error (MAX7219 LED matrix only). Allowed values are: {0}'.format(', '.join([str(x) for x in block_orientation_choices])), choices=block_orientation_choices, metavar='')
+    misc_group.add_argument('--mode', type=str, default='RGB', help='Colour mode (SSD1322, SSD1325 and emulator only). Allowed values are: {0}'.format(', '.join(color_choices)), choices=color_choices, metavar='')
+    misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help='Framebuffer implementation (SSD1331, SSD1322, ST7735 displays only). Allowed values are: {0}'.format(', '.join(framebuffer_choices)), choices=framebuffer_choices, metavar='')
+    misc_group.add_argument('--bgr', type=bool, default=False, help='Set to True if LCD pixels laid out in BGR (ST7735 displays only). Allowed values are: True, False', choices=[True, False], metavar='')
 
     if len(display_types["emulator"]) > 0:
         transformer_choices = get_transformer_choices()
 
         emulator_group = parser.add_argument_group('Emulator')
-        emulator_group.add_argument('--transform', type=str, default='scale2x', help='Scaling transform to apply (emulator only)', choices=transformer_choices)
+        emulator_group.add_argument('--transform', type=str, default='scale2x', help='Scaling transform to apply (emulator only). Allowed values are: {0}'.format(', '.join(transformer_choices)), choices=transformer_choices, metavar='')
         emulator_group.add_argument('--scale', type=int, default=2, help='Scaling factor to apply (emulator only)')
         emulator_group.add_argument('--duration', type=float, default=0.01, help='Animation frame duration (gifanim emulator only)')
         emulator_group.add_argument('--loop', type=int, default=0, help='Repeat loop, zero=forever (gifanim emulator only)')
