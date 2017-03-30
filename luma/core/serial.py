@@ -268,7 +268,7 @@ class spi(bitbang):
 
         try:
             self._spi = spi or self.__spidev__()
-            self._spi.open(port, device)
+            self._spi.open(device, port)
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
