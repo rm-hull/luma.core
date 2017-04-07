@@ -184,6 +184,8 @@ def create_parser(description):
     misc_group.add_argument('--mode', type=str, default='RGB', help='Colour mode (SSD1322, SSD1325 and emulator only). Allowed values are: {0}'.format(', '.join(color_choices)), choices=color_choices, metavar='')
     misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help='Framebuffer implementation (SSD1331, SSD1322, ST7735 displays only). Allowed values are: {0}'.format(', '.join(framebuffer_choices)), choices=framebuffer_choices, metavar='')
     misc_group.add_argument('--bgr', type=bool, default=False, help='Set to True if LCD pixels laid out in BGR (ST7735 displays only). Allowed values are: True, False', choices=[True, False], metavar='')
+    misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only)')
+    misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only)')
 
     if len(display_types["emulator"]) > 0:
         transformer_choices = get_transformer_choices()
