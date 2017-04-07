@@ -124,7 +124,7 @@ def create_device(args, dtypes=None):
         import luma.lcd.aux
         Device = getattr(luma.lcd.device, args.display)
         Serial = getattr(make_serial(args), args.interface)
-        luma.lcd.aux.backlight(gpio_LIGHT=args.gpio_backlight).enable(True)
+        luma.lcd.aux.backlight(gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
         device = Device(Serial(), **vars(args))
 
     elif args.display in dtypes.get('led_matrix'):
@@ -177,15 +177,17 @@ def create_parser(description):
     gpio_group = parser.add_argument_group('GPIO')
     gpio_group.add_argument('--gpio-data-command', type=int, default=24, help='GPIO pin for D/C RESET (SPI devices only)')
     gpio_group.add_argument('--gpio-reset', type=int, default=25, help='GPIO pin for RESET (SPI devices only)')
-    gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544 devices only)')
+    gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544, ST7735 devices only)')
 
     misc_group = parser.add_argument_group('Misc')
     misc_group.add_argument('--block-orientation', type=int, default=0, help='Fix 90° phase error (MAX7219 LED matrix only). Allowed values are: {0}'.format(', '.join([str(x) for x in block_orientation_choices])), choices=block_orientation_choices, metavar='')
     misc_group.add_argument('--mode', type=str, default='RGB', help='Colour mode (SSD1322, SSD1325 and emulator only). Allowed values are: {0}'.format(', '.join(color_choices)), choices=color_choices, metavar='')
     misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help='Framebuffer implementation (SSD1331, SSD1322, ST7735 displays only). Allowed values are: {0}'.format(', '.join(framebuffer_choices)), choices=framebuffer_choices, metavar='')
-    misc_group.add_argument('--bgr', type=bool, default=False, help='Set to True if LCD pixels laid out in BGR (ST7735 displays only). Allowed values are: True, False', choices=[True, False], metavar='')
+    misc_group.add_argument('--bgr', dest="bgr", action="store_true", help='Set if LCD pixels laid out in BGR (ST7735 displays only).')
+    misc_group.set_defaults(bgr=False)
     misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only)')
     misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only)')
+    misc_group.add_argument('--backlight-active', type=str, default="low", help='Set to \"low\" if LCD backlight is active low (default), else \"high\" otherwise (PCD8544, ST7735 displays only). Allowed values are: low, high', choices=["low", "high"], metavar='')
 
     if len(display_types["emulator"]) > 0:
         transformer_choices = get_transformer_choices()
