@@ -45,7 +45,7 @@ def get_interface_types():
 
 def get_display_types():
     """
-    Get ordered dict containg available display types from available luma
+    Get ordered dict containing available display types from available luma
     sub-projects.
 
     :rtype: OrderedDict
