@@ -19,9 +19,9 @@ class proportional(object):
 
     def __getitem__(self, asciiCode):
         bitmap = self.font[asciiCode]
-        # Don't trim the space character down
+        # Return a slim version of the space character
         if asciiCode == 32:
-            return bitmap
+            return [0] * 4
         else:
             return self._trim(bitmap) + [0]
 

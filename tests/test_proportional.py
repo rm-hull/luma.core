@@ -19,7 +19,7 @@ def test_wide_char():
 
 def test_space_char():
     font = proportional(CP437_FONT)
-    assert font[ord(' ')] == CP437_FONT[ord(' ')]
+    assert font[ord(' ')] == [0] * 4
 
 
 def test_doublequote_char():

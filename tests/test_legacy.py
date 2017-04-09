@@ -16,7 +16,7 @@ def test_textsize():
     calculated.
     """
     assert textsize("Hello world") == (88, 8)
-    assert textsize("Hello world", font=proportional(CP437_FONT)) == (75, 8)
+    assert textsize("Hello world", font=proportional(CP437_FONT)) == (71, 8)
 
 
 def test_text_space():
