@@ -13,8 +13,6 @@ import smbus2
 from luma.core.serial import i2c
 import luma.core.error
 
-from pyfakefs import fake_filesystem
-
 from helpers import Mock, patch, call
 
 
@@ -32,38 +30,34 @@ def fib(n):
         a, b = b, a + b
 
 
-class FakeI2COsModule(fake_filesystem.FakeOsModule):
-    def open(self, file_path, flags, mode=None):
-        try:
-            super(FakeI2COsModule, self).open(file_path, flags, mode)
-        except NotImplementedError:
-            raise self.expected_error
+def i2c_error(path_name, err_no):
+    expected_error = OSError()
+    expected_error.errno = err_no
+    expected_error.filename = path_name
+
+    def fake_open(a, b):
+        raise expected_error
+    return fake_open
 
 
-def test_init_device_not_found(fs):
+def test_init_device_not_found():
     port = 200
     address = 0x710
     path_name = '/dev/i2c-{}'.format(port)
-    os_module = FakeI2COsModule(fs)
-    os_module.expected_error = OSError()
-    os_module.expected_error.errno = errno.ENOENT
-    os_module.expected_error.filename = path_name
+    fake_open = i2c_error(path_name, errno.ENOENT)
 
-    with patch('smbus2.smbus2.os', os_module):
+    with patch('os.open', fake_open):
         with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
             i2c(port=port, address=address)
         assert str(ex.value) == 'I2C device not found: {}'.format(path_name)
 
 
-def test_init_device_permission_error(fs):
+def test_init_device_permission_error():
     port = 1
     path_name = '/dev/i2c-{}'.format(port)
-    os_module = FakeI2COsModule(fs)
-    os_module.expected_error = OSError()
-    os_module.expected_error.errno = errno.EACCES
-    os_module.expected_error.filename = path_name
+    fake_open = i2c_error(path_name, errno.EACCES)
 
-    with patch('smbus2.smbus2.os', os_module):
+    with patch('os.open', fake_open):
         try:
             i2c(port=port)
         except luma.core.error.DevicePermissionError as ex:

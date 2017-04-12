@@ -22,8 +22,7 @@ test_deps = [
     'mock;python_version<"3.3"',
     "pytest",
     "pytest-cov",
-    "pytest-warnings",
-    "pyfakefs"
+    "pytest-warnings"
 ]
 
 setup(
