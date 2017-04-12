@@ -36,7 +36,7 @@ class FakeI2COsModule(fake_filesystem.FakeOsModule):
     def open(self, file_path, flags, mode=None):
         try:
             super(FakeI2COsModule, self).open(file_path, flags, mode)
-        except NotImplementedError as e:
+        except NotImplementedError:
             raise self.expected_error
 
 
