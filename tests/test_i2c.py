@@ -15,6 +15,7 @@ import luma.core.error
 
 from helpers import Mock, patch, call
 
+
 smbus = Mock(unsafe=True)
 
 
@@ -29,23 +30,40 @@ def fib(n):
         a, b = b, a + b
 
 
+def i2c_error(path_name, err_no):
+    expected_error = OSError()
+    expected_error.errno = err_no
+    expected_error.filename = path_name
+
+    def fake_open(a, b):
+        raise expected_error
+    return fake_open
+
+
 def test_init_device_not_found():
     port = 200
     address = 0x710
-    with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
-        i2c(port=port, address=address)
-    assert str(ex.value) == 'I2C device not found: /dev/i2c-{}'.format(port)
+    path_name = '/dev/i2c-{}'.format(port)
+    fake_open = i2c_error(path_name, errno.ENOENT)
+
+    with patch('os.open', fake_open):
+        with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
+            i2c(port=port, address=address)
+        assert str(ex.value) == 'I2C device not found: {}'.format(path_name)
 
 
 def test_init_device_permission_error():
     port = 1
-    try:
-        i2c(port=port)
+    path_name = '/dev/i2c-{}'.format(port)
+    fake_open = i2c_error(path_name, errno.EACCES)
 
-    except luma.core.error.DevicePermissionError as ex:
-        # permission error: device exists but no permission
-        assert str(ex) == 'I2C device permission denied: /dev/i2c-{}'.format(
-            port)
+    with patch('os.open', fake_open):
+        try:
+            i2c(port=port)
+        except luma.core.error.DevicePermissionError as ex:
+            # permission error: device exists but no permission
+            assert str(ex) == 'I2C device permission denied: {}'.format(
+                path_name)
 
 
 def test_init_device_address_error():
