@@ -13,7 +13,10 @@ import smbus2
 from luma.core.serial import i2c
 import luma.core.error
 
+from pyfakefs import fake_filesystem
+
 from helpers import Mock, patch, call
+
 
 smbus = Mock(unsafe=True)
 
@@ -29,23 +32,44 @@ def fib(n):
         a, b = b, a + b
 
 
-def test_init_device_not_found():
+class FakeI2COsModule(fake_filesystem.FakeOsModule):
+    def open(self, file_path, flags, mode=None):
+        try:
+            super(FakeI2COsModule, self).open(file_path, flags, mode)
+        except NotImplementedError as e:
+            raise self.expected_error
+
+
+def test_init_device_not_found(fs):
     port = 200
     address = 0x710
-    with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
-        i2c(port=port, address=address)
-    assert str(ex.value) == 'I2C device not found: /dev/i2c-{}'.format(port)
+    path_name = '/dev/i2c-{}'.format(port)
+    os_module = FakeI2COsModule(fs)
+    os_module.expected_error = OSError()
+    os_module.expected_error.errno = errno.ENOENT
+    os_module.expected_error.filename = path_name
+
+    with patch('smbus2.smbus2.os', os_module):
+        with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
+            i2c(port=port, address=address)
+        assert str(ex.value) == 'I2C device not found: {}'.format(path_name)
 
 
-def test_init_device_permission_error():
+def test_init_device_permission_error(fs):
     port = 1
-    try:
-        i2c(port=port)
+    path_name = '/dev/i2c-{}'.format(port)
+    os_module = FakeI2COsModule(fs)
+    os_module.expected_error = OSError()
+    os_module.expected_error.errno = errno.EACCES
+    os_module.expected_error.filename = path_name
 
-    except luma.core.error.DevicePermissionError as ex:
-        # permission error: device exists but no permission
-        assert str(ex) == 'I2C device permission denied: /dev/i2c-{}'.format(
-            port)
+    with patch('smbus2.smbus2.os', os_module):
+        try:
+            i2c(port=port)
+        except luma.core.error.DevicePermissionError as ex:
+            # permission error: device exists but no permission
+            assert str(ex) == 'I2C device permission denied: {}'.format(
+                path_name)
 
 
 def test_init_device_address_error():

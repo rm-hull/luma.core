@@ -22,7 +22,8 @@ test_deps = [
     'mock;python_version<"3.3"',
     "pytest",
     "pytest-cov",
-    "pytest-warnings"
+    "pytest-warnings",
+    "pyfakefs"
 ]
 
 setup(
@@ -49,7 +50,7 @@ setup(
     tests_require=test_deps,
     extras_require={
         'docs': [
-            'sphinx >= 1.5.1'
+            'sphinx>=1.5.1'
         ],
         'test': test_deps,
         'qa': [
