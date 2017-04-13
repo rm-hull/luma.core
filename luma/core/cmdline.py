@@ -2,6 +2,7 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+import atexit
 import inspect
 import argparse
 import importlib
@@ -97,12 +98,20 @@ class make_serial(object):
 
     def spi(self):
         from luma.core.serial import spi
+
+        if self.opts.gpio is not None:
+            GPIO = importlib.import_module(self.opts.gpio)
+            GPIO.setmode(GPIO.BCM)
+            atexit.register(GPIO.cleanup)
+        else:
+            GPIO = None
+
         return spi(port=self.opts.spi_port,
                    device=self.opts.spi_device,
                    bus_speed_hz=self.opts.spi_bus_speed,
                    gpio_DC=self.opts.gpio_data_command,
                    gpio_RST=self.opts.gpio_reset,
-                   gpio=self.gpio)
+                   gpio=self.gpio or GPIO)
 
 
 def create_device(args, dtypes=None):
@@ -123,16 +132,16 @@ def create_device(args, dtypes=None):
         import luma.lcd.device
         import luma.lcd.aux
         Device = getattr(luma.lcd.device, args.display)
-        Serial = getattr(make_serial(args), args.interface)
-        luma.lcd.aux.backlight(gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
-        device = Device(Serial(), **vars(args))
+        spi = make_serial(args).spi()
+        device = Device(spi, **vars(args))
+        luma.lcd.aux.backlight(gpio=spi._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
 
     elif args.display in dtypes.get('led_matrix'):
         import luma.led_matrix.device
         from luma.core.serial import noop
         Device = getattr(luma.led_matrix.device, args.display)
-        Serial = make_serial(args, gpio=noop()).spi
-        device = Device(serial_interface=Serial(), **vars(args))
+        spi = make_serial(args, gpio=noop()).spi()
+        device = Device(serial_interface=spi, **vars(args))
 
     elif args.display in dtypes.get('emulator'):
         import luma.emulator.device
@@ -175,6 +184,7 @@ def create_parser(description):
     spi_group.add_argument('--spi-bus-speed', type=int, default=8000000, help='SPI max bus speed (Hz)')
 
     gpio_group = parser.add_argument_group('GPIO')
+    gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI devices only)')
     gpio_group.add_argument('--gpio-data-command', type=int, default=24, help='GPIO pin for D/C RESET (SPI devices only)')
     gpio_group.add_argument('--gpio-reset', type=int, default=25, help='GPIO pin for RESET (SPI devices only)')
     gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544, ST7735 devices only)')
@@ -187,7 +197,7 @@ def create_parser(description):
     misc_group.set_defaults(bgr=False)
     misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only)')
     misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only)')
-    misc_group.add_argument('--backlight-active', type=str, default="low", help='Set to \"low\" if LCD backlight is active low (default), else \"high\" otherwise (PCD8544, ST7735 displays only). Allowed values are: low, high', choices=["low", "high"], metavar='')
+    misc_group.add_argument('--backlight-active', type=str, default="low", help='Set to \"low\" if LCD backlight is active low, else \"high\" otherwise (PCD8544, ST7735 displays only). Allowed values are: low, high', choices=["low", "high"], metavar='')
 
     if len(display_types["emulator"]) > 0:
         transformer_choices = get_transformer_choices()
