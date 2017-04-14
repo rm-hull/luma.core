@@ -12,6 +12,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 from luma.core import mixin, ansi_color
 from luma.core.threadpool import threadpool
+from luma.core.render import canvas
+from luma.core.util import mutable_string, observable
 
 
 pool = threadpool(4)
@@ -416,3 +418,62 @@ class history(mixin.capabilities):
         Indication of the number of savepoints retained.
         """
         return len(self._savepoints)
+
+
+class sevensegment(object):
+    """
+    Abstraction that wraps a device, this class provides a ``text`` property
+    which can be used to set and get a text value, which when combined with a
+    ``segment_mapper`` sets the corect bit representation for seven-segment
+    displays and propagates that onto the underlying device.
+
+    :param device: A device instance
+    :param segment_mapper: An optional function that maps strings into the
+        correct representation for the 7-segment physical layout. If not
+        provided, the default mapper from compatible devices is used instead.
+    :param undefined: The default character to substitute when an unrenderable
+        character is supplied to the text property.
+    :type undefined: char
+    """
+    def __init__(self, device, undefined="_", segment_mapper=None):
+        self.device = device
+        self.undefined = undefined
+        self.segment_mapper = segment_mapper or device.segment_mapper
+        self._bufsize = device.width * device.height // 8
+        self.text = ""
+
+    @property
+    def text(self):
+        """
+        Returns the current state of the text buffer. This may not reflect
+        accurately what is displayed on the seven-segment device, as certain
+        alpha-numerics and most punctuation cannot be rendered on the limited
+        display
+        """
+        return self._text_buffer
+
+    @text.setter
+    def text(self, value):
+        """
+        Updates the seven-segment display with the given value. If there is not
+        enough space to show the full text, an ``OverflowException`` is raised.
+
+        :param value: The value to render onto the device. Any characters which
+            cannot be rendered will be converted into the ``undefined``
+            character supplied in the constructor.
+        :type value: string
+        """
+        self._text_buffer = observable(mutable_string(value), observer=self._flush)
+
+    def _flush(self, buf):
+        data = bytearray(self.segment_mapper(buf, notfound=self.undefined)).ljust(self._bufsize, b'\0')
+
+        if len(data) > self._bufsize:
+            raise OverflowError("Device's capabilities insufficent for value '{0}'".format(buf))
+
+        with canvas(self.device) as draw:
+            for x, byte in enumerate(reversed(data)):
+                for y in range(8):
+                    if byte & 0x01:
+                        draw.point((x, y), fill="white")
+                    byte >>= 1

@@ -20,8 +20,8 @@ def get_choices(module_name):
         if hasattr(module, '__all__'):
             return module.__all__
         else:
-            return [name for name, _ in inspect.getmembers(module,
-                                                           inspect.isclass)]
+            return [name for name, _ in inspect.getmembers(module, inspect.isclass)
+                    if name != "device"]
     except ImportError:
         return []
 
