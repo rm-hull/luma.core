@@ -40,6 +40,8 @@ class viewport(mixin.capabilities):
 
     def __init__(self, device, width, height):
         self.capabilities(width, height, rotate=0, mode=device.mode)
+        if hasattr(device, "segment_mapper"):
+            self.segment_mapper = device.segment_mapper
         self._device = device
         self._backing_image = Image.new(self.mode, self.size)
         self._position = (0, 0)
@@ -383,6 +385,8 @@ class history(mixin.capabilities):
     """
     def __init__(self, device):
         self.capabilities(device.width, device.height, rotate=0, mode=device.mode)
+        if hasattr(device, "segment_mapper"):
+            self.segment_mapper = device.segment_mapper
         self._savepoints = []
         self._device = device
         self._last_image = None
