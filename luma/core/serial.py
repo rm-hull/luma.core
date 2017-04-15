@@ -8,6 +8,11 @@ is I²C, SPI or bitbanging GPIO.
 """
 
 import errno
+try:
+    # missing on OSX
+    errno.EREMOTEIO
+except:
+    errno.EREMOTEIO = errno.EIO
 
 import luma.core.error
 
