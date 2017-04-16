@@ -4,13 +4,13 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:class:`luma.core.serial.i2c` class.
+Tests for the :py:class:`luma.core.interface.serial.i2c` class.
 """
 
 import errno
 import pytest
 import smbus2
-from luma.core.serial import i2c
+from luma.core.interface.serial import i2c
 import luma.core.error
 
 from helpers import Mock, patch, call

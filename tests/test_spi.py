@@ -4,12 +4,12 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:class:`luma.core.serial.spi` class.
+Tests for the :py:class:`luma.core.interface.serial.spi` class.
 """
 
 import pytest
 
-from luma.core.serial import spi
+from luma.core.interface.serial import spi
 import luma.core.error
 
 from helpers import Mock, call, get_spidev, rpi_gpio_missing

@@ -4,10 +4,10 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:class:`luma.core.serial.bitbang` class.
+Tests for the :py:class:`luma.core.interface.serial.bitbang` class.
 """
 
-from luma.core.serial import bitbang
+from luma.core.interface.serial import bitbang
 import luma.core.error
 
 import pytest

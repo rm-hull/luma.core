@@ -17,15 +17,15 @@ Luma.Core
 
 .. image:: https://requires.io/github/rm-hull/luma.core/requirements.svg?branch=master
    :target: https://requires.io/github/rm-hull/luma.core/requirements/?branch=master
- 
+
 .. image:: https://img.shields.io/pypi/pyversions/luma.core.svg
    :target: https://pypi.python.org/pypi/luma.core
 
 .. image:: https://img.shields.io/pypi/v/luma.core.svg
    :target: https://pypi.python.org/pypi/luma.core
-   
 
-   
+
+
 .. image:: https://img.shields.io/maintenance/yes/2017.svg?maxAge=2592000
 
 **luma.core** is a component library providing a Pillow-compatible drawing
@@ -41,7 +41,7 @@ single board computers:
 * sprite animation,
 * flexible framebuffering (depending on device capabilities)
 
-Device drivers extend **luma.core** to provide the correct initialization 
+Device drivers extend **luma.core** to provide the correct initialization
 sequences for specific physical display devices/chipsets.
 
 There are several drivers for different classes of device available:
