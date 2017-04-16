@@ -15,7 +15,7 @@ def test_module_deprecated():
         "v1.0.0: use luma.core.interface.serial instead")
 
     with pytest.deprecated_call() as c:
-        import luma.core.serial
+        import luma.core.serial  # noqa: F401
 
         assert str(c.list[0].message) == msg
 
