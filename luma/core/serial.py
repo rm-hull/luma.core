@@ -5,9 +5,14 @@
 """
 Encapsulates sending commands and data over a serial interface, whether that
 is I²C, SPI or bitbanging GPIO.
+
+This module is deprecated and will be removed in luma.core v1.0.0: use
+:py:mod:`luma.core.interface.serial` instead.
 """
 
-from luma.core.interface.serial import i2c, spi, bitbang, noop  # noqa: F401
+from luma.core.util import deprecation
+from luma.core.interface.serial import i2c, spi, bitbang, noop, __all__  # noqa: F401
 
 
-__all__ = ["i2c", "spi", "bitbang"]
+deprecation('luma.core.serial is deprecated and will be removed in v1.0.0: ' +
+    'use luma.core.interface.serial instead')
