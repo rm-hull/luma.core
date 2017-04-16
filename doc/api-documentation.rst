@@ -38,7 +38,7 @@ API Documentation
     :show-inheritance:
 
 :mod:`luma.core.interface.serial`
-"""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""
 .. automodule:: luma.core.interface.serial
     :members:
     :undoc-members:
