@@ -23,7 +23,7 @@ def assert_text(device, term, reference_img, text):
 
         for line in text:
             term.println(line)
-        device.image.save('foo.png')
+
         assert_identical_image(reference, device.image)
 
 
