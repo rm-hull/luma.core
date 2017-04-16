@@ -128,4 +128,3 @@ def test_unsupported_gpio_platform():
         assert str(ex) == 'GPIO access not available'
     except ImportError:
         pytest.skip(rpi_gpio_missing)
-

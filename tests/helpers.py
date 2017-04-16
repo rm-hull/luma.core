@@ -20,6 +20,7 @@ import pytest
 rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
     platform.system())
 
+
 def get_reference_file(fname):
     return os.path.abspath(os.path.join(
         os.path.dirname(__file__),

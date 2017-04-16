@@ -15,13 +15,27 @@ from luma.core.virtual import terminal
 from helpers import get_reference_image
 
 
-def test_wrapped_text():
+def test_default_text():
     img_path = get_reference_image('quick_brown_fox.png')
 
     with open(img_path, 'rb') as p:
         reference = Image.open(p)
         device = dummy()
         term = terminal(device)
+
+        term.println("The quick brown fox jumps over the lazy dog")
+
+        bbox = ImageChops.difference(reference, device.image).getbbox()
+        assert bbox is None
+
+
+def test_wrapped_text():
+    img_path = get_reference_image('quick_brown_fox_word_wrap.png')
+
+    with open(img_path, 'rb') as p:
+        reference = Image.open(p)
+        device = dummy()
+        term = terminal(device, word_wrap=True)
 
         term.println("The quick brown fox jumps over the lazy dog")
 

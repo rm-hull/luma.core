@@ -3,6 +3,7 @@
 # See LICENSE.rst for details.
 
 import time
+from textwrap import wrap
 try:
     monotonic = time.monotonic
 except AttributeError:
@@ -190,13 +191,14 @@ class terminal(object):
     that has :class:`mixin.capabilities` characteristics).
     """
     def __init__(self, device, font=None, color="white", bgcolor="black",
-                 tabstop=4, line_height=None, animate=True):
+                 tabstop=4, line_height=None, animate=True, word_wrap=False):
         self._device = device
         self.font = font or ImageFont.load_default()
         self.default_fgcolor = color
         self.default_bgcolor = bgcolor
         self.animate = animate
         self.tabstop = tabstop
+        self.word_wrap = word_wrap
 
         self._cw, self._ch = (0, 0)
         for i in range(32, 128):
@@ -227,8 +229,14 @@ class terminal(object):
         Prints the supplied text to the device, scrolling where necessary.
         The text is always followed by a newline.
         """
-        self.puts(text)
-        self.newline()
+        if self.word_wrap:
+            text = wrap(text, width=self.width)
+            for line in text:
+                self.puts(line)
+                self.newline()
+        else:
+            self.puts(text)
+            self.newline()
 
     def puts(self, text):
         """
