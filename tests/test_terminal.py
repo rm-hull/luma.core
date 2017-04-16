@@ -15,7 +15,6 @@ from luma.core.virtual import terminal
 from helpers import get_reference_image, assert_identical_image
 
 
-
 def assert_text(device, term, reference_img, text):
     img_path = get_reference_image(reference_img)
 
