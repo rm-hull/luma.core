@@ -23,7 +23,7 @@ def assert_text(device, term, reference_img, text):
 
         for line in text:
             term.println(line)
-
+        device.image.save('foo.png')
         assert_identical_image(reference, device.image)
 
 
@@ -96,6 +96,18 @@ def test_ansi_colors():
     reference = 'ansi_colors.png'
     device = dummy()
     term = terminal(device)
+
+    assert_text(device, term, reference, [
+        "hello \033[31mworld\33[0m",
+        "this is \033[7mreversed\033[7m!",
+        "\033[45;37mYellow\033[0m \033[43;30mMagenta"
+    ])
+
+
+def test_ansi_colors_wrapped():
+    reference = 'ansi_colors_wrapped.png'
+    device = dummy()
+    term = terminal(device, word_wrap=True)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\33[0m",
