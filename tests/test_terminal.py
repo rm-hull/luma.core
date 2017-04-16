@@ -7,12 +7,12 @@
 Tests for the :py:class:`luma.core.virtual.terminal` class.
 """
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 from luma.core.device import dummy
 from luma.core.virtual import terminal
 
-from helpers import get_reference_image
+from helpers import get_reference_image, assert_identical_image
 
 
 def test_default_text():
@@ -25,8 +25,7 @@ def test_default_text():
 
         term.println("The quick brown fox jumps over the lazy dog")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_wrapped_text():
@@ -39,8 +38,7 @@ def test_wrapped_text():
 
         term.println("The quick brown fox jumps over the lazy dog")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_tab_alignment():
@@ -54,8 +52,7 @@ def test_tab_alignment():
         term.println("1\t32\t999")
         term.println("999\t1\t32")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_control_chars():
@@ -68,8 +65,7 @@ def test_control_chars():
 
         term.println('foo\rbar\bspam\teggs\n\nham and cheese on rye')
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_scrolling():
@@ -87,8 +83,7 @@ def test_scrolling():
             "to get out of here while this billing and cooing is on. We'll go down " +
             "to eat vegetables. He said they were demons.")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_alt_colors():
@@ -101,8 +96,7 @@ def test_alt_colors():
 
         term.println("blue on grey")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_ansi_colors():
@@ -117,5 +111,4 @@ def test_ansi_colors():
         term.println("this is \033[7mreversed\033[7m!")
         term.println("\033[45;37mYellow\033[0m \033[43;30mMagenta")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)

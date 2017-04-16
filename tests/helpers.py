@@ -16,6 +16,8 @@ except ImportError:
 
 import pytest
 
+from PIL import ImageChops
+
 
 rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
     platform.system())
@@ -39,3 +41,8 @@ def get_spidev():
     except ImportError:
         pytest.skip('spidev is not supported on this platform: {}'.format(
             platform.system()))
+
+
+def assert_identical_image(reference, target):
+    bbox = ImageChops.difference(reference, target).getbbox()
+    assert bbox is None

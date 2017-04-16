@@ -10,14 +10,14 @@ helpers.
 
 import time
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 from luma.core.device import dummy
 from luma.core.render import canvas
 from luma.core.virtual import range_overlap, hotspot, snapshot, viewport
 
 import baseline_data
-from helpers import get_reference_image
+from helpers import get_reference_image, assert_identical_image
 
 
 def overlap(box1, box2):
@@ -120,8 +120,8 @@ def test_viewport_set_position():
             baseline_data.primitives(virtual, draw)
 
         virtual.set_position((20, 30))
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+
+        assert_identical_image(reference, device.image)
 
 
 def test_viewport_hotspot():
@@ -141,5 +141,4 @@ def test_viewport_hotspot():
         virtual.set_position((28, 30))
         virtual.remove_hotspot(widget, (19, 56))
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)

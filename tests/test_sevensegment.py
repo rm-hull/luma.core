@@ -5,11 +5,11 @@
 
 import pytest
 
-from PIL import Image, ImageChops
+from PIL import Image
 from luma.core.device import dummy
 from luma.core.virtual import sevensegment
 
-from helpers import get_reference_image
+from helpers import get_reference_image, assert_identical_image
 
 _DIGITS = {
     ' ': 0x00,
@@ -126,5 +126,4 @@ def test_setter_getter():
         seg.text = "1.61803398875"
         assert str(seg.text) == "1.61803398875"
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
