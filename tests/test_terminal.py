@@ -15,100 +15,91 @@ from luma.core.virtual import terminal
 from helpers import get_reference_image, assert_identical_image
 
 
-def test_default_text():
-    img_path = get_reference_image('quick_brown_fox.png')
+
+def assert_text(device, term, reference_img, text):
+    img_path = get_reference_image(reference_img)
 
     with open(img_path, 'rb') as p:
         reference = Image.open(p)
-        device = dummy()
-        term = terminal(device)
 
-        term.println("The quick brown fox jumps over the lazy dog")
+        for line in text:
+            term.println(line)
 
         assert_identical_image(reference, device.image)
+
+
+def test_default_text():
+    reference = 'quick_brown_fox.png'
+    device = dummy()
+    term = terminal(device)
+
+    assert_text(device, term, reference, [
+        "The quick brown fox jumps over the lazy dog"
+    ])
 
 
 def test_wrapped_text():
-    img_path = get_reference_image('quick_brown_fox_word_wrap.png')
+    reference = 'quick_brown_fox_word_wrap.png'
+    device = dummy()
+    term = terminal(device, word_wrap=True)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
-        device = dummy()
-        term = terminal(device, word_wrap=True)
-
-        term.println("The quick brown fox jumps over the lazy dog")
-
-        assert_identical_image(reference, device.image)
+    assert_text(device, term, reference, [
+        "The quick brown fox jumps over the lazy dog"
+    ])
 
 
 def test_tab_alignment():
-    img_path = get_reference_image('tab_align.png')
+    reference = 'tab_align.png'
+    device = dummy()
+    term = terminal(device, animate=False)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
-        device = dummy()
-        term = terminal(device, animate=False)
-
-        term.println("1\t32\t999")
-        term.println("999\t1\t32")
-
-        assert_identical_image(reference, device.image)
+    assert_text(device, term, reference, [
+        "1\t32\t999",
+        "999\t1\t32"
+    ])
 
 
 def test_control_chars():
-    img_path = get_reference_image('control_chars.png')
+    reference = 'control_chars.png'
+    device = dummy()
+    term = terminal(device, animate=False)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
-        device = dummy()
-        term = terminal(device, animate=False)
-
-        term.println('foo\rbar\bspam\teggs\n\nham and cheese on rye')
-
-        assert_identical_image(reference, device.image)
+    assert_text(device, term, reference, [
+        'foo\rbar\bspam\teggs\n\nham and cheese on rye'
+    ])
 
 
 def test_scrolling():
-    img_path = get_reference_image('scroll_text.png')
+    reference = 'scroll_text.png'
+    device = dummy()
+    term = terminal(device, animate=False)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
-        device = dummy()
-        term = terminal(device, animate=False)
-
-        term.println(
-            "it oozed over the blackness, and heard Harris's sleepy voice asking " +
-            "where we drew near it, so they spread their handkerchiefs on the back " +
-            "of Harris and Harris's friend as to avoid running down which, we managed " +
-            "to get out of here while this billing and cooing is on. We'll go down " +
-            "to eat vegetables. He said they were demons.")
-
-        assert_identical_image(reference, device.image)
+    assert_text(device, term, reference, [
+        "it oozed over the blackness, and heard Harris's sleepy voice asking " +
+        "where we drew near it, so they spread their handkerchiefs on the back " +
+        "of Harris and Harris's friend as to avoid running down which, we managed " +
+        "to get out of here while this billing and cooing is on. We'll go down " +
+        "to eat vegetables. He said they were demons."
+    ])
 
 
 def test_alt_colors():
-    img_path = get_reference_image('alt_colors.png')
+    reference = 'alt_colors.png'
+    device = dummy()
+    term = terminal(device, color="blue", bgcolor="grey", animate=False)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
-        device = dummy()
-        term = terminal(device, color="blue", bgcolor="grey", animate=False)
-
-        term.println("blue on grey")
-
-        assert_identical_image(reference, device.image)
+    assert_text(device, term, reference, [
+        "blue on grey"
+    ])
 
 
 def test_ansi_colors():
-    img_path = get_reference_image('ansi_colors.png')
+    reference = 'ansi_colors.png'
+    device = dummy()
+    term = terminal(device)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
-        device = dummy()
-        term = terminal(device)
-
-        term.println("hello \033[31mworld\33[0m")
-        term.println("this is \033[7mreversed\033[7m!")
-        term.println("\033[45;37mYellow\033[0m \033[43;30mMagenta")
-
-        assert_identical_image(reference, device.image)
+    assert_text(device, term, reference, [
+        "hello \033[31mworld\33[0m",
+        "this is \033[7mreversed\033[7m!",
+        "\033[45;37mYellow\033[0m \033[43;30mMagenta"
+    ])
