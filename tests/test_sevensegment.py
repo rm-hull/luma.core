@@ -5,11 +5,11 @@
 
 import pytest
 
-from PIL import Image, ImageChops
+from PIL import Image
 from luma.core.device import dummy
 from luma.core.virtual import sevensegment
 
-from helpers import get_reference_image
+from helpers import get_reference_image, assert_identical_image
 
 _DIGITS = {
     ' ': 0x00,
@@ -113,7 +113,7 @@ def test_overflow():
     seg = sevensegment(device, segment_mapper=dot_muncher)
     with pytest.raises(OverflowError) as ex:
         seg.text = "This is too big to fit in 3x8 seven-segment displays"
-    assert str(ex.value) == "Device's capabilities insufficent for value 'This is too big to fit in 3x8 seven-segment displays'"
+    assert str(ex.value) == "Device's capabilities insufficient for value 'This is too big to fit in 3x8 seven-segment displays'"
 
 
 def test_setter_getter():
@@ -126,5 +126,4 @@ def test_setter_getter():
         seg.text = "1.61803398875"
         assert str(seg.text) == "1.61803398875"
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)

@@ -7,7 +7,7 @@ API Documentation
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
 :mod:`luma.core.const`
 """"""""""""""""""""""
 .. automodule:: luma.core.const
@@ -33,6 +33,13 @@ API Documentation
 :mod:`luma.core.framebuffer`
 """"""""""""""""""""""""""""
 .. automodule:: luma.core.framebuffer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`luma.core.interface.serial`
+"""""""""""""""""""""""""""""""""
+.. automodule:: luma.core.interface.serial
     :members:
     :undoc-members:
     :show-inheritance:

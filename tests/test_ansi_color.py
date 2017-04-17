@@ -8,11 +8,12 @@ Tests for the :py:mod:`luma.core.ansi_color` module.
 """
 
 import pytest
-from luma.core.ansi_color import parse_str
+
+from luma.core import ansi_color
 
 
 def test_parse_str_no_escape():
-    gen = parse_str("hello world")
+    gen = ansi_color.parse_str("hello world")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
     assert next(gen) == ["putch", "l"]
@@ -30,7 +31,7 @@ def test_parse_str_no_escape():
 
 
 def test_parse_str_valid_ansi_colors():
-    gen = parse_str("hello \033[31mworld\33[0m")
+    gen = ansi_color.parse_str("hello \033[31mworld\33[0m")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
     assert next(gen) == ["putch", "l"]
@@ -50,7 +51,7 @@ def test_parse_str_valid_ansi_colors():
 
 
 def test_parse_str_multiple_ansi_colors():
-    gen = parse_str("hello \033[32;46mworld\33[7;0m")
+    gen = ansi_color.parse_str("hello \033[32;46mworld\33[7;0m")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
     assert next(gen) == ["putch", "l"]
@@ -72,7 +73,7 @@ def test_parse_str_multiple_ansi_colors():
 
 
 def test_parse_str_unknown_ansi_colors_ignored():
-    gen = parse_str("hello \033[27mworld")
+    gen = ansi_color.parse_str("hello \033[27mworld")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
     assert next(gen) == ["putch", "l"]
@@ -87,3 +88,8 @@ def test_parse_str_unknown_ansi_colors_ignored():
 
     with pytest.raises(StopIteration):
         next(gen)
+
+
+def test_strip_ansi_codes():
+    gen = ansi_color.strip_ansi_codes("hello \033[27mworld")
+    assert gen == "hello world"

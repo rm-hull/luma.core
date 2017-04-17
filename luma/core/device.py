@@ -4,9 +4,9 @@
 
 import atexit
 
-from luma.core.serial import i2c, noop
 from luma.core import mixin
 import luma.core.const
+from luma.core.interface.serial import i2c, noop
 
 
 class device(mixin.capabilities):

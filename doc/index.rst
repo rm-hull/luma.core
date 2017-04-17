@@ -8,7 +8,7 @@ Luma.Core
 
 .. image:: https://requires.io/github/rm-hull/luma.core/requirements.svg?branch=master
    :target: https://requires.io/github/rm-hull/luma.core/requirements/?branch=master
-  
+
 .. image:: https://img.shields.io/maintenance/yes/2017.svg?maxAge=2592000
 
 .. image:: https://img.shields.io/pypi/pyversions/luma.core.svg

@@ -10,7 +10,7 @@ Tests for the :py:mod:`luma.core.cmdline` module.
 import sys
 
 from luma.core import cmdline
-from luma.core.serial import __all__ as iface_types
+from luma.core.interface.serial import __all__ as iface_types
 
 from helpers import get_reference_file, patch, Mock
 

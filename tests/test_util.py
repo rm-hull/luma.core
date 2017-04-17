@@ -30,3 +30,11 @@ def test_deprecation():
     with pytest.deprecated_call() as c:
         d = DeprecatedClass()
         assert str(c.list[0].message) == d.msg
+
+
+def test_mutablestring():
+    f = util.mutable_string('bar')
+    f[1] = '2'
+    assert f == 'b2r'
+    assert repr(f) == "'b2r'"
+    assert len(f) == 3

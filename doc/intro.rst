@@ -13,7 +13,7 @@ single board computers:
 * sprite animation,
 * flexible framebuffering (depending on device capabilities)
 
-Device drivers extend **luma.core** to provide the correct initialization 
+Device drivers extend **luma.core** to provide the correct initialization
 sequences for specific physical display devices/chipsets.
 
 There are several drivers for different classes of device available:

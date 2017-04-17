@@ -4,13 +4,16 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:class:`luma.core.serial.bitbang` class.
+Tests for the :py:class:`luma.core.interface.serial.bitbang` class.
 """
 
-from luma.core.serial import bitbang
+from luma.core.interface.serial import bitbang
 import luma.core.error
 
-from helpers import Mock, call
+import pytest
+
+from helpers import Mock, call, rpi_gpio_missing
+
 
 gpio = Mock(unsafe=True)
 
@@ -60,3 +63,5 @@ def test_unsupported_gpio_platform():
         bitbang()
     except luma.core.error.UnsupportedPlatform as ex:
         assert str(ex) == 'GPIO access not available'
+    except ImportError:
+        pytest.skip(rpi_gpio_missing)

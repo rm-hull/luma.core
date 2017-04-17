@@ -4,14 +4,15 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:class:`luma.core.serial.spi` class.
+Tests for the :py:class:`luma.core.interface.serial.spi` class.
 """
 
 import pytest
-from luma.core.serial import spi
+
+from luma.core.interface.serial import spi
 import luma.core.error
 
-from helpers import Mock, call
+from helpers import Mock, call, get_spidev, rpi_gpio_missing
 
 
 spidev = Mock(unsafe=True)
@@ -113,7 +114,7 @@ def test_cleanup():
 
 
 def test_init_device_not_found():
-    import spidev
+    spidev = get_spidev()
     port = 1234
     with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
         spi(gpio=gpio, spi=spidev.SpiDev(), port=port)
@@ -125,3 +126,5 @@ def test_unsupported_gpio_platform():
         spi(spi=spidev, port=9, device=1)
     except luma.core.error.UnsupportedPlatform as ex:
         assert str(ex) == 'GPIO access not available'
+    except ImportError:
+        pytest.skip(rpi_gpio_missing)

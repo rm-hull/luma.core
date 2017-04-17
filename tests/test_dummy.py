@@ -7,13 +7,13 @@
 Tests for the :py:class:`luma.core.device.dummy` class.
 """
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 from luma.core.render import canvas
 from luma.core.device import dummy
 
 import baseline_data
-from helpers import get_reference_image
+from helpers import get_reference_image, assert_identical_image
 
 
 def test_capture_noops():
@@ -39,8 +39,7 @@ def test_portrait():
         with canvas(device) as draw:
             baseline_data.primitives(device, draw)
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)
 
 
 def test_dither():
@@ -56,5 +55,4 @@ def test_dither():
             draw.rectangle((0, 32, 64, 64), fill="blue")
             draw.rectangle((64, 32, 128, 64), fill="white")
 
-        bbox = ImageChops.difference(reference, device.image).getbbox()
-        assert bbox is None
+        assert_identical_image(reference, device.image)

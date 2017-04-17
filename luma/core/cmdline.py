@@ -41,7 +41,7 @@ def get_interface_types():
 
     :rtype: list
     """
-    return get_choices('luma.core.serial')
+    return get_choices('luma.core.interface.serial')
 
 
 def get_display_types():
@@ -93,11 +93,11 @@ class make_serial(object):
         self.gpio = gpio
 
     def i2c(self):
-        from luma.core.serial import i2c
+        from luma.core.interface.serial import i2c
         return i2c(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
     def spi(self):
-        from luma.core.serial import spi
+        from luma.core.interface.serial import spi
 
         if self.opts.gpio is not None:
             GPIO = importlib.import_module(self.opts.gpio)

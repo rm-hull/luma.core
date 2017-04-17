@@ -62,7 +62,7 @@ class capabilities(object):
 
     def display(self, image):
         """
-        Should be overridden in subclassed implementations.
+        Should be overridden in sub-classed implementations.
 
         :param image: An image to display
         :type image: PIL.Image.Image

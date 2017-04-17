@@ -3,6 +3,7 @@
 # See LICENSE.rst for details.
 
 import time
+from textwrap import TextWrapper
 try:
     monotonic = time.monotonic
 except AttributeError:
@@ -61,7 +62,8 @@ class viewport(mixin.capabilities):
     def add_hotspot(self, hotspot, xy):
         """
         Add the hotspot at (x, y). The hotspot must fit inside the bounds
-        of the virtual device. If it does not then an AssertError is raised.
+        of the virtual device. If it does not then an ``AssertError`` is
+        raised.
         """
         (x, y) = xy
         assert(0 <= x <= self.width - hotspot.width)
@@ -76,7 +78,7 @@ class viewport(mixin.capabilities):
         Remove the hotspot at (x, y): Any previously rendered image where the
         hotspot was placed is erased from the backing image, and will be
         "undrawn" the next time the virtual device is refreshed. If the
-        specified hotspot is not found (x, y), a ValueError is raised.
+        specified hotspot is not found (x, y), a ``ValueError`` is raised.
         """
         self._hotspots.remove((hotspot, xy))
         eraser = Image.new(self.mode, hotspot.size)
@@ -128,9 +130,9 @@ class hotspot(mixin.capabilities):
     You would either:
 
         * create a ``hotspot`` instance, suppling a render function (taking an
-          :py:mod:`PIL.ImageDraw` object, ``width`` & ``height`` dimensions. The
-          render function should draw within a bounding box of (0, 0, width,
-          height), and render a full frame.
+          :py:mod:`PIL.ImageDraw` object, ``width`` & ``height`` dimensions.
+          The render function should draw within a bounding box of ``(0, 0,
+          width, height)``, and render a full frame.
 
         * sub-class ``hotspot`` and override the :func:``should_redraw`` and
           :func:`update` methods. This might be more useful for slow-changing
@@ -190,13 +192,14 @@ class terminal(object):
     that has :class:`mixin.capabilities` characteristics).
     """
     def __init__(self, device, font=None, color="white", bgcolor="black",
-                 tabstop=4, line_height=None, animate=True):
+                 tabstop=4, line_height=None, animate=True, word_wrap=False):
         self._device = device
         self.font = font or ImageFont.load_default()
         self.default_fgcolor = color
         self.default_bgcolor = bgcolor
         self.animate = animate
         self.tabstop = tabstop
+        self.word_wrap = word_wrap
 
         self._cw, self._ch = (0, 0)
         for i in range(32, 128):
@@ -209,13 +212,22 @@ class terminal(object):
         self.height = device.height // self._ch
         self.size = (self.width, self.height)
         self.reset()
-        self._backing_image = Image.new(self._device.mode, self._device.size, self._bgcolor)
+        self._backing_image = Image.new(self._device.mode, self._device.size,
+            self._bgcolor)
         self._canvas = ImageDraw.Draw(self._backing_image)
         self.clear()
 
+        if self.word_wrap:
+            self.tw = TextWrapper()
+            self.tw.width = self.width
+            self.tw.expand_tabs = False
+            self.tw.replace_whitespace = False
+            self.tw.drop_whitespace = False
+            self.tw.break_long_words = True
+
     def clear(self):
         """
-        Clears the display and resets the cursor position to (0, 0).
+        Clears the display and resets the cursor position to ``(0, 0)``.
         """
         self._cx, self._cy = (0, 0)
         self._canvas.rectangle(self._device.bounding_box,
@@ -226,9 +238,36 @@ class terminal(object):
         """
         Prints the supplied text to the device, scrolling where necessary.
         The text is always followed by a newline.
+
+        :type text: str
         """
-        self.puts(text)
-        self.newline()
+        if self.word_wrap:
+            # find directives in complete text
+            directives = ansi_color.find_directives(text, self)
+
+            # strip ansi from text
+            clean_text = ansi_color.strip_ansi_codes(text)
+
+            # wrap clean text
+            clean_lines = self.tw.wrap(clean_text)
+
+            # print wrapped text
+            index = 0
+            for line in clean_lines:
+                line_length = len(line)
+                y = 0
+                while y < line_length:
+                    directive = directives[index]
+                    method = directive[0]
+                    args = directive[1]
+                    if method == self.putch:
+                        y += 1
+                    method(*args)
+                    index += 1
+                self.newline()
+        else:
+            self.puts(text)
+            self.newline()
 
     def puts(self, text):
         """
@@ -238,10 +277,10 @@ class terminal(object):
 
         If the ``animate`` flag was set to True (default), then each character
         is flushed to the device, giving the effect of 1970's teletype device.
+
+        :type text: str
         """
-        for directive in ansi_color.parse_str(text):
-            method = self.__getattribute__(directive[0])
-            args = directive[1:]
+        for method, args in ansi_color.find_directives(text, self):
             method(*args)
 
     def putch(self, char):
@@ -304,10 +343,11 @@ class terminal(object):
 
         if self._cy + (2 * self._ch) >= self._device.height:
             # Simulate a vertical scroll
-            copy = self._backing_image.crop((0, self._ch, self._device.width, self._device.height))
+            copy = self._backing_image.crop((0, self._ch, self._device.width,
+                self._device.height))
             self._backing_image.paste(copy, (0, 0))
-            self._canvas.rectangle((0, copy.height, self._device.width, self._device.height),
-                                   fill=self._bgcolor)
+            self._canvas.rectangle((0, copy.height, self._device.width,
+                self._device.height), fill=self._bgcolor)
         else:
             self._cy += self._ch
 
@@ -318,7 +358,7 @@ class terminal(object):
     def backspace(self):
         """
         Moves the cursor one place to the left, erasing the character at the
-        current position. Cannot move beyound column zero, nor onto the
+        current position. Cannot move beyond column zero, nor onto the
         previous line
         """
         if self._cx + self._cw >= 0:
@@ -329,7 +369,7 @@ class terminal(object):
 
     def erase(self):
         """
-        Erase the contents of the cursor's current postion without moving the
+        Erase the contents of the cursor's current position without moving the
         cursor's position.
         """
         bounds = (self._cx, self._cy, self._cx + self._cw, self._cy + self._ch)
@@ -362,14 +402,14 @@ class terminal(object):
     def reset(self):
         """
         Resets the foreground and background color value back to the original
-        when initialised.
+        when initialised
         """
         self._fgcolor = self.default_fgcolor
         self._bgcolor = self.default_bgcolor
 
     def reverse_colors(self):
         """
-        Flips the foreground and ackground colors
+        Flips the foreground and background colors
         """
         self._bgcolor, self._fgcolor = self._fgcolor, self._bgcolor
 
@@ -384,7 +424,8 @@ class history(mixin.capabilities):
     display.
     """
     def __init__(self, device):
-        self.capabilities(device.width, device.height, rotate=0, mode=device.mode)
+        self.capabilities(device.width, device.height, rotate=0,
+            mode=device.mode)
         if hasattr(device, "segment_mapper"):
             self.segment_mapper = device.segment_mapper
         self._savepoints = []
@@ -428,7 +469,7 @@ class sevensegment(object):
     """
     Abstraction that wraps a device, this class provides a ``text`` property
     which can be used to set and get a text value, which when combined with a
-    ``segment_mapper`` sets the corect bit representation for seven-segment
+    ``segment_mapper`` sets the correct bit representation for seven-segment
     displays and propagates that onto the underlying device.
 
     :param device: A device instance
@@ -467,13 +508,17 @@ class sevensegment(object):
             character supplied in the constructor.
         :type value: string
         """
-        self._text_buffer = observable(mutable_string(value), observer=self._flush)
+        self._text_buffer = observable(mutable_string(value),
+            observer=self._flush)
 
     def _flush(self, buf):
-        data = bytearray(self.segment_mapper(buf, notfound=self.undefined)).ljust(self._bufsize, b'\0')
+        data = bytearray(self.segment_mapper(buf, notfound=self.undefined)
+            ).ljust(self._bufsize, b'\0')
 
         if len(data) > self._bufsize:
-            raise OverflowError("Device's capabilities insufficent for value '{0}'".format(buf))
+            raise OverflowError(
+                "Device's capabilities insufficient for value '{0}'".format(
+                buf))
 
         with canvas(self.device) as draw:
             for x, byte in enumerate(reversed(data)):
