@@ -4,7 +4,7 @@
 
 """
 Encapsulates sending commands and data over a serial interface, whether that
-is I²C, SPI or bitbanging GPIO.
+is I²C, SPI or bit-banging GPIO.
 
 This module is deprecated and will be removed in luma.core v1.0.0: use
 :py:mod:`luma.core.interface.serial` instead.

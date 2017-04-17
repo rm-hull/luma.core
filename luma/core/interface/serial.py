@@ -4,7 +4,7 @@
 
 """
 Encapsulates sending commands and data over a serial interface, whether that
-is I²C, SPI or bitbanging GPIO.
+is I²C, SPI or bit-banging GPIO.
 """
 
 import errno
@@ -131,10 +131,10 @@ class bitbang(object):
     unless there is a good reason!
 
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that dont need reset or D/C functionality, supply a :py:class:`noop`
+        For slaves that don't need reset or D/C functionality, supply a :py:class:`noop`
         implementation instead.
     :param transfer_size: Max bytes to transfer in one go. Some implementations
-        only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
+        only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
     :param SCLK The GPIO pin to connect the SPI clock to.
@@ -242,7 +242,7 @@ class spi(bitbang):
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz
     :type device: int
     :param transfer_size: Max bytes to transfer in one go. Some implementations
-        only support maxium of 64 or 128 bytes, whereas RPi/py-spidev supports
+        only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
     :param gpio_DC: The GPIO pin to connect data/command select (DC) to (defaults to 24).

@@ -98,8 +98,8 @@ class spritesheet(object):
         :type frame_index: int
         :returns: A Pillow image cropped from the main image corresponding to
             the given frame index.
-        :raises TypeError: if the frame_index is not numeric
-        :raises IndexError: if the frame_index is less than zero or more
+        :raises TypeError: if the ``frame_index`` is not numeric
+        :raises IndexError: if the ``frame_index`` is less than zero or more
             than the largest frame.
         """
 
@@ -173,7 +173,7 @@ class framerate_regulator(object):
 
     :param fps: The desired frame rate, expressed numerically in
         frames-per-second.  By default, this is set at 16.67, to give a frame
-        render time of approximately 60ms. This can be overriden as necessary,
+        render time of approximately 60ms. This can be overridden as necessary,
         and if no FPS limiting is required, the ``fps`` can be set to zero.
     :type fps: float
     """

@@ -13,14 +13,14 @@ class diff_to_previous(object):
     """
     Compare the current frame to the previous frame and tries to calculate the
     differences: this will either be ``None`` for a perfect match or some
-    bounding box describing the areas that are different, upto the size of the
+    bounding box describing the areas that are different, up to the size of the
     entire image.
 
     The image data for the difference is then be passed to a device for
     rendering just those small changes. This can be very quick for small screen
     updates, but suffers from variable render times, depending on the changes
     applied. The :py:class`luma.core.sprite_system.framerate_regulator` may be
-    used to counteract this behviour however.
+    used to counteract this behavior however.
 
     :param device: the target device, used to determine the initial 'previous'
         image.
@@ -53,7 +53,7 @@ class diff_to_previous(object):
         Realign the left and right edges of the bounding box such that they are
         inflated to align modulo 4.
 
-        This method is optional, and used mainly to accomodate devices with
+        This method is optional, and used mainly to accommodate devices with
         COM/SEG GDDRAM structures that store pixels in 4-bit nibbles.
         """
         left, top, right, bottom = self.bounding_box
@@ -85,7 +85,7 @@ class full_frame(object):
     Not all display drivers may be able to use the differencing framebuffer, so
     this is provided as a drop-in replacement.
 
-    :param device: the target device, used to determine the bounding box.
+    :param device: The target device, used to determine the bounding box.
     :type device: luma.core.device.device
     """
     def __init__(self, device):
