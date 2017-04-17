@@ -238,10 +238,32 @@ class terminal(object):
         """
         Prints the supplied text to the device, scrolling where necessary.
         The text is always followed by a newline.
+
+        :type text: str
         """
         if self.word_wrap:
-            for line in self.tw.wrap(text):
-                self.puts(line)
+            # find directives in complete text
+            directives = ansi_color.find_directives(text, self)
+
+            # strip ansi from text
+            clean_text = ansi_color.strip_ansi_codes(text)
+
+            # wrap clean text
+            clean_lines = self.tw.wrap(clean_text)
+
+            # print wrapped text
+            index = 0
+            for line in clean_lines:
+                line_length = len(line)
+                y = 0
+                while y < line_length:
+                    directive = directives[index]
+                    method = directive[0]
+                    args = directive[1]
+                    if method == self.putch:
+                        y += 1
+                    method(*args)
+                    index += 1
                 self.newline()
         else:
             self.puts(text)
@@ -255,10 +277,10 @@ class terminal(object):
 
         If the ``animate`` flag was set to True (default), then each character
         is flushed to the device, giving the effect of 1970's teletype device.
+
+        :type text: str
         """
-        for directive in ansi_color.parse_str(text):
-            method = self.__getattribute__(directive[0])
-            args = directive[1:]
+        for method, args in ansi_color.find_directives(text, self):
             method(*args)
 
     def putch(self, char):
