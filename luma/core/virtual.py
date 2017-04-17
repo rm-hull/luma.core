@@ -201,13 +201,6 @@ class terminal(object):
         self.tabstop = tabstop
         self.word_wrap = word_wrap
 
-        if self.word_wrap:
-            self.tw = TextWrapper()
-            self.tw.expand_tabs = False
-            self.tw.replace_whitespace = False
-            self.tw.drop_whitespace = False
-            self.tw.break_long_words = True
-
         self._cw, self._ch = (0, 0)
         for i in range(32, 128):
             w, h = self.font.getsize(chr(i))
@@ -224,6 +217,14 @@ class terminal(object):
         self._canvas = ImageDraw.Draw(self._backing_image)
         self.clear()
 
+        if self.word_wrap:
+            self.tw = TextWrapper()
+            self.tw.width = self.width
+            self.tw.expand_tabs = False
+            self.tw.replace_whitespace = False
+            self.tw.drop_whitespace = False
+            self.tw.break_long_words = True
+
     def clear(self):
         """
         Clears the display and resets the cursor position to ``(0, 0)``.
@@ -239,7 +240,6 @@ class terminal(object):
         The text is always followed by a newline.
         """
         if self.word_wrap:
-            self.tw.width = self.width
             for line in self.tw.wrap(text):
                 self.puts(line)
                 self.newline()
