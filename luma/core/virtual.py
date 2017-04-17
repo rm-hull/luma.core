@@ -130,9 +130,9 @@ class hotspot(mixin.capabilities):
     You would either:
 
         * create a ``hotspot`` instance, suppling a render function (taking an
-          :py:mod:`PIL.ImageDraw` object, ``width`` & ``height`` dimensions. The
-          render function should draw within a bounding box of (0, 0, width,
-          height), and render a full frame.
+          :py:mod:`PIL.ImageDraw` object, ``width`` & ``height`` dimensions.
+          The render function should draw within a bounding box of ``(0, 0,
+          width, height)``, and render a full frame.
 
         * sub-class ``hotspot`` and override the :func:``should_redraw`` and
           :func:`update` methods. This might be more useful for slow-changing
@@ -219,7 +219,8 @@ class terminal(object):
         self.height = device.height // self._ch
         self.size = (self.width, self.height)
         self.reset()
-        self._backing_image = Image.new(self._device.mode, self._device.size, self._bgcolor)
+        self._backing_image = Image.new(self._device.mode, self._device.size,
+            self._bgcolor)
         self._canvas = ImageDraw.Draw(self._backing_image)
         self.clear()
 
@@ -320,10 +321,11 @@ class terminal(object):
 
         if self._cy + (2 * self._ch) >= self._device.height:
             # Simulate a vertical scroll
-            copy = self._backing_image.crop((0, self._ch, self._device.width, self._device.height))
+            copy = self._backing_image.crop((0, self._ch, self._device.width,
+                self._device.height))
             self._backing_image.paste(copy, (0, 0))
-            self._canvas.rectangle((0, copy.height, self._device.width, self._device.height),
-                                   fill=self._bgcolor)
+            self._canvas.rectangle((0, copy.height, self._device.width,
+                self._device.height), fill=self._bgcolor)
         else:
             self._cy += self._ch
 
@@ -400,7 +402,8 @@ class history(mixin.capabilities):
     display.
     """
     def __init__(self, device):
-        self.capabilities(device.width, device.height, rotate=0, mode=device.mode)
+        self.capabilities(device.width, device.height, rotate=0,
+            mode=device.mode)
         if hasattr(device, "segment_mapper"):
             self.segment_mapper = device.segment_mapper
         self._savepoints = []
@@ -483,13 +486,17 @@ class sevensegment(object):
             character supplied in the constructor.
         :type value: string
         """
-        self._text_buffer = observable(mutable_string(value), observer=self._flush)
+        self._text_buffer = observable(mutable_string(value),
+            observer=self._flush)
 
     def _flush(self, buf):
-        data = bytearray(self.segment_mapper(buf, notfound=self.undefined)).ljust(self._bufsize, b'\0')
+        data = bytearray(self.segment_mapper(buf, notfound=self.undefined)
+            ).ljust(self._bufsize, b'\0')
 
         if len(data) > self._bufsize:
-            raise OverflowError("Device's capabilities insufficient for value '{0}'".format(buf))
+            raise OverflowError(
+                "Device's capabilities insufficient for value '{0}'".format(
+                buf))
 
         with canvas(self.device) as draw:
             for x, byte in enumerate(reversed(data)):
