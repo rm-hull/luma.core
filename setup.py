@@ -37,7 +37,7 @@ setup(
     url="https://github.com/rm-hull/luma.core",
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     namespace_packages=["luma"],
-    packages=["luma.core", "luma.core.legacy"],
+    packages=["luma.core", "luma.core.legacy", "luma.core.interface"],
     install_requires=[
         'pillow>=4.0.0',
         'smbus2',
