@@ -54,8 +54,8 @@ class mutable_string(object):
 class observable(object):
     """
     Wraps any container object such that on inserting, updating or deleting,
-    an observer is notified with a payload of the target. All other special name
-    methods are passed through parameters unhindered.
+    an observer is notified with a payload of the target. All other special
+    name methods are passed through parameters unhindered.
     """
     def __init__(self, target, observer):
         self.target = target
