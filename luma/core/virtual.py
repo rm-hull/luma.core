@@ -62,7 +62,8 @@ class viewport(mixin.capabilities):
     def add_hotspot(self, hotspot, xy):
         """
         Add the hotspot at (x, y). The hotspot must fit inside the bounds
-        of the virtual device. If it does not then an AssertError is raised.
+        of the virtual device. If it does not then an ``AssertError`` is
+        raised.
         """
         (x, y) = xy
         assert(0 <= x <= self.width - hotspot.width)
@@ -77,7 +78,7 @@ class viewport(mixin.capabilities):
         Remove the hotspot at (x, y): Any previously rendered image where the
         hotspot was placed is erased from the backing image, and will be
         "undrawn" the next time the virtual device is refreshed. If the
-        specified hotspot is not found (x, y), a ValueError is raised.
+        specified hotspot is not found (x, y), a ``ValueError`` is raised.
         """
         self._hotspots.remove((hotspot, xy))
         eraser = Image.new(self.mode, hotspot.size)
@@ -224,7 +225,7 @@ class terminal(object):
 
     def clear(self):
         """
-        Clears the display and resets the cursor position to (0, 0).
+        Clears the display and resets the cursor position to ``(0, 0)``.
         """
         self._cx, self._cy = (0, 0)
         self._canvas.rectangle(self._device.bounding_box,
@@ -333,7 +334,7 @@ class terminal(object):
     def backspace(self):
         """
         Moves the cursor one place to the left, erasing the character at the
-        current position. Cannot move beyound column zero, nor onto the
+        current position. Cannot move beyond column zero, nor onto the
         previous line
         """
         if self._cx + self._cw >= 0:
@@ -344,7 +345,7 @@ class terminal(object):
 
     def erase(self):
         """
-        Erase the contents of the cursor's current postion without moving the
+        Erase the contents of the cursor's current position without moving the
         cursor's position.
         """
         bounds = (self._cx, self._cy, self._cx + self._cw, self._cy + self._ch)
@@ -377,14 +378,14 @@ class terminal(object):
     def reset(self):
         """
         Resets the foreground and background color value back to the original
-        when initialised.
+        when initialised
         """
         self._fgcolor = self.default_fgcolor
         self._bgcolor = self.default_bgcolor
 
     def reverse_colors(self):
         """
-        Flips the foreground and ackground colors
+        Flips the foreground and background colors
         """
         self._bgcolor, self._fgcolor = self._fgcolor, self._bgcolor
 
@@ -443,7 +444,7 @@ class sevensegment(object):
     """
     Abstraction that wraps a device, this class provides a ``text`` property
     which can be used to set and get a text value, which when combined with a
-    ``segment_mapper`` sets the corect bit representation for seven-segment
+    ``segment_mapper`` sets the correct bit representation for seven-segment
     displays and propagates that onto the underlying device.
 
     :param device: A device instance
@@ -488,7 +489,7 @@ class sevensegment(object):
         data = bytearray(self.segment_mapper(buf, notfound=self.undefined)).ljust(self._bufsize, b'\0')
 
         if len(data) > self._bufsize:
-            raise OverflowError("Device's capabilities insufficent for value '{0}'".format(buf))
+            raise OverflowError("Device's capabilities insufficient for value '{0}'".format(buf))
 
         with canvas(self.device) as draw:
             for x, byte in enumerate(reversed(data)):
