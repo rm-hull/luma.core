@@ -38,7 +38,8 @@ def test_get_display_types():
 
 def test_get_choices_unknown_module():
     """
-    get_choices returns an empty list when trying to inspect an unknown module.
+    :py:func:`luma.core.cmdline.get_choices` returns an empty list when
+    trying to inspect an unknown module.
     """
     result = cmdline.get_choices('foo')
     assert result == []
@@ -46,7 +47,8 @@ def test_get_choices_unknown_module():
 
 def test_load_config_file_parse():
     """
-    load_config parses a text file and returns a list of arguments.
+    :py:func:`luma.core.cmdline.load_config` parses a text file and returns a
+    list of arguments.
     """
     result = cmdline.load_config(test_config_file)
     assert result == [
@@ -59,7 +61,8 @@ def test_load_config_file_parse():
 
 def test_create_parser():
     """
-    create_parser returns an argument parser instance.
+    :py:func:`luma.core.cmdline.create_parser` returns an argument parser
+    instance.
     """
     sys.modules['luma.emulator'] = Mock()
     sys.modules['luma.emulator.render'] = Mock()
@@ -76,6 +79,9 @@ def test_create_parser():
 
 
 def test_make_serial_i2c():
+    """
+    :py:func:`luma.core.cmdline.make_serial.i2c` returns an I2C instance.
+    """
     class opts:
         i2c_port = 200
         i2c_address = 0x710
@@ -88,3 +94,20 @@ def test_make_serial_i2c():
         with pytest.raises(error.DeviceNotFoundError) as ex:
             factory.i2c()
         assert str(ex.value) == 'I2C device not found: {}'.format(path_name)
+
+
+def test_make_serial_spi():
+    """
+    :py:func:`luma.core.cmdline.make_serial.spi` returns an SPI instance.
+    """
+    class opts:
+        spi_port = 0
+        spi_device = 0
+        spi_bus_speed = 8000000
+        gpio_data_command = 24
+        gpio_reset = 25
+        gpio_backlight = 18
+
+    factory = cmdline.make_serial(opts)
+    with pytest.raises(error.UnsupportedPlatform):
+        factory.spi()

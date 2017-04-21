@@ -99,7 +99,7 @@ class make_serial(object):
     def spi(self):
         from luma.core.interface.serial import spi
 
-        if self.opts.gpio is not None:
+        if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
             GPIO = importlib.import_module(self.opts.gpio)
             GPIO.setmode(GPIO.BCM)
             atexit.register(GPIO.cleanup)
