@@ -100,7 +100,7 @@ def test_ansi_colors():
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors here!",
         "this is \033[7mreversed\033[7m!",
-        "\033[45;37mYellow\033[0m \033[43;30mMagenta"
+        "\033[44;37mBlue\033[0m \033[46;30mCyan"
     ])
 
 
@@ -112,7 +112,7 @@ def test_ansi_colors_wrapped():
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors\t\033[32mwrap\033[0m\t?",
         "this is \033[7mreversed\033[7m!",
-        "\033[45;37mYellow\033[0m \033[43;30mMagenta"
+        "\033[43;30mYellow\033[0m \033[45;37mMagenta"
     ])
 
 
