@@ -347,7 +347,7 @@ class terminal(object):
                 self._device.height))
             self._backing_image.paste(copy, (0, 0))
             self._canvas.rectangle((0, copy.height, self._device.width,
-                self._device.height), fill=self._bgcolor)
+                self._device.height), fill=self.default_bgcolor)
         else:
             self._cy += self._ch
 
