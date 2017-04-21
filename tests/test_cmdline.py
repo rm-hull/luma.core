@@ -91,9 +91,8 @@ def test_make_serial_i2c():
     factory = cmdline.make_serial(opts)
 
     with patch('os.open', fake_open):
-        with pytest.raises(error.DeviceNotFoundError) as ex:
+        with pytest.raises(error.DeviceNotFoundError):
             factory.i2c()
-        assert str(ex.value) == 'I2C device not found: {}'.format(path_name)
 
 
 def test_make_serial_spi():
@@ -110,4 +109,25 @@ def test_make_serial_spi():
 
     factory = cmdline.make_serial(opts)
     with pytest.raises(error.UnsupportedPlatform):
+        factory.spi()
+
+
+def test_make_serial_spi_alt_gpio():
+    """
+    :py:func:`luma.core.cmdline.make_serial.spi` returns an SPI instance
+    when using an alternative GPIO implementation.
+    """
+    class opts:
+        spi_port = 0
+        spi_device = 0
+        spi_bus_speed = 8000000
+        gpio_data_command = 24
+        gpio_reset = 25
+        gpio_backlight = 18
+        gpio = 'fake_gpio'
+
+    gpio = Mock(unsafe=True)
+    sys.modules['fake_gpio'] = gpio
+    factory = cmdline.make_serial(opts)
+    with pytest.raises(error.DeviceNotFoundError):
         factory.spi()
