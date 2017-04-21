@@ -6,7 +6,7 @@ import time
 from textwrap import TextWrapper
 try:
     monotonic = time.monotonic
-except AttributeError:
+except AttributeError:  # pragma: no cover
     from monotonic import monotonic
 
 from PIL import Image, ImageDraw, ImageFont
@@ -257,9 +257,7 @@ class terminal(object):
                 line_length = len(line)
                 y = 0
                 while y < line_length:
-                    directive = directives[index]
-                    method = directive[0]
-                    args = directive[1]
+                    method, args = directives[index]
                     if method == self.putch:
                         y += 1
                     method(*args)

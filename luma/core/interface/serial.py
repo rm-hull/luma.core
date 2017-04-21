@@ -11,7 +11,7 @@ import errno
 try:
     # missing on OSX
     errno.EREMOTEIO
-except:
+except:  # pragma: no cover
     errno.EREMOTEIO = errno.EIO
 
 import luma.core.error
@@ -159,11 +159,11 @@ class bitbang(object):
         self._CE = self._configure(kwargs.get("CE"))
         self._DC = self._configure(kwargs.get("DC"))
         self._RST = self._configure(kwargs.get("RST"))
-        self._cmd_mode = self._gpio.LOW     # Command mode = Hold low
-        self._data_mode = self._gpio.HIGH   # Data mode = Pull high
+        self._cmd_mode = self._gpio.LOW  # Command mode = Hold low
+        self._data_mode = self._gpio.HIGH  # Data mode = Pull high
 
         if self._RST is not None:
-            self._gpio.output(self._RST, self._gpio.LOW)   # Reset device
+            self._gpio.output(self._RST, self._gpio.LOW)  # Reset device
             self._gpio.output(self._RST, self._gpio.HIGH)  # Keep RESET pulled high
 
     def _configure(self, pin):
