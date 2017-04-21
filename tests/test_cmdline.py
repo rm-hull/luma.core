@@ -8,11 +8,14 @@ Tests for the :py:mod:`luma.core.cmdline` module.
 """
 
 import sys
+import errno
 
-from luma.core import cmdline
+from luma.core import cmdline, error
 from luma.core.interface.serial import __all__ as iface_types
 
-from helpers import get_reference_file, patch, Mock
+from helpers import get_reference_file, patch, Mock, i2c_error
+
+import pytest
 
 
 test_config_file = get_reference_file('config-test.txt')
@@ -29,7 +32,8 @@ def test_get_display_types():
     """
     Enumerate display types.
     """
-    assert list(cmdline.get_display_types().keys()) == cmdline.get_supported_libraries()
+    assert list(cmdline.get_display_types().keys()) == \
+        cmdline.get_supported_libraries()
 
 
 def test_get_choices_unknown_module():
@@ -69,3 +73,18 @@ def test_create_parser():
         parser = cmdline.create_parser(description='test')
         args = parser.parse_args(['-f', test_config_file])
         assert args.config == test_config_file
+
+
+def test_make_serial_i2c():
+    class opts:
+        i2c_port = 200
+        i2c_address = 0x710
+
+    path_name = '/dev/i2c-{}'.format(opts.i2c_port)
+    fake_open = i2c_error(path_name, errno.ENOENT)
+    factory = cmdline.make_serial(opts)
+
+    with patch('os.open', fake_open):
+        with pytest.raises(error.DeviceNotFoundError) as ex:
+            factory.i2c()
+        assert str(ex.value) == 'I2C device not found: {}'.format(path_name)

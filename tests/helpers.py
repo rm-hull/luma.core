@@ -46,3 +46,13 @@ def get_spidev():
 def assert_identical_image(reference, target):
     bbox = ImageChops.difference(reference, target).getbbox()
     assert bbox is None
+
+
+def i2c_error(path_name, err_no):
+    expected_error = OSError()
+    expected_error.errno = err_no
+    expected_error.filename = path_name
+
+    def fake_open(a, b):
+        raise expected_error
+    return fake_open

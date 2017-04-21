@@ -13,7 +13,7 @@ import smbus2
 from luma.core.interface.serial import i2c
 import luma.core.error
 
-from helpers import Mock, patch, call
+from helpers import Mock, patch, call, i2c_error
 
 
 smbus = Mock(unsafe=True)
@@ -28,16 +28,6 @@ def fib(n):
     for _ in range(n):
         yield a
         a, b = b, a + b
-
-
-def i2c_error(path_name, err_no):
-    expected_error = OSError()
-    expected_error.errno = err_no
-    expected_error.filename = path_name
-
-    def fake_open(a, b):
-        raise expected_error
-    return fake_open
 
 
 def test_init_device_not_found():
