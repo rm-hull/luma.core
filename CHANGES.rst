@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **0.9.0**  | * Add word-wrap capability to ``luma.core.virtual.terminal``        | 2017/04/14 |
+| **0.9.0**  | * Add word-wrap capability to ``luma.core.virtual.terminal``        | 2017/04/22 |
 |            | * Bug fix to ``luma.core.virtual.terminal`` when scrolling          |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.8.1**  | * Propagate segment_mapper through other virtual devices            | 2017/04/14 |
