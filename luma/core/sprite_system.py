@@ -12,7 +12,7 @@ Simplified sprite animation framework.
 import time
 try:
     monotonic = time.monotonic
-except AttributeError:
+except AttributeError:  # pragma: no cover
     from monotonic import monotonic
 
 from PIL import Image
