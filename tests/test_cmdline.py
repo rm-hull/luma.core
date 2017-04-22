@@ -131,3 +131,13 @@ def test_make_serial_spi_alt_gpio():
     factory = cmdline.make_serial(opts)
     with pytest.raises(error.DeviceNotFoundError):
         factory.spi()
+
+
+def test_create_device():
+    """
+    :py:func:`luma.core.cmdline.create_device` returns ``None`` for unknown
+    displays.
+    """
+    class args:
+        display = 'foo'
+    assert cmdline.create_device(args) is None
