@@ -114,21 +114,24 @@ class make_serial(object):
                    gpio=self.gpio or GPIO)
 
 
-def create_device(args, dtypes=None):
+def create_device(args, display_types=None):
     """
     Create and return device.
+
+    :type args: object
+    :type display_types: dict
     """
     device = None
-    if dtypes is None:
-        dtypes = get_display_types()
+    if display_types is None:
+        display_types = get_display_types()
 
-    if args.display in dtypes.get('oled'):
+    if args.display in display_types.get('oled'):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         Serial = getattr(make_serial(args), args.interface)
         device = Device(Serial(), **vars(args))
 
-    elif args.display in dtypes.get('lcd'):
+    elif args.display in display_types.get('lcd'):
         import luma.lcd.device
         import luma.lcd.aux
         Device = getattr(luma.lcd.device, args.display)
@@ -136,14 +139,14 @@ def create_device(args, dtypes=None):
         device = Device(spi, **vars(args))
         luma.lcd.aux.backlight(gpio=spi._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
 
-    elif args.display in dtypes.get('led_matrix'):
+    elif args.display in display_types.get('led_matrix'):
         import luma.led_matrix.device
         from luma.core.serial import noop
         Device = getattr(luma.led_matrix.device, args.display)
         spi = make_serial(args, gpio=noop()).spi()
         device = Device(serial_interface=spi, **vars(args))
 
-    elif args.display in dtypes.get('emulator'):
+    elif args.display in display_types.get('emulator'):
         import luma.emulator.device
         Device = getattr(luma.emulator.device, args.display)
         device = Device(**vars(args))
