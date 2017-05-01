@@ -166,7 +166,7 @@ def create_parser(description):
     interface_types = get_interface_types()
     framebuffer_choices = get_choices('luma.core.framebuffer')
     rotation_choices = [0, 1, 2, 3]
-    block_orientation_choices = [0, 90, -90]
+    block_orientation_choices = [0, 90, -90, 180]
     color_choices = ['1', 'RGB', 'RGBA']
 
     general_group = parser.add_argument_group('General')
