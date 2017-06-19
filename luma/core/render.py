@@ -16,10 +16,16 @@ class canvas(object):
     changed by adding ``dither=True`` and the image will be converted from RGB
     space into a 1-bit monochrome image where dithering is employed to
     differentiate colors at the expense of resolution.
+    If a ``background`` parameter is provided, the canvas is based on the given
+    background. This is useful to e.g. write text on a given background image.
     """
-    def __init__(self, device, dither=False):
+    def __init__(self, device, background=None, dither=False):
         self.draw = None
-        self.image = Image.new("RGB" if dither else device.mode, device.size)
+        if background is None:
+            self.image = Image.new("RGB" if dither else device.mode, device.size)
+        else:
+            assert(background.size == device.size)
+            self.image = background.copy()
         self.device = device
         self.dither = dither
 
