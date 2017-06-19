@@ -40,7 +40,7 @@ def test_default_text():
 def test_wrapped_text():
     reference = 'quick_brown_fox_word_wrap.png'
     device = dummy()
-    term = terminal(device, word_wrap=True)
+    term = terminal(device, word_wrap=True, animate=False)
 
     assert_text(device, term, reference, [
         "The quick brown fox jumps over the lazy dog"
@@ -95,7 +95,7 @@ def test_alt_colors():
 def test_ansi_colors():
     reference = 'ansi_colors.png'
     device = dummy()
-    term = terminal(device)
+    term = terminal(device, animate=False)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors here!",
@@ -107,7 +107,7 @@ def test_ansi_colors():
 def test_ansi_colors_wrapped():
     reference = 'ansi_colors_wrapped.png'
     device = dummy()
-    term = terminal(device, word_wrap=True)
+    term = terminal(device, word_wrap=True, animate=False)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors\t\033[32mwrap\033[0m\t?",
@@ -119,7 +119,7 @@ def test_ansi_colors_wrapped():
 def test_ansi_colors_scroll():
     reference = 'ansi_colors_scroll.png'
     device = dummy()
-    term = terminal(device, word_wrap=True)
+    term = terminal(device, word_wrap=True, animate=False)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors\t\033[32mwrap\033[0m\t?",
