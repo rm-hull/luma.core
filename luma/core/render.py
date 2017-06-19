@@ -17,9 +17,12 @@ class canvas(object):
     space into a 1-bit monochrome image where dithering is employed to
     differentiate colors at the expense of resolution.
     """
-    def __init__(self, device, dither=False):
+    def __init__(self, device, background=None, dither=False):
         self.draw = None
-        self.image = Image.new("RGB" if dither else device.mode, device.size)
+        if background is None:
+            self.image = Image.new("RGB" if dither else device.mode, device.size)
+        else:
+            self.image = background.copy()
         self.device = device
         self.dither = dither
 
