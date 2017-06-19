@@ -95,7 +95,7 @@ def test_i2c_command_device_not_found_error():
         with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
             serial.command(*cmds)
 
-        assert str(ex.value) == 'I2C device not found on address: {}'.format(
+        assert str(ex.value) == 'I2C device not found on address: 0x{0:02X}'.format(
             address)
 
 

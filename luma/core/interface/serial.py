@@ -93,7 +93,7 @@ class i2c(object):
             if e.errno in [errno.EREMOTEIO, errno.EIO]:
                 # I/O error
                 raise luma.core.error.DeviceNotFoundError(
-                    'I2C device not found on address: {}'.format(self._addr))
+                    'I2C device not found on address: 0x{0:02X}'.format(self._addr))
             else:  # pragma: no cover
                 raise
 
