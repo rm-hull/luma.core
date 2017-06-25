@@ -16,11 +16,12 @@ Contributors
 ^^^^^^^^^^^^
 * Thijs Triemstra (@thijstriemstra)
 * Christoph Handel (@fragfutter)
-* Boeeerb (@Boeeerb)
-* xes (@xes)
+* @Boeeerb
+* @xes
 * Roger Dahl (@rogerdahl)
 * Václav Šmilauer (@eudoxos)
 * Claus Bjerre (@bjerrep)
-* Unattributed (@bkntrx)
-* Unattributed (@7754359337)
-* TheRaspyDev (@theraspydev)
+* @bkntrx
+* @7754359337
+* @theraspydev
+* @vortigont
