@@ -4,6 +4,9 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| **0.9.3**  | * LCD_FONT: lowercase cyrillic chars added, minor corrections in    | 2017/06/25 |
+|            |   uppercase chars                                                   |            |
++------------+---------------------------------------------------------------------+------------+
 | **0.9.2**  | * Add ``background=`` option to ``luma.core.render.canvas``         | 2017/06/19 |
 |            | * Add TCA9548A I2C multiplex scanner (contrib)                      |            |
 |            | * Display I2C address in hex when error occurs                      |            |
