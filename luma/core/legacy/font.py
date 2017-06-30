@@ -17,10 +17,10 @@ class proportional(object):
     def __init__(self, font):
         self.font = font
 
-    def __getitem__(self, asciiCode):
-        bitmap = self.font[asciiCode]
+    def __getitem__(self, ascii_code):
+        bitmap = self.font[ascii_code]
         # Return a slim version of the space character
-        if asciiCode == 32:
+        if ascii_code == 32:
             return [0] * 4
         else:
             return self._trim(bitmap) + [0]
@@ -32,6 +32,23 @@ class proportional(object):
         first = nonzero[0]
         last = nonzero[-1] + 1
         return arr[first:last]
+
+
+class tolerant(object):
+    """
+    Wraps an existing font array, and on indexing, if the supplied
+    ascii_code does not exist, will return the column definitions
+    for the given ``missing`` parameter.
+    """[0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80],
+    def __init__(self, font, missing="_"):
+        self.font = font
+        self.missing_code = ord(missing)
+
+    def __getitem__(self, ascii_code):
+        try:
+            return self.font[ascii_code]
+        except IndexError:
+            return self.font[self.missing_code]
 
 
 #: Bit patterns for the CP437 font,
