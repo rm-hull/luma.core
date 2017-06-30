@@ -39,7 +39,9 @@ class tolerant(object):
     Wraps an existing font array, and on indexing, if the supplied
     ascii_code does not exist, will return the column definitions
     for the given ``missing`` parameter.
-    """[0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80],
+
+    .. versionadded:: 0.9.4
+    """
     def __init__(self, font, missing="_"):
         self.font = font
         self.missing_code = ord(missing)
