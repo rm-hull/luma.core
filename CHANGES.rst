@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *upcoming* | * Add ``tolerant`` class for legacy font handling non-ASCII chars   |            |
+| **0.9.4**  | * Add ``tolerant`` class for legacy font handling non-ASCII chars   | 2017/07/01 |
 |            | * Add CP437 chars to fonts.py                                       |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.9.3**  | * LCD_FONT: lowercase cyrillic chars added, minor corrections in    | 2017/06/25 |
