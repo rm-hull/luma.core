@@ -14,7 +14,7 @@ def test_module_deprecated():
     """
     The :py:mod:`luma.core.serial` module is deprecated.
     """
-    with pytest.deprecated_call() as c:
+    with pytest.deprecated_call():
         import luma.core.serial  # noqa: F401
 
 
