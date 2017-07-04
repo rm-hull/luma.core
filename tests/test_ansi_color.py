@@ -49,6 +49,18 @@ def test_parse_str_valid_ansi_colors():
     with pytest.raises(StopIteration):
         next(gen)
 
+def test_parse_str_valid_ansi_colors_extended_codeset():
+    gen = ansi_color.parse_str("á \033[31á\33[0m")
+    assert next(gen) == ["putch", "\xe1"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["foreground_color", "red"]
+    assert next(gen) == ["putch", "á"]
+    assert next(gen) == ["reset"]
+
+    with pytest.raises(StopIteration):
+        next(gen)
+
+
 
 def test_parse_str_multiple_ansi_colors():
     gen = ansi_color.parse_str("hello \033[32;46mworld\33[7;0m")

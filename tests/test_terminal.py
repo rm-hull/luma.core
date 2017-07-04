@@ -18,8 +18,8 @@ from helpers import get_reference_image, assert_identical_image
 def assert_text(device, term, reference_img, text):
     img_path = get_reference_image(reference_img)
 
-    with open(img_path, 'rb') as p:
-        reference = Image.open(p)
+    with open(img_path, 'rb') as fp:
+        reference = Image.open(fp)
 
         for line in text:
             term.println(line)
@@ -127,3 +127,11 @@ def test_ansi_colors_scroll():
         "\033[43;30mYellow\033[0m \033[44;37mBlue abcdefg hijklmn",
         "\033[41;30mRed\033[0m \033[42;37mGreen"
     ])
+
+
+def test_CP437_charset():
+    reference = 'accented_charset.png'
+    device = dummy()
+    term = terminal(device, word_wrap=True, animate=False)
+
+    assert_text(device, term, reference, ["á \033[31á\33[0m"])
