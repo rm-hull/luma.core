@@ -14,13 +14,8 @@ def test_module_deprecated():
     """
     The :py:mod:`luma.core.serial` module is deprecated.
     """
-    msg = ("luma.core.serial is deprecated and will be removed in " +
-        "v1.0.0: use luma.core.interface.serial instead")
-
     with pytest.deprecated_call() as c:
         import luma.core.serial  # noqa: F401
-
-        assert str(c.list[0].message) == msg
 
 
 def test_module_all_equal():
