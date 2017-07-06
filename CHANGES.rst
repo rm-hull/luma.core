@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *Upcoming* | * Remove assert in ``terminal`` to allow extended characters to be  |            |
+| **0.9.5**  | * Remove assert in ``terminal`` to allow extended characters to be  | 2017/07/06 |
 |            |   printed (note: this only works for Python3 presently)             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **0.9.4**  | * Add ``tolerant`` class for legacy font handling non-ASCII chars   | 2017/07/01 |
