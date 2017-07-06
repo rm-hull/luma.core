@@ -300,8 +300,6 @@ class terminal(object):
             self.tab()
 
         else:
-            assert(32 <= ord(char) <= 127)
-
             w = self.font.getsize(char)[0]
             if self._cx + w >= self._device.width:
                 self.newline()
