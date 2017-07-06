@@ -66,10 +66,8 @@ def test_init_params_deprecated():
     bus_speed = 16000000
     dc = 80
     rst = 90
-    msg1 = 'bcm_DC argument is deprecated in favor of gpio_DC and will be removed in 1.0.0'
-    msg2 = 'bcm_RST argument is deprecated in favor of gpio_RST and will be removed in 1.0.0'
 
-    with pytest.deprecated_call() as c:
+    with pytest.deprecated_call():
         spi(gpio=gpio, spi=spidev, port=port, device=device,
             bus_speed_hz=bus_speed, bcm_DC=dc, bcm_RST=rst)
         verify_spi_init(port, device, bus_speed, dc, rst)
@@ -77,8 +75,6 @@ def test_init_params_deprecated():
             call(rst, gpio.LOW),
             call(rst, gpio.HIGH)
         ])
-        assert str(c.list[0].message) == msg1
-        assert str(c.list[1].message) == msg2
 
 
 def test_init_invalid_bus_speed():

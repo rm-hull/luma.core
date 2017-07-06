@@ -27,9 +27,8 @@ def test_deprecation():
             self.msg = 'Deprecated; will be removed in 0.0.1'
             util.deprecation(self.msg)
 
-    with pytest.deprecated_call() as c:
-        d = DeprecatedClass()
-        assert str(c.list[0].message) == d.msg
+    with pytest.deprecated_call():
+        DeprecatedClass()
 
 
 def test_mutablestring():
