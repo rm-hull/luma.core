@@ -8,8 +8,6 @@ Tests for the :py:mod:`luma.core.util` module.
 """
 
 
-import pytest
-
 from luma.core import util
 
 from helpers import get_reference_file

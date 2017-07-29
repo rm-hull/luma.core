@@ -2,8 +2,6 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import warnings
-
 
 class mutable_string(object):
 
