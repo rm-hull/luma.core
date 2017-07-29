@@ -17,7 +17,6 @@ except:  # pragma: no cover
 import luma.core.error
 
 from luma.core import lib
-from luma.core.util import deprecation
 
 
 __all__ = ["i2c", "spi", "bitbang"]
@@ -249,25 +248,13 @@ class spi(bitbang):
     :type gpio_DC: int
     :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 25).
     :type gpio_RST: int
-    :param bcm_DC: Deprecated. Use ``gpio_DC`` instead.
-    :type bcm_DC: int
-    :param bcm_RST:  Deprecated. Use ``gpio_RST`` instead.
-    :type bcm_RST: int
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, transfer_size=4096,
-                 gpio_DC=24, gpio_RST=25, bcm_DC=None, bcm_RST=None):
+                 gpio_DC=24, gpio_RST=25):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
-
-        if bcm_DC is not None:
-            deprecation('bcm_DC argument is deprecated in favor of gpio_DC and will be removed in 1.0.0')
-            gpio_DC = bcm_DC
-
-        if bcm_RST is not None:
-            deprecation('bcm_RST argument is deprecated in favor of gpio_RST and will be removed in 1.0.0')
-            gpio_RST = bcm_RST
 
         bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
 

@@ -60,23 +60,6 @@ def test_init():
     ])
 
 
-def test_init_params_deprecated():
-    port = 5
-    device = 2
-    bus_speed = 16000000
-    dc = 80
-    rst = 90
-
-    with pytest.deprecated_call():
-        spi(gpio=gpio, spi=spidev, port=port, device=device,
-            bus_speed_hz=bus_speed, bcm_DC=dc, bcm_RST=rst)
-        verify_spi_init(port, device, bus_speed, dc, rst)
-        gpio.output.assert_has_calls([
-            call(rst, gpio.LOW),
-            call(rst, gpio.HIGH)
-        ])
-
-
 def test_init_invalid_bus_speed():
     with pytest.raises(AssertionError):
         spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=942312)

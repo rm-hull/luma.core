@@ -5,10 +5,6 @@
 import warnings
 
 
-def deprecation(message):
-    warnings.warn(message, DeprecationWarning, stacklevel=2)
-
-
 class mutable_string(object):
 
     def __init__(self, value):
