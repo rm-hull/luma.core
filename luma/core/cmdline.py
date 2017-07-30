@@ -141,7 +141,7 @@ def create_device(args, display_types=None):
 
     elif args.display in display_types.get('led_matrix'):
         import luma.led_matrix.device
-        from luma.core.serial import noop
+        from luma.core.interface.serial import noop
         Device = getattr(luma.led_matrix.device, args.display)
         spi = make_serial(args, gpio=noop()).spi()
         device = Device(serial_interface=spi, **vars(args))
