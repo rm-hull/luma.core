@@ -32,7 +32,7 @@ install_deps = [
 ]
 
 
-if platform.system() != 'Darwin':
+if platform.system() not in ['Darwin', 'Windows']:
     rpi_deps = ['spidev', 'RPI.GPIO']
     install_deps.extend(rpi_deps)
 
