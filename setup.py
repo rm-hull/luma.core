@@ -31,9 +31,10 @@ install_deps = [
     'monotonic;python_version<"3.3"'
 ]
 
+
 if platform.system() != 'Darwin':
-    install_deps.append('spidev')
-    install_deps.append('RPI.GPIO')
+    rpi_deps = ['spidev', 'RPI.GPIO']
+    install_deps.extend(rpi_deps)
 
 setup(
     name="luma.core",
