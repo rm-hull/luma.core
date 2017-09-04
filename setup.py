@@ -24,6 +24,16 @@ test_deps = [
     "pytest-cov"
 ]
 
+install_deps = [
+    'pillow>=4.0.0',
+    'smbus2',
+    'monotonic;python_version<"3.3"'
+]
+
+if os.uname()[0] != 'Darwin':
+    install_deps.append('spidev')
+    install_deps.append('RPI.GPIO')
+
 setup(
     name="luma.core",
     version=version,
@@ -37,13 +47,7 @@ setup(
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     namespace_packages=["luma"],
     packages=["luma.core", "luma.core.legacy", "luma.core.interface"],
-    install_requires=[
-        'pillow>=4.0.0',
-        'smbus2',
-        'spidev',
-        'RPi.GPIO',
-        'monotonic;python_version<"3.3"'
-    ],
+    install_requires=install_deps,
     setup_requires=pytest_runner,
     tests_require=test_deps,
     extras_require={
