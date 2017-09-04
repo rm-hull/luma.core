@@ -3,6 +3,7 @@
 
 import os
 import sys
+import platform
 from setuptools import setup
 
 
@@ -30,7 +31,7 @@ install_deps = [
     'monotonic;python_version<"3.3"'
 ]
 
-if os.uname()[0] != 'Darwin':
+if platform.system() != 'Darwin':
     install_deps.append('spidev')
     install_deps.append('RPI.GPIO')
 
