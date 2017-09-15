@@ -115,7 +115,7 @@ def test_make_serial_spi():
         assert 'luma.core.interface.serial.spi' in repr(factory.spi())
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip(str(e))
+        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_make_serial_spi_alt_gpio():
@@ -134,7 +134,7 @@ def test_make_serial_spi_alt_gpio():
             assert 'luma.core.interface.serial.spi' in repr(factory.spi())
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
-            pytest.skip(str(e))
+            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_create_device():
@@ -170,7 +170,7 @@ def test_create_device_oled():
             assert device == display_name
         except error.UnsupportedPlatform as e:
             # non-rpi platform
-            pytest.skip(str(e))
+            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_create_device_lcd():
