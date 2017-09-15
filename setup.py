@@ -3,7 +3,6 @@
 
 import os
 import sys
-import platform
 from setuptools import setup
 
 
@@ -28,13 +27,10 @@ test_deps = [
 install_deps = [
     'pillow>=4.0.0',
     'smbus2',
-    'monotonic;python_version<"3.3"'
+    'monotonic;python_version<"3.3"',
+    'spidev;platform_system=="Linux"',
+    'RPI.GPIO;platform_system=="Linux"'
 ]
-
-
-if platform.system() not in ['Darwin', 'Windows']:
-    rpi_deps = ['spidev', 'RPI.GPIO']
-    install_deps.extend(rpi_deps)
 
 setup(
     name="luma.core",
