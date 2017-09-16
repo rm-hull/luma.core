@@ -110,9 +110,12 @@ def test_make_serial_spi():
     """
     :py:func:`luma.core.cmdline.make_serial.spi` returns an SPI instance.
     """
-    factory = cmdline.make_serial(test_spi_opts)
-    with pytest.raises(error.UnsupportedPlatform):
-        factory.spi()
+    try:
+        factory = cmdline.make_serial(test_spi_opts)
+        assert 'luma.core.interface.serial.spi' in repr(factory.spi())
+    except error.UnsupportedPlatform as e:
+        # non-rpi platform, e.g. ubuntu 64-bit
+        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_make_serial_spi_alt_gpio():
@@ -126,9 +129,12 @@ def test_make_serial_spi_alt_gpio():
     with patch.dict('sys.modules', **{
             'fake_gpio': Mock(unsafe=True)
         }):
-        factory = cmdline.make_serial(opts)
-        with pytest.raises(error.DeviceNotFoundError):
-            factory.spi()
+        try:
+            factory = cmdline.make_serial(opts)
+            assert 'luma.core.interface.serial.spi' in repr(factory.spi())
+        except error.DeviceNotFoundError as e:
+            # non-rpi platform, e.g. ubuntu 64-bit
+            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_create_device():
@@ -152,13 +158,19 @@ def test_create_device_oled():
         display = display_name
 
     module_mock = Mock()
+    module_mock.oled.device.oled1234.return_value = display_name
     with patch.dict('sys.modules', **{
+            # mock luma.oled package
             'luma': module_mock,
             'luma.oled': module_mock,
             'luma.oled.device': module_mock
         }):
-        with pytest.raises(error.UnsupportedPlatform):
-            cmdline.create_device(args, display_types=display_types)
+        try:
+            device = cmdline.create_device(args, display_types=display_types)
+            assert device == display_name
+        except error.UnsupportedPlatform as e:
+            # non-rpi platform
+            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_create_device_lcd():
@@ -176,6 +188,7 @@ def test_create_device_lcd():
     module_mock = Mock()
     module_mock.lcd.device.lcd1234.return_value = display_name
     with patch.dict('sys.modules', **{
+            # mock spidev and luma.lcd packages
             'fake_gpio': module_mock,
             'spidev': module_mock,
             'luma': module_mock,
@@ -200,6 +213,7 @@ def test_create_device_led_matrix():
     module_mock = Mock()
     module_mock.led_matrix.device.matrix1234.return_value = display_name
     with patch.dict('sys.modules', **{
+            # mock spidev and luma.led_matrix packages
             'spidev': module_mock,
             'luma': module_mock,
             'luma.led_matrix': module_mock,
@@ -222,6 +236,7 @@ def test_create_device_emulator():
     module_mock = Mock()
     module_mock.emulator.device.emulator1234.return_value = display_name
     with patch.dict('sys.modules', **{
+            # mock spidev and luma.emulator packages
             'spidev': module_mock,
             'luma': module_mock,
             'luma.emulator': module_mock,
