@@ -2,8 +2,8 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-from PIL import Image, ImageDraw 
-from luma.core import mixin 
+from PIL import Image, ImageDraw
+from luma.core import mixin
 
 
 class MultiImage(mixin.capabilities):
@@ -41,7 +41,6 @@ class MultiImage(mixin.capabilities):
         '''
         if id in self.images:
             del self.images[id]
-
 
     def set_position(self, id, xy):
         '''
