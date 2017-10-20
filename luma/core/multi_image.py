@@ -5,13 +5,45 @@
 from PIL import Image, ImageDraw
 from luma.core import mixin
 
+# TODO: rename xy -> pos
+# TODO: rename offs -> offset
+
+class RenderedImage():
+    
+    def __init__(self, image, xy=(0, 0), offs=(0, 0)):
+        self.image = image
+        self.xy = xy
+        self.offs = offs
+    
+    def set_position(self, xy):
+        """
+        Sets the position of an image within the device boundaries
+        """
+        self.xy = xy
+
+    def set_offset(self, offs):
+        self.offs = offs
+
+    def cropped_image(self, dimensions):
+        return self.image.crop(box=self._crop_box(dimensions))
+
+    def _crop_box(self, dimensions):
+        """
+        Calculates the crop box for the offset within the image
+        """
+        (left, top) = self.offs
+        right = left + min(dimensions[0], self.image.width)
+        bottom = top + min(dimensions[1], self.image.height)
+
+        return (left, top, right, bottom)
+
 
 class MultiImage(mixin.capabilities):
     """
     Renders multiple images on a background
     """
 
-    image_id = 0
+    image_id = 0 # FIXME remove
 
     def __init__(self, device, width, height):
         """
@@ -28,65 +60,24 @@ class MultiImage(mixin.capabilities):
         self._device = device
         self._background_image = Image.new(self.mode, self.size)
         self.images = {}
+        self.rendered_images = []
 
     def image(self):
         return self._background_image
 
-    def add_image(self, im, xy=(0, 0), offs=(0, 0)):
-        """
-        Adds an image to the list of images to be rendered.
-        Returns a unique image id
-        """
-        id = MultiImage.image_id
-        MultiImage.image_id += 1
-        self.images[id] = (im, xy, offs)
-        return id
+    def add_image(self, rendered_image):
+        self.rendered_images.append(rendered_image)
 
-    def remove_image(self, id):
-        """
-        Removes an image from list of images to be rendered
-        """
-        if id in self.images:
-            del self.images[id]
-
-    def set_position(self, id, xy):
-        """
-        Sets the position of an image within the device boundaries
-        """
-        if id in self.images:
-            self.images[id] = (self.images[id][0], xy, self.images[id][2])
-            self.refresh()
-
-    def set_offset(self, id, offs):
-        """
-        Selects an offset within the image from which to draw
-        the image. This allows scrolling of the image, similar
-        to viewport.
-        The image is clipped at the device boundaries.
-        """
-        if id in self.images:
-            self.images[id] = (self.images[id][0], self.images[id][1], offs)
-            self.refresh()
-
+    def remove_image(self, rendered_image):
+        self.rendered_images.remove(rendered_image)
+    
     def refresh(self):
         self._clear()
-        for id, image in self.images.iteritems():
-            pasted_im = image[0].crop(box=self._crop_box(image[0], image[2]))
-            self._background_image.paste(pasted_im, image[1])
-        im = self._background_image.crop(
-            box=(0, 0, self._device.width, self._device.height))
+        for img in self.rendered_images:
+            self._background_image.paste(img.cropped_image((self._device.width, self._device.height)), img.xy)
+        self._background_image.crop(box = self._device.bounding_box)
 
     def _clear(self):
         draw = ImageDraw.Draw(self._background_image)
         draw.rectangle(self._device.bounding_box,
                                fill="black")
-
-    def _crop_box(self, image, offs):
-        """
-        Calculates the crop box for the offset within an image
-        """
-        (left, top) = offs
-        right = left + min(self._device.width, image.width)
-        bottom = top + min(self._device.height, image.height)
-
-        return (left, top, right, bottom)
