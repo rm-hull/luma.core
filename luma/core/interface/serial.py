@@ -140,7 +140,7 @@ class bitbang(object):
     :type SCLK: int
     :param SDA: The GPIO pin to connect the SPI data (MOSI) line to.
     :type SDA: int
-    :param CE The GPIO pin to connect the SPI chip enable (CE) line to.
+    :param CE: The GPIO pin to connect the SPI chip enable (CE) line to.
     :type SDA: int
     :param DC: The GPIO pin to connect data/command select (DC) to.
     :type DC: int
