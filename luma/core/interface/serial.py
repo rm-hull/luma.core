@@ -138,7 +138,7 @@ class bitbang(object):
     :type transfer_size: int
     :param SCLK: The GPIO pin to connect the SPI clock to.
     :type SCLK: int
-    :param SDA The GPIO pin to connect the SPI data (MOSI) line to.
+    :param SDA: The GPIO pin to connect the SPI data (MOSI) line to.
     :type SDA: int
     :param CE The GPIO pin to connect the SPI chip enable (CE) line to.
     :type SDA: int
