@@ -72,13 +72,6 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-:mod:`luma.core.serial`
-"""""""""""""""""""""""
-.. automodule:: luma.core.serial
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`luma.core.sprite_system`
 """"""""""""""""""""""""""""""
 .. automodule:: luma.core.sprite_system

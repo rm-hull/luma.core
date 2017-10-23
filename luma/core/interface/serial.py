@@ -8,14 +8,8 @@ is I²C, SPI or bit-banging GPIO.
 """
 
 import errno
-try:
-    # missing on OSX
-    errno.EREMOTEIO
-except:  # pragma: no cover
-    errno.EREMOTEIO = errno.EIO
 
 import luma.core.error
-
 from luma.core import lib
 
 
@@ -31,7 +25,7 @@ class i2c(object):
         `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
         reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
-        over smbus2
+        over smbus2.
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
@@ -79,7 +73,7 @@ class i2c(object):
         Sends a command or sequence of commands through to the I²C address
         - maximum allowed is 32 bytes in one go.
 
-        :param cmd: a spread of commands
+        :param cmd: a spread of commands.
         :type cmd: int
         :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
         """
@@ -102,7 +96,7 @@ class i2c(object):
         address - maximum allowed in one transaction is 32 bytes, so if
         data is larger than this, it is sent in chunks.
 
-        :param data: a data sequence
+        :param data: a data sequence.
         :type data: list, bytearray
         """
         i = 0
@@ -130,17 +124,17 @@ class bitbang(object):
     unless there is a good reason!
 
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that don't need reset or D/C functionality, supply a :py:class:`noop`
-        implementation instead.
+        For slaves that don't need reset or D/C functionality, supply a
+        :py:class:`noop <luma.core.interface.serial.noop>` implementation instead.
     :param transfer_size: Max bytes to transfer in one go. Some implementations
         only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
-    :param SCLK The GPIO pin to connect the SPI clock to.
+    :param SCLK: The GPIO pin to connect the SPI clock to.
     :type SCLK: int
-    :param SDA The GPIO pin to connect the SPI data (MOSI) line to.
+    :param SDA: The GPIO pin to connect the SPI data (MOSI) line to.
     :type SDA: int
-    :param CE The GPIO pin to connect the SPI chip enable (CE) line to.
+    :param CE: The GPIO pin to connect the SPI chip enable (CE) line to.
     :type SDA: int
     :param DC: The GPIO pin to connect data/command select (DC) to.
     :type DC: int
@@ -187,7 +181,7 @@ class bitbang(object):
         Sends a data byte or sequence of data bytes through to the SPI device.
         If the data is more than :py:attr:`transfer_size` bytes, it is sent in chunks.
 
-        :param data: a data sequence
+        :param data: a data sequence.
         :type data: list, bytearray
         """
         if self._DC:
@@ -232,16 +226,16 @@ class spi(bitbang):
 
     :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that dont need reset or D/C functionality, supply a :py:class:`noop`
-        implementation instead.
+        For slaves that don't need reset or D/C functionality, supply a
+        :py:class:`noop <luma.core.interface.serial.noop>` implementation instead.
     :param port: SPI port, usually 0 (default) or 1.
     :type port: int
     :param device: SPI device, usually 0 (default) or 1.
     :type device: int
-    :param bus_speed_hz: SPI bus speed, defaults to 8MHz
+    :param bus_speed_hz: SPI bus speed, defaults to 8MHz.
     :type device: int
-    :param transfer_size: Max bytes to transfer in one go. Some implementations
-        only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
+    :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
+        only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
     :param gpio_DC: The GPIO pin to connect data/command select (DC) to (defaults to 24).
@@ -282,7 +276,7 @@ class spi(bitbang):
 
 class noop(object):
     """
-    Does nothing, used for pseudo-devices / emulators / anything really
+    Does nothing, used for pseudo-devices / emulators / anything really.
     """
     def __getattr__(self, attr):
         return self.__noop
