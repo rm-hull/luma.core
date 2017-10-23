@@ -136,7 +136,7 @@ class bitbang(object):
         only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
-    :param SCLK The GPIO pin to connect the SPI clock to.
+    :param SCLK: The GPIO pin to connect the SPI clock to.
     :type SCLK: int
     :param SDA The GPIO pin to connect the SPI data (MOSI) line to.
     :type SDA: int
@@ -232,7 +232,7 @@ class spi(bitbang):
 
     :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that dont need reset or D/C functionality, supply a :py:class:`noop`
+        For slaves that don't need reset or D/C functionality, supply a :py:class:`noop`
         implementation instead.
     :param port: SPI port, usually 0 (default) or 1.
     :type port: int
@@ -240,8 +240,8 @@ class spi(bitbang):
     :type device: int
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz
     :type device: int
-    :param transfer_size: Max bytes to transfer in one go. Some implementations
-        only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
+    :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
+        only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
     :param gpio_DC: The GPIO pin to connect data/command select (DC) to (defaults to 24).
