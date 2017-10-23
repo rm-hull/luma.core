@@ -2,7 +2,7 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-# TODO: assertions
+# TODO: unit tests
 
 from PIL import Image, ImageDraw
 from luma.core import mixin
@@ -25,6 +25,7 @@ class ComposableImage(object):
             from which it should be drawn
         :type offset: tuple
         """
+        assert(image)
         self._image = image
         self._position = position
         self._offset = offset
@@ -139,6 +140,7 @@ class ImageComposition(mixin.capabilities):
         :param image: the image to add
         :type image: Image
         """
+        assert(image)
         self.composed_images.append(image)
 
     def remove_image(self, image):
@@ -147,6 +149,7 @@ class ImageComposition(mixin.capabilities):
         :param image: the image to be removed
         :type image: Image
         """
+        assert(image)
         self.composed_images.remove(image)
 
     def __call__(self):
