@@ -31,7 +31,7 @@ class i2c(object):
         `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
         reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
-        over smbus2
+        over smbus2.
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
@@ -79,7 +79,7 @@ class i2c(object):
         Sends a command or sequence of commands through to the I²C address
         - maximum allowed is 32 bytes in one go.
 
-        :param cmd: a spread of commands
+        :param cmd: a spread of commands.
         :type cmd: int
         :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
         """
@@ -102,7 +102,7 @@ class i2c(object):
         address - maximum allowed in one transaction is 32 bytes, so if
         data is larger than this, it is sent in chunks.
 
-        :param data: a data sequence
+        :param data: a data sequence.
         :type data: list, bytearray
         """
         i = 0
@@ -187,7 +187,7 @@ class bitbang(object):
         Sends a data byte or sequence of data bytes through to the SPI device.
         If the data is more than :py:attr:`transfer_size` bytes, it is sent in chunks.
 
-        :param data: a data sequence
+        :param data: a data sequence.
         :type data: list, bytearray
         """
         if self._DC:
@@ -238,7 +238,7 @@ class spi(bitbang):
     :type port: int
     :param device: SPI device, usually 0 (default) or 1.
     :type device: int
-    :param bus_speed_hz: SPI bus speed, defaults to 8MHz
+    :param bus_speed_hz: SPI bus speed, defaults to 8MHz.
     :type device: int
     :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
         only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
@@ -282,7 +282,7 @@ class spi(bitbang):
 
 class noop(object):
     """
-    Does nothing, used for pseudo-devices / emulators / anything really
+    Does nothing, used for pseudo-devices / emulators / anything really.
     """
     def __getattr__(self, attr):
         return self.__noop
