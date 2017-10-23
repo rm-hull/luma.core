@@ -130,8 +130,8 @@ class bitbang(object):
     unless there is a good reason!
 
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that don't need reset or D/C functionality, supply a :py:class:`noop`
-        implementation instead.
+        For slaves that don't need reset or D/C functionality, supply a
+        :py:class:`noop <luma.core.interface.serial.noop>` implementation instead.
     :param transfer_size: Max bytes to transfer in one go. Some implementations
         only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
@@ -232,8 +232,8 @@ class spi(bitbang):
 
     :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
-        For slaves that don't need reset or D/C functionality, supply a :py:class:`noop`
-        implementation instead.
+        For slaves that don't need reset or D/C functionality, supply a
+        :py:class:`noop <luma.core.interface.serial.noop>` implementation instead.
     :param port: SPI port, usually 0 (default) or 1.
     :type port: int
     :param device: SPI device, usually 0 (default) or 1.
