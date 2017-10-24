@@ -86,27 +86,27 @@ class ComposableImage(object):
         """
         return self._image.height
 
-    def image(self, dimensions):
+    def image(self, size):
         """
-        :param dimensions: the width and height of the image composition
-        :type dimensions: tuple
+        :param size: the width, height of the image composition
+        :type size: tuple
         :returns: An image, cropped to the boundaries specified
-        by ``dimensions``
+        by ``size``
         :rtype: Image
         """
-        return self._image.crop(box=self._crop_box(dimensions))
+        return self._image.crop(box=self._crop_box(size))
 
-    def _crop_box(self, dimensions):
+    def _crop_box(self, size):
         """
         Helper that calculates the crop box for the offset within the image
-        :param dimensions: the width and height of the image composition
-        :type dimensions: tuple
-        :returns: The bounding box of the image, given ```dimensions```
+        :param size: the width and height of the image composition
+        :type size: tuple
+        :returns: The bounding box of the image, given ```size```
         :rtype: tuple
         """
         (left, top) = self.offset
-        right = left + min(dimensions[0], self.width)
-        bottom = top + min(dimensions[1], self.height)
+        right = left + min(size[0], self.width)
+        bottom = top + min(size[1], self.height)
 
         return (left, top, right, bottom)
 
