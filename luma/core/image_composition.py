@@ -167,8 +167,9 @@ class ImageComposition(mixin.capabilities):
         self._clear()
         for img in self.composed_images:
             self._background_image.paste(img.image(
-                                  (self._device.width, self._device.height)),
-                                  img.position)
+                                        (self._device.width,
+                                         self._device.height)),
+                                         img.position)
         self._background_image.crop(box=self._device.bounding_box)
 
     def _clear(self):
