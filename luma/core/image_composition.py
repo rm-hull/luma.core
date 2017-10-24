@@ -5,7 +5,6 @@
 # TODO: unit tests
 
 from PIL import Image, ImageDraw
-from luma.core import mixin
 
 
 class ComposableImage(object):
@@ -112,26 +111,21 @@ class ComposableImage(object):
         return (left, top, right, bottom)
 
 
-class ImageComposition(mixin.capabilities):
+class ImageComposition(object):
     """
     Manages a composition of ComposableImages that
     can be rendered onto a single Image
     """
 
-    def __init__(self, device, width, height):
+    def __init__(self, device):
         """
         Instantiates a new ImageComposition
 
         :param device: the device on which to render
         :type device: Device
-        :param width: the width of the composition
-        :type width: int
-        :param height: the height of the composition
-        :type height: int
         """
-        self.capabilities(width, height, rotate=0, mode=device.mode)
         self._device = device
-        self._background_image = Image.new(self.mode, self.size)
+        self._background_image = Image.new(device.mode, device.size)
         self.composed_images = []
 
     def add_image(self, image):
