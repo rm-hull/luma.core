@@ -9,10 +9,11 @@ helpers.
 """
 
 import pytest
+import PIL
 
 from PIL import Image
-
-from luma.core.image_composition import ComposableImage
+from luma.core.device import dummy
+from luma.core.image_composition import ComposableImage, ImageComposition
 
 
 def test_composable_image_none():
@@ -20,7 +21,19 @@ def test_composable_image_none():
         ComposableImage(None)
 
 
-def test_composable_image_attributes():
+def test_composable_image_image():
+    ci = ComposableImage(Image.new("RGB", (1, 1)))
+    with pytest.raises(AssertionError):
+        ci.image((0, 0))
+
+    with pytest.raises(AssertionError):
+        ci.image((1, 0))
+
+    with pytest.raises(AssertionError):
+        ci.image((0, 1))
+
+
+def test_composable_image_ctor():
     pos = (78, 12)
     offs = (90, 12)
     img_size = (123, 234)
@@ -28,11 +41,11 @@ def test_composable_image_attributes():
     ci = ComposableImage(img)
     ci.position = pos
     ci.offset = offs
-    ci.image = img
     assert ci.position == pos
     assert ci.offset == offs
     assert ci.width == img_size[0]
     assert ci.height == img_size[1]
+    assert isinstance(ci.image((1, 1)), PIL.Image.Image)
 
 
 def test_composable_image_crop_same():
@@ -69,3 +82,20 @@ def test_composable_image_crop_offset():
     ci = ComposableImage(img, offset=(20, 20))
     cropped_img = ci.image(crop_size)
     assert cropped_img.size == crop_size
+
+
+def test_image_composition_ctor():
+    ic = ImageComposition(dummy())
+    assert isinstance(ic(), PIL.Image.Image)
+
+
+def test_image_add_image_none():
+    ic = ImageComposition(dummy())
+    with pytest.raises(AssertionError):
+        ic.add_image(None)
+
+
+def test_image_remove_image_none():
+    ic = ImageComposition(dummy())
+    with pytest.raises(AssertionError):
+        ic.remove_image(None)
