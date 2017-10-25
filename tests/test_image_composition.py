@@ -11,7 +11,8 @@ helpers.
 import pytest
 import PIL
 
-from PIL import Image
+
+from PIL import Image, ImageDraw
 from luma.core.device import dummy
 from luma.core.image_composition import ComposableImage, ImageComposition
 
@@ -99,3 +100,40 @@ def test_image_remove_image_none():
     ic = ImageComposition(dummy())
     with pytest.raises(AssertionError):
         ic.remove_image(None)
+
+
+def test_image_count():
+    ic = ImageComposition(dummy())
+    img1 = ComposableImage(Image.new("RGB", (1, 1)))
+    img2 = ComposableImage(Image.new("RGB", (1, 1)))
+    img3 = ComposableImage(Image.new("RGB", (1, 1)))
+    ic.add_image(img1)
+    ic.add_image(img2)
+    ic.add_image(img3)
+    assert len(ic.composed_images) == 3
+    ic.remove_image(img3)
+    assert len(ic.composed_images) == 2
+    ic.remove_image(img2)
+    assert len(ic.composed_images) == 1
+    ic.remove_image(img1)
+    assert len(ic.composed_images) == 0
+
+
+def test_refresh_no_images():
+    ic = ImageComposition(dummy())
+    ic_img_before = list(ic().getdata())
+    ic.refresh()
+    assert ic_img_before == list(ic().getdata())
+
+
+def test_refresh():
+    ic = ImageComposition(dummy())
+    ic_img_before = list(ic().getdata())
+    img = Image.new("RGB", (25, 25))
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((10, 10, 20, 20), outline="white")
+    del draw
+    ci = ComposableImage(img)
+    ic.add_image(ci)
+    ic.refresh()
+    assert ic_img_before != list(ic().getdata())
