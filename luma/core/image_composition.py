@@ -2,8 +2,6 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-# TODO: unit tests
-
 from PIL import Image, ImageDraw
 
 
@@ -94,6 +92,8 @@ class ComposableImage(object):
         by ``size``
         :rtype: Image
         """
+        assert(size[0])
+        assert(size[1])
         return self._image.crop(box=self._crop_box(size))
 
     def _crop_box(self, size):
