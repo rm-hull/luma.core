@@ -11,7 +11,6 @@ helpers.
 import pytest
 import PIL
 
-
 from PIL import Image, ImageDraw
 from luma.core.device import dummy
 from luma.core.image_composition import ComposableImage, ImageComposition

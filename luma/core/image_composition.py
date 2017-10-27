@@ -2,17 +2,24 @@
 # Copyright (c) 2017 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+"""
+Composes scrollable, positionable images into another
+Image
+
+.. versionadded:: 1.0.4
+"""
+
 from PIL import Image, ImageDraw
 
 
 class ComposableImage(object):
     """
     This class encapsulates an image and its attributes
-    that can be rendered onto an ImageComposition
+    that can be rendered onto an ``ImageComposition``
     """
     def __init__(self, image, position=(0, 0), offset=(0, 0)):
         """
-        Instantiates a new ComposableImage
+        Instantiates a new ``ComposableImage``
         :param image: the composable image
         :type image: Image
         :param position: the initial position of the image
@@ -70,7 +77,7 @@ class ComposableImage(object):
     def width(self):
         """
         :returns: The actual width of the image, regardless
-        its position or offset within the image composition
+            its position or offset within the image composition
         :rtype: int
         """
         return self._image.width
@@ -79,7 +86,7 @@ class ComposableImage(object):
     def height(self):
         """
         :returns: The actual height of the image, regardless
-        its position or offset within the image composition
+            its position or offset within the image composition
         :rtype: int
         """
         return self._image.height
@@ -89,7 +96,7 @@ class ComposableImage(object):
         :param size: the width, height of the image composition
         :type size: tuple
         :returns: An image, cropped to the boundaries specified
-        by ``size``
+            by ``size``
         :rtype: Image
         """
         assert(size[0])
@@ -113,13 +120,13 @@ class ComposableImage(object):
 
 class ImageComposition(object):
     """
-    Manages a composition of ComposableImages that
+    Manages a composition of ``ComposableImage``s that
     can be rendered onto a single Image
     """
 
     def __init__(self, device):
         """
-        Instantiates a new ImageComposition
+        Instantiates a new ``ImageComposition``
 
         :param device: the device on which to render
         :type device: Device
