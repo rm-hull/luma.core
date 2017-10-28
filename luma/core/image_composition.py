@@ -6,7 +6,7 @@
 Composes scrollable, positionable images into another
 Image
 
-.. versionadded:: 1.0.4
+.. versionadded:: 1.1.0
 """
 
 from PIL import Image, ImageDraw
