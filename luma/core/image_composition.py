@@ -167,9 +167,7 @@ class ImageComposition(object):
         """
         self._clear()
         for img in self.composed_images:
-            self._background_image.paste(img.image(
-                                        (self._device.width,
-                                         self._device.height)),
+            self._background_image.paste(img.image(self._device.size),
                                          img.position)
         self._background_image.crop(box=self._device.bounding_box)
 
@@ -180,3 +178,4 @@ class ImageComposition(object):
         draw = ImageDraw.Draw(self._background_image)
         draw.rectangle(self._device.bounding_box,
                        fill="black")
+        del draw
