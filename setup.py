@@ -12,6 +12,7 @@ def read_file(*parts, encoding='utf-8'):
     with open(os.path.join(os.path.dirname(__file__), *parts), encoding=encoding) as r:
         return r.read()
 
+
 def find_version(*file_paths):
     version_file = read_file(*file_paths)
     version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
