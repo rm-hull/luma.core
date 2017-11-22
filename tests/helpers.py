@@ -21,6 +21,8 @@ from PIL import ImageChops
 
 rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
     platform.system())
+spidev_missing = 'spidev is not supported on this platform: {}'.format(
+    platform.system())
 
 
 def get_reference_file(fname):
@@ -39,8 +41,7 @@ def get_spidev():
         import spidev
         return spidev
     except ImportError:
-        pytest.skip('spidev is not supported on this platform: {}'.format(
-            platform.system()))
+        pytest.skip(spidev_missing)
 
 
 def assert_identical_image(reference, target):

@@ -12,7 +12,8 @@ import errno
 from luma.core import cmdline, error
 from luma.core.interface.serial import __all__ as iface_types
 
-from helpers import get_reference_file, patch, Mock, i2c_error
+from helpers import (get_reference_file, patch, Mock, i2c_error,
+    rpi_gpio_missing, spidev_missing)
 
 import pytest
 
@@ -113,6 +114,9 @@ def test_make_serial_spi():
     try:
         factory = cmdline.make_serial(test_spi_opts)
         assert 'luma.core.interface.serial.spi' in repr(factory.spi())
+    except ImportError:
+        # non-rpi platform, e.g. macos
+        pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
         pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
@@ -132,6 +136,8 @@ def test_make_serial_spi_alt_gpio():
         try:
             factory = cmdline.make_serial(opts)
             assert 'luma.core.interface.serial.spi' in repr(factory.spi())
+        except ImportError:
+            pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
             pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
@@ -168,6 +174,8 @@ def test_create_device_oled():
         try:
             device = cmdline.create_device(args, display_types=display_types)
             assert device == display_name
+        except ImportError:
+            pytest.skip(rpi_gpio_missing)
         except error.UnsupportedPlatform as e:
             # non-rpi platform
             pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
