@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
 import os
 import sys
 from io import open
@@ -11,11 +12,19 @@ def read_file(fname, encoding='utf-8'):
     with open(os.path.join(os.path.dirname(__file__), fname), encoding=encoding) as r:
         return r.read()
 
+def find_version(*file_paths):
+    version_file = read_file(*file_paths)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
 
 README = read_file("README.rst")
 CONTRIB = read_file("CONTRIBUTING.rst")
 CHANGES = read_file("CHANGES.rst")
-version = read_file("VERSION.txt").strip()
+version = find_version("luma", "core", "__init__.py")
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
