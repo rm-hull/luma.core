@@ -40,7 +40,7 @@ def get_library_for_display_type(display_type):
     Get library name for ``display_type``, e.g. ``ssd1306`` should return
     ``oled``.
 
-    .. versionadded:: 1.1.1
+    .. versionadded:: 1.2.0
 
     :param display_type: Display type, e.g. ``ssd1306``.
     :type display_type: str
@@ -56,7 +56,7 @@ def get_library_version(module_name):
     """
     Get version number from ``module_name``'s ``__version__`` attribute.
 
-    .. versionadded:: 1.1.1
+    .. versionadded:: 1.2.0
 
     :param module_name:
     :type module_name: str
