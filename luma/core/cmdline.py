@@ -35,6 +35,43 @@ def get_supported_libraries():
     return ['oled', 'lcd', 'led_matrix', 'emulator']
 
 
+def get_library_for_display_type(display_type):
+    """
+    Get library name for ``display_type``, e.g. ``ssd1306`` should return
+    ``oled``.
+
+    .. versionadded:: 1.1.1
+
+    :param display_type: Display type, e.g. ``ssd1306``.
+    :type display_type: str
+    :rtype: str or None
+    """
+    display_types = get_display_types()
+    for key in display_types.keys():
+        if display_type in display_types[key]:
+            return key
+
+
+def get_library_version(module_name):
+    """
+    Get version number from ``module_name``'s ``__version__`` attribute.
+
+    .. versionadded:: 1.1.1
+
+    :param module_name:
+    :type module_name: str
+    :rtype: str
+    """
+    try:
+        module = importlib.import_module('luma.' + module_name)
+        if hasattr(module, '__version__'):
+            return module.__version__
+        else:
+            return None
+    except ImportError:
+        return None
+
+
 def get_interface_types():
     """
     Get list of available interface types, e.g. ``['spi', 'i2c']``.
