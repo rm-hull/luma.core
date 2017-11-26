@@ -38,9 +38,7 @@ test_deps = [
 install_deps = [
     'pillow>=4.0.0',
     'smbus2',
-    'monotonic;python_version<"3.3"',
-    'spidev;platform_system=="Linux"',
-    'RPI.GPIO;platform_system=="Linux"'
+    'monotonic;python_version<"3.3"'
 ]
 
 setup(
@@ -60,6 +58,9 @@ setup(
     setup_requires=pytest_runner,
     tests_require=test_deps,
     extras_require={
+        ':platform_system=="Linux"': [
+            'spidev', 'RPI.GPIO'
+        ],
         'docs': [
             'sphinx>=1.5.1'
         ],
