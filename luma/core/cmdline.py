@@ -138,7 +138,15 @@ class make_serial(object):
 
         if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
             GPIO = importlib.import_module(self.opts.gpio)
-            GPIO.setmode(GPIO.BCM)
+
+            if hasattr(self.opts, 'gpio_mode') and self.opts.gpio_mode is not None:
+                (packageName, _, attrName) = self.opts.gpio_mode.rpartition('.')
+                pkg = importlib.import_module(packageName)
+                mode = getattr(pkg, attrName)
+                GPIO.setmode(mode)
+            else:
+                GPIO.setmode(GPIO.BCM)
+
             atexit.register(GPIO.cleanup)
         else:
             GPIO = None
@@ -225,6 +233,7 @@ def create_parser(description):
 
     gpio_group = parser.add_argument_group('GPIO')
     gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI devices only)')
+    gpio_group.add_argument('--gpio-mode', type=str, default=None, help='Alternative pin mapping mode (SPI devices only)')
     gpio_group.add_argument('--gpio-data-command', type=int, default=24, help='GPIO pin for D/C RESET (SPI devices only)')
     gpio_group.add_argument('--gpio-reset', type=int, default=25, help='GPIO pin for RESET (SPI devices only)')
     gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544, ST7735 devices only)')
