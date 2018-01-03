@@ -234,6 +234,8 @@ class spi(bitbang):
     :type device: int
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz.
     :type device: int
+    :param cs_high: Whether SPI chip select is high, defaults to False.
+    :type device: bool
     :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
         only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
@@ -246,7 +248,7 @@ class spi(bitbang):
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
-                 bus_speed_hz=8000000, transfer_size=4096,
+                 bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
                  gpio_DC=24, gpio_RST=25):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
@@ -255,6 +257,7 @@ class spi(bitbang):
         try:
             self._spi = spi or self.__spidev__()
             self._spi.open(port, device)
+            self._spi.cshigh = cs_high
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
