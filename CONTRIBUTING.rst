@@ -26,3 +26,4 @@ Contributors
 * @theraspydev
 * @vortigont
 * Maarten Los (@mlos)
+* Jonathan Pereira (@jonathanrjpereira)
