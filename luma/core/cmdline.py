@@ -235,7 +235,6 @@ def create_parser(description):
     spi_group.add_argument('--spi-cs-high', type=bool, default=False, help='SPI chip select is high')
     spi_group.add_argument('--spi-transfer-size', type=int, default=4096, help='SPI bus max transfer unit (bytes)')
 
-
     gpio_group = parser.add_argument_group('GPIO')
     gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI devices only)')
     gpio_group.add_argument('--gpio-mode', type=str, default=None, help='Alternative pin mapping mode (SPI devices only)')
