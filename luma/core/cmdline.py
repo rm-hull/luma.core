@@ -155,6 +155,7 @@ class make_serial(object):
                    device=self.opts.spi_device,
                    bus_speed_hz=self.opts.spi_bus_speed,
                    cs_high=self.opts.spi_cs_high,
+                   transfer_size=self.opts.spi_transfer_size,
                    gpio_DC=self.opts.gpio_data_command,
                    gpio_RST=self.opts.gpio_reset,
                    gpio=self.gpio or GPIO)
@@ -232,6 +233,7 @@ def create_parser(description):
     spi_group.add_argument('--spi-device', type=int, default=0, help='SPI device')
     spi_group.add_argument('--spi-bus-speed', type=int, default=8000000, help='SPI max bus speed (Hz)')
     spi_group.add_argument('--spi-cs-high', type=bool, default=False, help='SPI chip select is high')
+    spi_group.add_argument('--spi-transfer-size', type=int, default=4096, help='SPI bus max transfer unit (bytes)')
 
     gpio_group = parser.add_argument_group('GPIO')
     gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI devices only)')
