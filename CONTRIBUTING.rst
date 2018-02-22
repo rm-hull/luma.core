@@ -27,3 +27,4 @@ Contributors
 * @vortigont
 * Maarten Los (@mlos)
 * Jonathan Pereira (@jonathanrjpereira)
+* Daniel Smullen (@drspangle)
