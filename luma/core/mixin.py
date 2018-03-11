@@ -36,6 +36,7 @@ class capabilities(object):
         self.bounding_box = (0, 0, self.width - 1, self.height - 1)
         self.rotate = rotate
         self.mode = mode
+        self.persist = False
 
     def clear(self):
         """

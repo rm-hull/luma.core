@@ -82,8 +82,9 @@ class device(mixin.capabilities):
         is being shutdown, so shouldn't usually need be called directly in
         application code.
         """
-        self.hide()
-        self.clear()
+        if not self.persist:
+            self.hide()
+            self.clear()
         self._serial_interface.cleanup()
 
 
