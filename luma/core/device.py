@@ -78,7 +78,7 @@ class device(mixin.capabilities):
         helps prolong the life of the device), clear the screen and close
         resources associated with the underlying serial interface.
 
-        If self.persist is True, the device will not be switched off.
+        If :py:attr:`persist` is True, the device will not be switched off.
 
         This is a managed function, which is called when the python processs
         is being shutdown, so shouldn't usually need be called directly in
