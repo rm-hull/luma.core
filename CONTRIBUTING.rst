@@ -28,3 +28,4 @@ Contributors
 * Maarten Los (@mlos)
 * Jonathan Pereira (@jonathanrjpereira)
 * Daniel Smullen (@drspangle)
+* Hans Liss (@hansliss)
