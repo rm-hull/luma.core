@@ -58,8 +58,7 @@ def parse_str(text):
         escape codes.
     :type text: str
     """
-    prog = re.compile(r'^\033\[(\d+(;\d+)*)m')
-    text = str(text)
+    prog = re.compile(r'^\033\[(\d+(;\d+)*)m', re.UNICODE)
 
     while text != "":
         result = prog.match(text)
