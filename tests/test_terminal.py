@@ -12,7 +12,8 @@ from PIL import Image
 from luma.core.device import dummy
 from luma.core.virtual import terminal
 
-from helpers import get_reference_image, assert_identical_image
+from helpers import (get_reference_image, assert_identical_image,
+    get_reference_font)
 
 
 def assert_text(device, term, reference_img, text):
@@ -131,7 +132,11 @@ def test_ansi_colors_scroll():
 
 def test_CP437_charset():
     reference = 'accented_charset.png'
+    unicode_font = get_reference_font('DejaVuSans.ttf')
     device = dummy()
-    term = terminal(device, word_wrap=True, animate=False)
+    term = terminal(device, font=unicode_font, word_wrap=False, animate=False,
+        color="blue", bgcolor="white")
 
-    assert_text(device, term, reference, ["á \033[31á\33[0m"])
+    assert_text(device, term, reference, [
+        "\033[31mFußgängerunterführungen\033[0m Текст на русском"
+    ])

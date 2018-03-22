@@ -16,7 +16,7 @@ except ImportError:
 
 import pytest
 
-from PIL import ImageChops
+from PIL import ImageChops, ImageFont
 
 
 rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
@@ -34,6 +34,11 @@ def get_reference_file(fname):
 
 def get_reference_image(fname):
     return get_reference_file(os.path.join('images', fname))
+
+
+def get_reference_font(fname, fsize=12):
+    path = get_reference_file(os.path.join('font', fname))
+    return ImageFont.truetype(path, fsize)
 
 
 def get_spidev():
