@@ -16,7 +16,7 @@ from helpers import (get_reference_image, assert_identical_image,
     get_reference_font)
 
 
-def assert_text(device, term, reference_img, text):
+def assert_text(device, term, reference_img, text, save=None):
     img_path = get_reference_image(reference_img)
 
     with open(img_path, 'rb') as fp:
@@ -24,6 +24,9 @@ def assert_text(device, term, reference_img, text):
 
         for line in text:
             term.println(line)
+
+        if save is not None:
+            device.image.save(save)
 
         assert_identical_image(reference, device.image)
 
@@ -138,5 +141,5 @@ def test_CP437_charset():
         color="blue", bgcolor="white")
 
     assert_text(device, term, reference, [
-        "\033[31mFußgängerunterführungen\033[0m Текст на русском"
+        u"\033[31mFußgängerunterführungen\033[0m Текст на русском"
     ])

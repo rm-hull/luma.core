@@ -59,7 +59,6 @@ def parse_str(text):
     :type text: str
     """
     prog = re.compile(r'^\033\[(\d+(;\d+)*)m', re.UNICODE)
-    text = str(text)
 
     while text != "":
         result = prog.match(text)
