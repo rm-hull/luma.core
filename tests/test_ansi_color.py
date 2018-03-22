@@ -51,11 +51,28 @@ def test_parse_str_valid_ansi_colors():
 
 
 def test_parse_str_valid_ansi_colors_extended_codeset():
-    gen = ansi_color.parse_str("á \033[31á\33[0m")
+    gen = ansi_color.parse_str("á \033[31mFußgänger Текст на\033[0m")
     assert next(gen) == ["putch", "\xe1"]
     assert next(gen) == ["putch", " "]
     assert next(gen) == ["foreground_color", "red"]
-    assert next(gen) == ["putch", "á"]
+    assert next(gen) == ["putch", "F"]
+    assert next(gen) == ["putch", "u"]
+    assert next(gen) == ["putch", "ß"]
+    assert next(gen) == ["putch", "g"]
+    assert next(gen) == ["putch", "ä"]
+    assert next(gen) == ["putch", "n"]
+    assert next(gen) == ["putch", "g"]
+    assert next(gen) == ["putch", "e"]
+    assert next(gen) == ["putch", "r"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["putch", "Т"]
+    assert next(gen) == ["putch", "е"]
+    assert next(gen) == ["putch", "к"]
+    assert next(gen) == ["putch", "с"]
+    assert next(gen) == ["putch", "т"]
+    assert next(gen) == ["putch", " "]
+    assert next(gen) == ["putch", "н"]
+    assert next(gen) == ["putch", "а"]
     assert next(gen) == ["reset"]
 
     with pytest.raises(StopIteration):
