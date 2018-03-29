@@ -57,6 +57,7 @@ API Documentation
     :members:
     :undoc-members:
     :show-inheritance:
+    :exclude-members: CP437_FONT, SINCLAIR_FONT, LCD_FONT, UKR_FONT, TINY_FONT,SEG7_FONT
 
 :mod:`luma.core.mixin`
 """"""""""""""""""""""
