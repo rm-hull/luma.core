@@ -134,7 +134,7 @@ class hotspot(mixin.capabilities):
           The render function should draw within a bounding box of ``(0, 0,
           width, height)``, and render a full frame.
 
-        * sub-class ``hotspot`` and override the :func:``should_redraw`` and
+        * sub-class ``hotspot`` and override the :func:`should_redraw` and
           :func:`update` methods. This might be more useful for slow-changing
           values where it is not necessary to update every refresh cycle, or
           your implementation is stateful.

@@ -11,7 +11,7 @@ class canvas(object):
     which the caller can draw upon. As soon as the with-block completes, the
     resultant image is flushed onto the device.
 
-    By default, any color (other than black) will be _generally_ treated as
+    By default, any color (other than black) will be `generally` treated as
     white when displayed on monochrome devices. However, this behaviour can be
     changed by adding ``dither=True`` and the image will be converted from RGB
     space into a 1-bit monochrome image where dithering is employed to
