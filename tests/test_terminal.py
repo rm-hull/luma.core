@@ -133,7 +133,7 @@ def test_ansi_colors_scroll():
     ])
 
 
-def test_CP437_charset():
+def test_accented_charset():
     reference = 'accented_charset.png'
     unicode_font = get_reference_font('DejaVuSans.ttf')
     device = dummy()
