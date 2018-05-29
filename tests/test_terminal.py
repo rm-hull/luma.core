@@ -28,7 +28,7 @@ def assert_text(device, term, reference_img, text, save=None):
         if save is not None:
             device.image.save(save)
 
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)
 
 
 def test_default_text():

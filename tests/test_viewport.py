@@ -121,7 +121,7 @@ def test_viewport_set_position():
 
         virtual.set_position((20, 30))
 
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)
 
 
 def test_viewport_hotspot():
@@ -141,4 +141,4 @@ def test_viewport_hotspot():
         virtual.set_position((28, 30))
         virtual.remove_hotspot(widget, (19, 56))
 
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)

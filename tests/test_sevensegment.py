@@ -126,4 +126,4 @@ def test_setter_getter():
         seg.text = "1.61803398875"
         assert str(seg.text) == "1.61803398875"
 
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)

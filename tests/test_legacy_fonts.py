@@ -35,4 +35,4 @@ def test_font(fontname):
     img_path = get_reference_image('{0}.png'.format(fontname))
     with open(img_path, 'rb') as fp:
         reference = Image.open(fp)
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)

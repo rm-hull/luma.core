@@ -49,9 +49,10 @@ def get_spidev():
         pytest.skip(spidev_missing)
 
 
-def assert_identical_image(reference, target):
+def assert_identical_image(reference, target, img_path):
     bbox = ImageChops.difference(reference, target).getbbox()
-    assert bbox is None
+    assert bbox is None, '{0} is not identical to generated image'.format(
+        os.path.basename(img_path))
 
 
 def i2c_error(path_name, err_no):
