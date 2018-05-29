@@ -28,7 +28,7 @@ def test_canvas_background():
             with canvas(device, background=bgnd) as draw:
                 draw.rectangle((20, 15, device.width - 20, device.height - 15),
                                fill='black', outline='white')
-                draw.text((36, 22), 'Background'", fill='white')
+                draw.text((36, 22), 'Background', fill='white')
                 draw.text((52, 32), 'Test', fill='white')
 
             assert_identical_image(reference, device.image, img_path)
