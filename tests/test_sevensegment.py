@@ -86,7 +86,12 @@ _DIGITS = {
 def dot_muncher(text, notfound="_"):
     undefined = _DIGITS[notfound]
     iterator = iter(text)
-    last = _DIGITS.get(next(iterator), undefined)
+    try:
+        last = _DIGITS.get(next(iterator), undefined)
+    except StopIteration:
+        # Catch exception from next() in py3.7 and return normally
+        return
+
     try:
         while True:
             curr = _DIGITS.get(next(iterator), undefined)
