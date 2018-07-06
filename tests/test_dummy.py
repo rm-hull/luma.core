@@ -39,7 +39,7 @@ def test_portrait():
         with canvas(device) as draw:
             baseline_data.primitives(device, draw)
 
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)
 
 
 def test_dither():
@@ -55,4 +55,4 @@ def test_dither():
             draw.rectangle((0, 32, 64, 64), fill="blue")
             draw.rectangle((64, 32, 128, 64), fill="white")
 
-        assert_identical_image(reference, device.image)
+        assert_identical_image(reference, device.image, img_path)
