@@ -29,3 +29,4 @@ Contributors
 * Jonathan Pereira (@jonathanrjpereira)
 * Daniel Smullen (@drspangle)
 * Hans Liss (@hansliss)
+* Phil Howard (@gadgetoid)
