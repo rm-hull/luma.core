@@ -92,19 +92,26 @@ class i2c(object):
 
     def data(self, data):
         """
-        Sends a data byte or sequence of data bytes through to the I²C
-        address - maximum allowed in one transaction is 32 bytes, so if
-        data is larger than this, it is sent in chunks.
+        Sends a data byte or sequence of data bytes to the I²C address.
+        If the bus is in managed mode backed by smbus2, the i2c_rdwr
+        method will be used to avoid having to send in chunks.
+        For SMBus devices the maximum allowed in one transaction is
+        32 bytes, so if data is larger than this, it is sent in chunks.
 
         :param data: a data sequence.
         :type data: list, bytearray
         """
-        i = 0
-        n = len(data)
-        write = self._bus.write_i2c_block_data
-        while i < n:
-            write(self._addr, self._data_mode, list(data[i:i + 32]))
-            i += 32
+        if self._managed:
+            import smbus2
+            w_msg = smbus2.i2c_msg.write(self._addr, list(self.data))
+            self._bus.i2c_rdwr(w_msg)
+        else:
+            i = 0
+            n = len(data)
+            write = self._bus.write_i2c_block_data
+            while i < n:
+                write(self._addr, self._data_mode, list(data[i:i + 32]))
+                i += 32
 
     def cleanup(self):
         """
