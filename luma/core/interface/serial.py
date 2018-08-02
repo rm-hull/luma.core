@@ -55,6 +55,7 @@ class i2c(object):
 
         try:
             self._managed = bus is None
+            self._i2c_msg_write = smbus2.i2c_msg.write if bus is None else None
             self._bus = bus or smbus2.SMBus(port)
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
@@ -102,9 +103,7 @@ class i2c(object):
         :type data: list, bytearray
         """
         if self._managed:
-            import smbus2
-            w_msg = smbus2.i2c_msg.write(self._addr, list(self.data))
-            self._bus.i2c_rdwr(w_msg)
+            self._bus.i2c_rdwr(self._i2c_msg_write(self._addr, [self._data_mode] + data))
         else:
             i = 0
             n = len(data)
