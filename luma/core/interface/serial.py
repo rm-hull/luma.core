@@ -235,7 +235,7 @@ class spi(bitbang):
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz.
     :type device: int
     :param cs_high: Whether SPI chip select is high, defaults to False.
-    :type device: bool
+    :type cs_high: bool
     :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
         only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
