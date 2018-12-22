@@ -15,18 +15,19 @@ from PIL import Image, ImageDraw
 class ComposableImage(object):
     """
     This class encapsulates an image and its attributes
-    that can be rendered onto an ``ImageComposition``
+    that can be rendered onto an :py:class:`ImageComposition`.
     """
     def __init__(self, image, position=(0, 0), offset=(0, 0)):
         """
-        Instantiates a new ``ComposableImage``
-        :param image: the composable image
-        :type image: Image
-        :param position: the initial position of the image
-            within the composition
+        Instantiates a new ``ComposableImage``.
+
+        :param image: The composable image.
+        :type image: PIL.Image
+        :param position: The initial position of the image
+            within the composition.
         :type position: tuple
-        :param offset: the initial offset within the image,
-            from which it should be drawn
+        :param offset: The initial offset within the image,
+            from which it should be drawn.
         :type offset: tuple
         """
         assert(image)
@@ -38,7 +39,8 @@ class ComposableImage(object):
     def position(self):
         """
         Getter for position
-        :returns: A tuple containing the x,y position
+
+        :returns: A tuple containing the ``x,y`` position.
         :rtype: tuple
         """
         return self._position
@@ -47,8 +49,9 @@ class ComposableImage(object):
     def position(self, value):
         """
         Indicates where the image is to be rendered in an image
-        composition
-        :param value: The x,y position
+        composition.
+
+        :param value: The ``x,y`` position tuple.
         :type value: tuple
         """
         self._position = value
@@ -56,8 +59,9 @@ class ComposableImage(object):
     @property
     def offset(self):
         """
-        Getter for offset
-        :returns: A tuple containing the top,left
+        Getter for offset.
+
+        :returns: A tuple containing the top,left position.
         :rtype: tuple
         """
         return self._offset
@@ -67,8 +71,9 @@ class ComposableImage(object):
         """
         Indicates the top left position within the image,
         as of which it is is to be rendered in the
-        image composition
-        :param value: The top,left position
+        image composition.
+
+        :param value: The top,left position.
         :type value: tuple
         """
         self._offset = value
@@ -77,7 +82,7 @@ class ComposableImage(object):
     def width(self):
         """
         :returns: The actual width of the image, regardless
-            its position or offset within the image composition
+            its position or offset within the image composition.
         :rtype: int
         """
         return self._image.width
@@ -86,18 +91,18 @@ class ComposableImage(object):
     def height(self):
         """
         :returns: The actual height of the image, regardless
-            its position or offset within the image composition
+            its position or offset within the image composition.
         :rtype: int
         """
         return self._image.height
 
     def image(self, size):
         """
-        :param size: the width, height of the image composition
+        :param size: The width, height of the image composition.
         :type size: tuple
         :returns: An image, cropped to the boundaries specified
-            by ``size``
-        :rtype: Image
+            by ``size``.
+        :rtype: PIL.Image.Image
         """
         assert(size[0])
         assert(size[1])
@@ -105,10 +110,11 @@ class ComposableImage(object):
 
     def _crop_box(self, size):
         """
-        Helper that calculates the crop box for the offset within the image
-        :param size: the width and height of the image composition
+        Helper that calculates the crop box for the offset within the image.
+
+        :param size: The width and height of the image composition.
         :type size: tuple
-        :returns: The bounding box of the image, given ```size```
+        :returns: The bounding box of the image, given ``size``.
         :rtype: tuple
         """
         (left, top) = self.offset
@@ -120,16 +126,15 @@ class ComposableImage(object):
 
 class ImageComposition(object):
     """
-    Manages a composition of ``ComposableImage``s that
-    can be rendered onto a single Image
+    Manages a composition of :py:class:`ComposableImage` instances that
+    can be rendered onto a single :py:class:`PIL.Image.Image`.
     """
-
     def __init__(self, device):
         """
         Instantiates a new ``ImageComposition``
 
-        :param device: the device on which to render
-        :type device: Device
+        :param device: The device on which to render.
+        :type device: luma.core.device.device
         """
         self._device = device
         self._background_image = Image.new(device.mode, device.size)
@@ -137,33 +142,36 @@ class ImageComposition(object):
 
     def add_image(self, image):
         """
-        Adds an image to the composition
-        :param image: the image to add
-        :type image: Image
+        Adds an image to the composition.
+
+        :param image: The image to add.
+        :type image: PIL.Image.Image
         """
         assert(image)
         self.composed_images.append(image)
 
     def remove_image(self, image):
         """
-        Removes an image from the composition
-        :param image: the image to be removed
-        :type image: Image
+        Removes an image from the composition.
+
+        :param image: The image to be removed.
+        :type image: PIL.Image.Image
         """
         assert(image)
         self.composed_images.remove(image)
 
     def __call__(self):
         """
-        Returns the current composition
-        :rtype: Image
+        Returns the current composition.
+
+        :rtype: PIL.Image.Image
         """
         return self._background_image
 
     def refresh(self):
         """
         Clears the composition and renders all the images
-        taking into account their position and offset
+        taking into account their position and offset.
         """
         self._clear()
         for img in self.composed_images:
@@ -173,7 +181,7 @@ class ImageComposition(object):
 
     def _clear(self):
         """
-        Helper that clears the composition
+        Helper that clears the composition.
         """
         draw = ImageDraw.Draw(self._background_image)
         draw.rectangle(self._device.bounding_box,

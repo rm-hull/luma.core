@@ -78,7 +78,7 @@ class device(mixin.capabilities):
         helps prolong the life of the device), clear the screen and close
         resources associated with the underlying serial interface.
 
-        If :py:attr:`persist` is True, the device will not be switched off.
+        If :py:attr:`persist` is ``True``, the device will not be switched off.
 
         This is a managed function, which is called when the python processs
         is being shutdown, so shouldn't usually need be called directly in
@@ -105,6 +105,9 @@ class dummy(device):
         """
         Takes a :py:mod:`PIL.Image` and makes a copy of it for later
         use/inspection.
+
+        :param image: Image to display.
+        :type image: PIL.Image.Image
         """
         assert(image.size == self.size)
 

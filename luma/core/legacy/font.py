@@ -63,6 +63,8 @@ class tolerant(object):
     ascii_code does not exist, will return the column definitions
     for the given ``missing`` parameter.
 
+    :type missing: str
+
     .. versionadded:: 0.9.4
     """
     def __init__(self, font, missing="_"):
