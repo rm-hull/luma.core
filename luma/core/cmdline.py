@@ -58,7 +58,7 @@ def get_library_version(module_name):
 
     .. versionadded:: 1.2.0
 
-    :param module_name:
+    :param module_name: The module name, e.g. ``luma.oled``.
     :type module_name: str
     :rtype: str
     """
@@ -86,7 +86,7 @@ def get_display_types():
     Get ordered dict containing available display types from available luma
     sub-projects.
 
-    :rtype: OrderedDict
+    :rtype: collections.OrderedDict
     """
     display_types = OrderedDict()
     for namespace in get_supported_libraries():

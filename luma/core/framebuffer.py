@@ -19,10 +19,10 @@ class diff_to_previous(object):
     The image data for the difference is then be passed to a device for
     rendering just those small changes. This can be very quick for small screen
     updates, but suffers from variable render times, depending on the changes
-    applied. The :py:class`luma.core.sprite_system.framerate_regulator` may be
+    applied. The :py:class:`luma.core.sprite_system.framerate_regulator` may be
     used to counteract this behavior however.
 
-    :param device: the target device, used to determine the initial 'previous'
+    :param device: The target device, used to determine the initial 'previous'
         image.
     :type device: luma.core.device.device
     """
@@ -37,9 +37,10 @@ class diff_to_previous(object):
         ``bounding_box`` and ``image`` attributes are updated accordingly, as is
         priming :py:func:`getdata`.
 
-        :param image: An image to render
+        :param image: The image to render.
         :type image: PIL.Image.Image
         :returns: ``True`` or ``False``
+        :rtype: bool
         """
         self.bounding_box = ImageChops.difference(self.image, image).getbbox()
         if self.bounding_box is not None:
@@ -70,7 +71,7 @@ class diff_to_previous(object):
         A sequence of pixel data relating to the changes that occurred
         since the last time :py:func:`redraw_required` was last called.
 
-        :returns: A sequence of pixels or ``None``
+        :returns: A sequence of pixels or ``None``.
         :rtype: iterable
         """
         if self.bounding_box:
@@ -96,7 +97,7 @@ class full_frame(object):
         Caches the image ready for getting the sequence of pixel data with
         :py:func:`getdata`. This method always returns affirmatively.
 
-        :param image: An image to render
+        :param image: The image to render.
         :type image: PIL.Image.Image
         :returns: ``True`` always.
         """
@@ -114,7 +115,7 @@ class full_frame(object):
         A sequence of pixels representing the full image supplied when the
         :py:func:`redraw_required` method was last called.
 
-        :returns: A sequence of pixels
+        :returns: A sequence of pixels.
         :rtype: iterable
         """
         return self.image.getdata()

@@ -21,7 +21,7 @@ class i2c(object):
     Wrap an `I²C <https://en.wikipedia.org/wiki/I%C2%B2C>`_ (Inter-Integrated
     Circuit) interface to provide :py:func:`data` and :py:func:`command` methods.
 
-    :param bus: a *smbus* implementation, if `None` is supplied (default),
+    :param bus: A *smbus* implementation, if ``None`` is supplied (default),
         `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
         reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
@@ -29,7 +29,7 @@ class i2c(object):
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
-    :param address: I²C address, default: 0x3C.
+    :param address: I²C address, default: ``0x3C``.
     :type address: int
     :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
     :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
@@ -73,7 +73,7 @@ class i2c(object):
         Sends a command or sequence of commands through to the I²C address
         - maximum allowed is 32 bytes in one go.
 
-        :param cmd: a spread of commands.
+        :param cmd: A spread of commands.
         :type cmd: int
         :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
         """
@@ -96,7 +96,7 @@ class i2c(object):
         address - maximum allowed in one transaction is 32 bytes, so if
         data is larger than this, it is sent in chunks.
 
-        :param data: a data sequence.
+        :param data: A data sequence.
         :type data: list, bytearray
         """
         i = 0
@@ -125,7 +125,7 @@ class bitbang(object):
 
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
         For slaves that don't need reset or D/C functionality, supply a
-        :py:class:`noop <luma.core.interface.serial.noop>` implementation instead.
+        :py:class:`noop` implementation instead.
     :param transfer_size: Max bytes to transfer in one go. Some implementations
         only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
@@ -135,7 +135,7 @@ class bitbang(object):
     :param SDA: The GPIO pin to connect the SPI data (MOSI) line to.
     :type SDA: int
     :param CE: The GPIO pin to connect the SPI chip enable (CE) line to.
-    :type SDA: int
+    :type CE: int
     :param DC: The GPIO pin to connect data/command select (DC) to.
     :type DC: int
     :param RST: The GPIO pin to connect reset (RES / RST) to.
@@ -168,7 +168,7 @@ class bitbang(object):
         """
         Sends a command or sequence of commands through to the SPI device.
 
-        :param cmd: a spread of commands
+        :param cmd: A spread of commands.
         :type cmd: int
         """
         if self._DC:
@@ -181,7 +181,7 @@ class bitbang(object):
         Sends a data byte or sequence of data bytes through to the SPI device.
         If the data is more than :py:attr:`transfer_size` bytes, it is sent in chunks.
 
-        :param data: a data sequence.
+        :param data: A data sequence.
         :type data: list, bytearray
         """
         if self._DC:
@@ -211,7 +211,7 @@ class bitbang(object):
 
     def cleanup(self):
         """
-        Clean up GPIO resources if managed
+        Clean up GPIO resources if managed.
         """
         if self._managed:
             self._gpio.cleanup()
@@ -227,14 +227,14 @@ class spi(bitbang):
     :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
     :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
         For slaves that don't need reset or D/C functionality, supply a
-        :py:class:`noop <luma.core.interface.serial.noop>` implementation instead.
+        :py:class:`noop` implementation instead.
     :param port: SPI port, usually 0 (default) or 1.
     :type port: int
     :param device: SPI device, usually 0 (default) or 1.
     :type device: int
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz.
-    :type device: int
-    :param cs_high: Whether SPI chip select is high, defaults to False.
+    :type bus_speed_hz: int
+    :param cs_high: Whether SPI chip select is high, defaults to ``False``.
     :type cs_high: bool
     :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
         only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
@@ -271,7 +271,7 @@ class spi(bitbang):
 
     def cleanup(self):
         """
-        Clean up SPI & GPIO resources
+        Clean up SPI & GPIO resources.
         """
         self._spi.close()
         super(spi, self).cleanup()
