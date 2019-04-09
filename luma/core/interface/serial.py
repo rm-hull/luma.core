@@ -13,7 +13,7 @@ import luma.core.error
 from luma.core import lib
 
 
-__all__ = ["i2c", "spi", "bitbang"]
+__all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c"]
 
 
 class i2c(object):
@@ -259,10 +259,10 @@ class spi(bitbang):
             self._spi.open(port, device)
             self._spi.cshigh = cs_high
         except (IOError, OSError) as e:
-            if e.errno == errno.ENOENT:
-                raise luma.core.error.DeviceNotFoundError('SPI device not found')
-            else:  # pragma: no cover
-                raise
+            # if e.errno == errno.ENOENT:
+            #     raise luma.core.error.DeviceNotFoundError('SPI device not found')
+            # else:  # pragma: no cover
+            raise
 
         self._spi.max_speed_hz = bus_speed_hz
 
@@ -289,3 +289,40 @@ class noop(object):
 
     def __noop(self, *args, **kwargs):
         pass
+
+
+def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12_000_000, CS=3, DC=5, RESET=6):
+
+    from pyftdi.spi import SpiController
+    from luma.core.interface.serial import spi
+    from luma.core.interface.ftdi import FTDI_WRAPPER_SPI, FTDI_WRAPPER_GPIO, ftdi_pin
+
+    ftdi_spi = SpiController(cs_count=1)
+    ftdi_spi.configure(device)
+
+    slave = ftdi_spi.get_port(cs=CS - 3, freq=bus_speed_hz, mode=0)
+    gpio = ftdi_spi.get_gpio()
+
+    # RESET and DC configured as outputs
+    pins = ftdi_pin(RESET) | ftdi_pin(DC)
+    gpio.set_direction(pins, pins & 0xFF)
+
+    return spi(
+        FTDI_WRAPPER_SPI(slave),
+        FTDI_WRAPPER_GPIO(gpio),
+        gpio_DC=DC,
+        gpio_RST=RESET)
+
+
+def ftdi_i2c(device='ftdi://::/1', address=0x3C):
+
+    from pyftdi.i2c import I2cController
+    from luma.core.interface.serial import i2c
+    from luma.core.interface.ftdi import FTDI_WRAPPER_I2C
+
+    ftdi_i2c = I2cController(cs_count=1)
+    ftdi_i2c.configure(device)
+
+    slave = ftdi_i2c.get_port(address)
+
+    return i2c(bus=FTDI_WRAPPER_I2C(slave))

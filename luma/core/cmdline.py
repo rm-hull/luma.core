@@ -160,6 +160,14 @@ class make_serial(object):
                    gpio_RST=self.opts.gpio_reset,
                    gpio=self.gpio or GPIO)
 
+    def ftdi_spi(self):
+        from luma.core.interface.serial import ftdi_spi
+
+        return ftdi_spi(device=self.opts.ftdi_device,
+                        bus_speed_hz=self.opts.spi_bus_speed,
+                        DC=self.opts.gpio_data_command,
+                        RESET=self.opts.gpio_reset)
+
 
 def create_device(args, display_types=None):
     """
@@ -176,22 +184,22 @@ def create_device(args, display_types=None):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         Serial = getattr(make_serial(args), args.interface)
-        device = Device(Serial(), **vars(args))
+        device = Device(serial_interface=Serial(), **vars(args))
 
     elif args.display in display_types.get('lcd'):
         import luma.lcd.device
         import luma.lcd.aux
         Device = getattr(luma.lcd.device, args.display)
-        spi = make_serial(args).spi()
-        device = Device(spi, **vars(args))
+        Serial = getattr(make_serial(args), args.interface)
+        device = Device(serial_interface=Serial(), **vars(args))
         luma.lcd.aux.backlight(gpio=spi._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
 
     elif args.display in display_types.get('led_matrix'):
         import luma.led_matrix.device
         from luma.core.interface.serial import noop
         Device = getattr(luma.led_matrix.device, args.display)
-        spi = make_serial(args, gpio=noop()).spi()
-        device = Device(serial_interface=spi, **vars(args))
+        Serial = getattr(make_serial(args, gpio=noop()), args.interface)
+        device = Device(serial_interface=Serial(), **vars(args))
 
     elif args.display in display_types.get('emulator'):
         import luma.emulator.device
@@ -234,6 +242,9 @@ def create_parser(description):
     spi_group.add_argument('--spi-bus-speed', type=int, default=8000000, help='SPI max bus speed (Hz)')
     spi_group.add_argument('--spi-cs-high', type=bool, default=False, help='SPI chip select is high')
     spi_group.add_argument('--spi-transfer-size', type=int, default=4096, help='SPI bus max transfer unit (bytes)')
+
+    ftdi_group = parser.add_argument_group('FTDI')
+    ftdi_group.add_argument('--ftdi-device', type=str, default='ftdi://::/1', help='FTDI device')
 
     gpio_group = parser.add_argument_group('GPIO')
     gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI devices only)')
