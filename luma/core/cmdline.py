@@ -135,7 +135,6 @@ class make_serial(object):
 
     def spi(self):
         from luma.core.interface.serial import spi
-
         if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
             GPIO = importlib.import_module(self.opts.gpio)
 
@@ -162,11 +161,14 @@ class make_serial(object):
 
     def ftdi_spi(self):
         from luma.core.interface.serial import ftdi_spi
-
         return ftdi_spi(device=self.opts.ftdi_device,
                         bus_speed_hz=self.opts.spi_bus_speed,
                         DC=self.opts.gpio_data_command,
                         RESET=self.opts.gpio_reset)
+
+    def ftdi_i2c(self):
+        from luma.core.interface.serial import ftdi_i2c
+        return ftdi_i2c(address=self.opts.i2c_address)
 
 
 def create_device(args, display_types=None):

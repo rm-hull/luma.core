@@ -8,7 +8,8 @@ def ftdi_pin(pin):
 
 
 class FTDI_WRAPPER_SPI:
-    def __init__(self, spi_port):
+    def __init__(self, controller, spi_port):
+        self._controller = controller
         self._spi_port = spi_port
 
     def open(self, port, device):
@@ -18,7 +19,19 @@ class FTDI_WRAPPER_SPI:
         self._spi_port.write(data)
 
     def close(self):
-        pass
+        self._controller.terminate()
+
+
+class FTDI_WRAPPER_I2C:
+    def __init__(self, controller, i2c_port):
+        self._controller = controller
+        self._i2c_port = i2c_port
+
+    def write_i2c_block_data(self, address, register, data):
+        self._i2c_port.write_to(register, data)
+
+    def close(self):
+        self._controller.terminate()
 
 
 class FTDI_WRAPPER_GPIO:

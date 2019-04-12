@@ -297,18 +297,18 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12_000_000, CS=3, DC=5, RESET=6)
     from luma.core.interface.serial import spi
     from luma.core.interface.ftdi import FTDI_WRAPPER_SPI, FTDI_WRAPPER_GPIO, ftdi_pin
 
-    ftdi_spi = SpiController(cs_count=1)
-    ftdi_spi.configure(device)
+    controller = SpiController(cs_count=1)
+    controller.configure(device)
 
-    slave = ftdi_spi.get_port(cs=CS - 3, freq=bus_speed_hz, mode=0)
-    gpio = ftdi_spi.get_gpio()
+    slave = controller.get_port(cs=CS - 3, freq=bus_speed_hz, mode=0)
+    gpio = controller.get_gpio()
 
     # RESET and DC configured as outputs
     pins = ftdi_pin(RESET) | ftdi_pin(DC)
     gpio.set_direction(pins, pins & 0xFF)
 
     return spi(
-        FTDI_WRAPPER_SPI(slave),
+        FTDI_WRAPPER_SPI(controller, slave),
         FTDI_WRAPPER_GPIO(gpio),
         gpio_DC=DC,
         gpio_RST=RESET)
@@ -320,9 +320,11 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
     from luma.core.interface.serial import i2c
     from luma.core.interface.ftdi import FTDI_WRAPPER_I2C
 
-    ftdi_i2c = I2cController(cs_count=1)
-    ftdi_i2c.configure(device)
+    controller = I2cController()
+    controller.configure(device)
 
-    slave = ftdi_i2c.get_port(address)
+    port = controller.get_port(int(address, 0))
 
-    return i2c(bus=FTDI_WRAPPER_I2C(slave))
+    serial = i2c(bus=FTDI_WRAPPER_I2C(controller, port))
+    serial._managed = False
+    return serial
