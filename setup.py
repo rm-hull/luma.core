@@ -38,7 +38,7 @@ test_deps = [
 install_deps = [
     'pillow>=4.0.0',
     'smbus2',
-    'pyftdi'
+    'pyftdi;python_version>="3.5"'
 ]
 
 setup(

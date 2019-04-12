@@ -259,10 +259,10 @@ class spi(bitbang):
             self._spi.open(port, device)
             self._spi.cshigh = cs_high
         except (IOError, OSError) as e:
-            # if e.errno == errno.ENOENT:
-            #     raise luma.core.error.DeviceNotFoundError('SPI device not found')
-            # else:  # pragma: no cover
-            raise
+            if e.errno == errno.ENOENT:
+                raise luma.core.error.DeviceNotFoundError('SPI device not found')
+            else:  # pragma: no cover
+                raise
 
         self._spi.max_speed_hz = bus_speed_hz
 
@@ -291,7 +291,7 @@ class noop(object):
         pass
 
 
-def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12_000_000, CS=3, DC=5, RESET=6):
+def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
 
     from pyftdi.spi import SpiController
     from luma.core.interface.serial import spi
