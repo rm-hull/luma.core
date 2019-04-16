@@ -7,8 +7,10 @@
 Tests for the :py:class:`luma.core.interface.serial.ftdi_spi` class.
 """
 
+import pytest
+import sys
 from luma.core.interface.serial import ftdi_spi
-from helpers import Mock, call, patch
+from helpers import Mock, call, patch, pyftdi_missing
 
 
 def fib(n):
@@ -18,6 +20,7 @@ def fib(n):
         a, b = b, a + b
 
 
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.spi.SpiController')
 def test_init(mock_controller):
     gpio = Mock()
@@ -34,6 +37,7 @@ def test_init(mock_controller):
     gpio.set_direction.assert_called_with(0x60, 0x60)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.spi.SpiController')
 def test_command(mock_controller):
     cmds = [3, 1, 4, 2]
@@ -50,6 +54,7 @@ def test_command(mock_controller):
     port.write.assert_called_once_with(cmds)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.spi.SpiController')
 def test_data(mock_controller):
     data = list(fib(100))
@@ -66,6 +71,7 @@ def test_data(mock_controller):
     port.write.assert_called_once_with(data)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.spi.SpiController')
 def test_cleanup(mock_controller):
     gpio = Mock()
