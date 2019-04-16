@@ -10,7 +10,7 @@ Tests for the :py:class:`luma.core.interface.serial.ftdi_i2c` class.
 import pytest
 import sys
 from luma.core.interface.serial import ftdi_i2c
-from helpers import Mock, call, patch, pyftdi_missing
+from helpers import Mock, patch, pyftdi_missing
 
 
 def fib(n):

@@ -25,6 +25,7 @@ spidev_missing = 'spidev is not supported on this platform: {}'.format(
     platform.system())
 pyftdi_missing = 'pyftdi is not supported on Python {}'.format(platform.python_version())
 
+
 def get_reference_file(fname):
     return os.path.abspath(os.path.join(
         os.path.dirname(__file__),
