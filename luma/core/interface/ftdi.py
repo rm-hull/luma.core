@@ -58,3 +58,6 @@ class FTDI_WRAPPER_GPIO:
             self._data |= mask
 
         self._gpio.write(self._data)
+
+    def cleanup(self):
+        pass
