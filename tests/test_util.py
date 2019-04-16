@@ -20,5 +20,13 @@ def test_mutablestring():
     f = util.mutable_string('bar')
     f[1] = '2'
     assert f == 'b2r'
-    assert repr(f) == "'b2r'"
+    assert repr(f) == repr('b2r')
     assert len(f) == 3
+
+
+def test_mutablestring_unicode():
+    f = util.mutable_string(u'bazül')
+    f[4] = 'L'
+    assert f == u'baz\xfcL'
+    assert repr(f) == repr(u'baz\xfcL')
+    assert len(f) == 5

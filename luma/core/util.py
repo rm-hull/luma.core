@@ -2,11 +2,15 @@
 # Copyright (c) 2017-18 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+import sys
+if sys.version_info.major == 3:
+    unicode = str
+
 
 class mutable_string(object):
 
     def __init__(self, value):
-        assert value.__class__ is str
+        assert isinstance(value, str) or isinstance(value, unicode)
         self.target = value
 
     def __getattr__(self, attr):
@@ -16,10 +20,10 @@ class mutable_string(object):
         return self.target[key]
 
     def __setitem__(self, key, value):
-        assert value.__class__ is str
+        assert isinstance(value, str) or isinstance(value, unicode)
         tmp = list(self.target)
         tmp[key] = value
-        self.target = "".join(tmp)
+        self.target = ("" if isinstance(self.target, str) else u"").join(tmp)
 
     def __delitem__(self, key):
         tmp = list(self.target)
@@ -33,13 +37,16 @@ class mutable_string(object):
         return iter(self.target)
 
     def __str__(self):
-        return str(self.target)
+        return self.target
 
     def __repr__(self):
         return repr(self.target)
 
     def __eq__(self, other):
-        return str(self.target) == str(other)
+        if isinstance(self.target, unicode):
+            return self.target == unicode(other)
+        else:
+            return self.target == str(other)
 
     def __hash__(self):
         return hash(self.target)

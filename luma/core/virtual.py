@@ -23,7 +23,7 @@ pool = threadpool(4)
 def calc_bounds(xy, entity):
     """
     For an entity with width and height attributes, determine
-    the bounding box if were positioned at (x, y).
+    the bounding box if were positioned at ``(x, y)``.
     """
     left, top = xy
     right, bottom = left + entity.width, top + entity.height
@@ -32,7 +32,7 @@ def calc_bounds(xy, entity):
 
 def range_overlap(a_min, a_max, b_min, b_max):
     """
-    Neither range is completely greater than the other
+    Neither range is completely greater than the other.
     """
     return (a_min < b_max) and (b_min < a_max)
 
@@ -61,7 +61,7 @@ class viewport(mixin.capabilities):
 
     def add_hotspot(self, hotspot, xy):
         """
-        Add the hotspot at (x, y). The hotspot must fit inside the bounds
+        Add the hotspot at ``(x, y)``. The hotspot must fit inside the bounds
         of the virtual device. If it does not then an ``AssertError`` is
         raised.
         """
@@ -75,10 +75,11 @@ class viewport(mixin.capabilities):
 
     def remove_hotspot(self, hotspot, xy):
         """
-        Remove the hotspot at (x, y): Any previously rendered image where the
-        hotspot was placed is erased from the backing image, and will be
+        Remove the hotspot at ``(x, y)``: Any previously rendered image where
+        the hotspot was placed is erased from the backing image, and will be
         "undrawn" the next time the virtual device is refreshed. If the
-        specified hotspot is not found (x, y), a ``ValueError`` is raised.
+        specified hotspot is not found for ``(x, y)``, a ``ValueError`` is
+        raised.
         """
         self._hotspots.remove((hotspot, xy))
         eraser = Image.new(self.mode, hotspot.size)
@@ -86,9 +87,9 @@ class viewport(mixin.capabilities):
 
     def is_overlapping_viewport(self, hotspot, xy):
         """
-        Checks to see if the hotspot at position (x, y)
+        Checks to see if the hotspot at position ``(x, y)``
         is (at least partially) visible according to the
-        position of the viewport
+        position of the viewport.
         """
         l1, t1, r1, b1 = calc_bounds(xy, hotspot)
         l2, t2, r2, b2 = calc_bounds(self._position, self._device)
@@ -177,7 +178,7 @@ class snapshot(hotspot):
 
     def should_redraw(self):
         """
-        Only requests a redraw after ``interval`` seconds have elapsed
+        Only requests a redraw after ``interval`` seconds have elapsed.
         """
         return monotonic() - self.last_updated > self.interval
 
@@ -239,6 +240,7 @@ class terminal(object):
         Prints the supplied text to the device, scrolling where necessary.
         The text is always followed by a newline.
 
+        :param text: The text to print.
         :type text: str
         """
         if self.word_wrap:
@@ -276,6 +278,7 @@ class terminal(object):
         If the ``animate`` flag was set to True (default), then each character
         is flushed to the device, giving the effect of 1970's teletype device.
 
+        :param text: The text to print.
         :type text: str
         """
         for method, args in ansi_color.find_directives(text, self):
@@ -286,6 +289,8 @@ class terminal(object):
         Prints the specific character, which must be a valid printable ASCII
         value in the range 32..127 only, or one of carriage return (\\r),
         newline (\\n), backspace (\\b) or tab (\\t).
+
+        :param char: The character to print.
         """
         if char == '\r':
             self.carriage_return()
@@ -355,7 +360,7 @@ class terminal(object):
         """
         Moves the cursor one place to the left, erasing the character at the
         current position. Cannot move beyond column zero, nor onto the
-        previous line
+        previous line.
         """
         if self._cx + self._cw >= 0:
             self.erase()
@@ -379,18 +384,18 @@ class terminal(object):
 
     def foreground_color(self, value):
         """
-        Sets the foreground color
+        Sets the foreground color.
 
-        :param value: new color value, either string name or RGB tuple.
+        :param value: The new color value, either string name or RGB tuple.
         :type value: str or tuple
         """
         self._fgcolor = value
 
     def background_color(self, value):
         """
-        Sets the foreground color
+        Sets the background color.
 
-        :param value: new color value, either string name or RGB tuple.
+        :param value: The new color value, either string name or RGB tuple.
         :type value: str or tuple
         """
         self._bgcolor = value
@@ -398,14 +403,14 @@ class terminal(object):
     def reset(self):
         """
         Resets the foreground and background color value back to the original
-        when initialised
+        when initialised.
         """
         self._fgcolor = self.default_fgcolor
         self._bgcolor = self.default_bgcolor
 
     def reverse_colors(self):
         """
-        Flips the foreground and background colors
+        Flips the foreground and background colors.
         """
         self._bgcolor, self._fgcolor = self._fgcolor, self._bgcolor
 
@@ -445,6 +450,9 @@ class history(mixin.capabilities):
         Restores the last savepoint. If ``drop`` is supplied and greater than
         zero, then that many savepoints are dropped, and the next savepoint is
         restored.
+
+        :param drop:
+        :type drop: int
         """
         assert(drop >= 0)
         while drop > 0:
@@ -468,7 +476,7 @@ class sevensegment(object):
     ``segment_mapper`` sets the correct bit representation for seven-segment
     displays and propagates that onto the underlying device.
 
-    :param device: A device instance
+    :param device: A device instance.
     :param segment_mapper: An optional function that maps strings into the
         correct representation for the 7-segment physical layout. If not
         provided, the default mapper from compatible devices is used instead.
@@ -489,7 +497,7 @@ class sevensegment(object):
         Returns the current state of the text buffer. This may not reflect
         accurately what is displayed on the seven-segment device, as certain
         alpha-numerics and most punctuation cannot be rendered on the limited
-        display
+        display.
         """
         return self._text_buffer
 
@@ -502,7 +510,7 @@ class sevensegment(object):
         :param value: The value to render onto the device. Any characters which
             cannot be rendered will be converted into the ``undefined``
             character supplied in the constructor.
-        :type value: string
+        :type value: str
         """
         self._text_buffer = observable(mutable_string(value),
             observer=self._flush)

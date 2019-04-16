@@ -137,9 +137,9 @@ class spritesheet(object):
 
         :param seq_name: The name of a previously defined animation sequence.
         :type seq_name: str
-        :returns: a generator that yields all frames from the animation
+        :returns: A generator that yields all frames from the animation
             sequence.
-        :raises AttributeError: if the ``seq_name`` is unknown.
+        :raises AttributeError: If the ``seq_name`` is unknown.
         """
         while True:
             index = 0
@@ -219,7 +219,7 @@ class framerate_regulator(object):
         correlate to the desired FPS supplied in the constructor, but no
         guarantees are given.
 
-        :returns: the effective frame rate
+        :returns: The effective frame rate.
         :rtype: float
         """
         if self.start_time is None:
@@ -230,9 +230,9 @@ class framerate_regulator(object):
     def average_transit_time(self):
         """
         Calculates the average transit time between the enter and exit methods,
-        and return the time in milliseconds
+        and return the time in milliseconds.
 
-        :returns: the average transit in milliseconds
+        :returns: The average transit in milliseconds.
         :rtype: float
         """
         return self.total_transit_time * 1000.0 / self.called

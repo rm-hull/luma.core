@@ -15,15 +15,16 @@ class capabilities(object):
         Assigns attributes such as ``width``, ``height``, ``size`` and
         ``bounding_box`` correctly oriented from the supplied parameters.
 
-        :param width: the device width
+        :param width: The device width.
         :type width: int
-        :param height: the device height
+        :param height: The device height.
         :type height: int
-        :param rotate: an integer value of 0 (default), 1, 2 or 3 only, where 0 is
+        :param rotate: An integer value of 0 (default), 1, 2 or 3 only, where 0 is
             no rotation, 1 is rotate 90° clockwise, 2 is 180° rotation and 3
             represents 270° rotation.
         :type rotate: int
-        :param mode: the supported color model, one of "1", "RGB" or "RGBA" only.
+        :param mode: The supported color model, one of ``"1"``, ``"RGB"`` or
+            ``"RGBA"`` only.
         :type mode: str
         """
         assert mode in ("1", "RGB", "RGBA")
@@ -48,11 +49,11 @@ class capabilities(object):
         """
         Provides a preprocessing facility (which may be overridden) whereby the supplied image is
         rotated according to the device's rotate capability. If this method is
-        overridden, it is important to call the super
+        overridden, it is important to call the ``super`` method.
 
-        :param image: An image to pre-process
+        :param image: An image to pre-process.
         :type image: PIL.Image.Image
-        :returns: A new processed image
+        :returns: A new processed image.
         :rtype: PIL.Image.Image
         """
         if self.rotate == 0:
@@ -65,7 +66,7 @@ class capabilities(object):
         """
         Should be overridden in sub-classed implementations.
 
-        :param image: An image to display
+        :param image: An image to display.
         :type image: PIL.Image.Image
         :raises NotImplementedError:
         """

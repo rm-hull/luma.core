@@ -80,6 +80,7 @@ def strip_ansi_codes(text):
 
     .. versionadded:: 0.9.0
 
+    :param text: String containing ANSI color codes.
     :type text: str
     :rtype: str
     """
@@ -94,6 +95,7 @@ def find_directives(text, klass):
 
     .. versionadded:: 0.9.0
 
+    :param text: String containing directives.
     :type text: str
     :type klass: object
     :rtype: list

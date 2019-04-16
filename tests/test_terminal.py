@@ -78,10 +78,10 @@ def test_scrolling():
     term = terminal(device, animate=False)
 
     assert_text(device, term, reference, [
-        "it oozed over the blackness, and heard Harris's sleepy voice asking " +
-        "where we drew near it, so they spread their handkerchiefs on the back " +
-        "of Harris and Harris's friend as to avoid running down which, we managed " +
-        "to get out of here while this billing and cooing is on. We'll go down " +
+        "it oozed over the blackness, and heard Harris's sleepy voice asking "
+        "where we drew near it, so they spread their handkerchiefs on the back "
+        "of Harris and Harris's friend as to avoid running down which, we managed "
+        "to get out of here while this billing and cooing is on. We'll go down "
         "to eat vegetables. He said they were demons."
     ])
 

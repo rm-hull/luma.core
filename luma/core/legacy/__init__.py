@@ -23,7 +23,7 @@ def textsize(txt, font=None):
 
     :param txt: The text string to calculate the bounds for
     :type txt: str
-    :param font: The font (from :py:mod:`luma.core.legacy.font`) to use
+    :param font: The font (from :py:mod:`luma.core.legacy.font`) to use.
     """
     font = font or DEFAULT_FONT
     src = [c for ascii_code in txt for c in font[ord(ascii_code)]]
@@ -37,12 +37,14 @@ def text(draw, xy, txt, fill=None, font=None):
 
     :param draw: A valid canvas to draw the text onto.
     :type draw: PIL.ImageDraw
-    :param txt: The text string to display (must be ASCII only)
+    :param txt: The text string to display (must be ASCII only).
     :type txt: str
-    :param xy: An ``(x, y)`` tuple denoting the top-left corner to draw the text
+    :param xy: An ``(x, y)`` tuple denoting the top-left corner to draw the
+        text.
     :type xy: tuple
-    :param fill: The fill color to use (standard Pillow color name or RGB tuple)
-    :param font: The font (from :py:mod:`luma.core.legacy.font`) to use
+    :param fill: The fill color to use (standard Pillow color name or RGB
+        tuple).
+    :param font: The font (from :py:mod:`luma.core.legacy.font`) to use.
     """
     font = font or DEFAULT_FONT
     x, y = xy
@@ -56,18 +58,20 @@ def text(draw, xy, txt, fill=None, font=None):
             x += 1
 
 
-def show_message(device, msg, y_offset=0, fill=None, font=None, scroll_delay=0.03):
+def show_message(device, msg, y_offset=0, fill=None, font=None,
+                 scroll_delay=0.03):
     """
     Scrolls a message right-to-left across the devices display.
 
-    :param device: The device to scroll across
-    :param msg: The text message to display (must be ASCII only)
+    :param device: The device to scroll across.
+    :param msg: The text message to display (must be ASCII only).
     :type msg: str
-    :param y_offset: The row to use to display the text
+    :param y_offset: The row to use to display the text.
     :type y_offset: int
-    :param fill: The fill color to use (standard Pillow color name or RGB tuple)
-    :param font: The font (from :py:mod:`luma.core.legacy.font`) to use
-    :param scroll_delay: The number of seconds to delay between scrolling
+    :param fill: The fill color to use (standard Pillow color name or RGB
+        tuple).
+    :param font: The font (from :py:mod:`luma.core.legacy.font`) to use.
+    :param scroll_delay: The number of seconds to delay between scrolling.
     :type scroll_delay: float
     """
     fps = 0 if scroll_delay == 0 else 1.0 / scroll_delay
