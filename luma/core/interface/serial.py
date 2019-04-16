@@ -313,11 +313,13 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
     pins = ftdi_pin(RESET) | ftdi_pin(DC)
     gpio.set_direction(pins, pins & 0xFF)
 
-    return spi(
+    serial = spi(
         FTDI_WRAPPER_SPI(controller, slave),
         FTDI_WRAPPER_GPIO(gpio),
         gpio_DC=DC,
         gpio_RST=RESET)
+    serial._managed = True
+    return serial
 
 
 def ftdi_i2c(device='ftdi://::/1', address=0x3C):
@@ -332,5 +334,6 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
     port = controller.get_port(int(address, 0))
 
     serial = i2c(bus=FTDI_WRAPPER_I2C(controller, port))
-    serial._managed = False
+    serial._managed = True
+    serial._i2c_msg_write = lambda address, data: (address, data)
     return serial

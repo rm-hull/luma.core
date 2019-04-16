@@ -30,6 +30,11 @@ class FTDI_WRAPPER_I2C:
     def write_i2c_block_data(self, address, register, data):
         self._i2c_port.write_to(register, data)
 
+    def i2c_rdwr(self, message):
+        address, data = message
+        register = data[0]
+        self.write_i2c_block_data(address, register, data[1:])
+
     def close(self):
         self._controller.terminate()
 
