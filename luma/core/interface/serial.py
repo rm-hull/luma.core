@@ -331,7 +331,7 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
     controller = I2cController()
     controller.configure(device)
 
-    port = controller.get_port(int(address, 0))
+    port = controller.get_port(int(str(address), 0))
 
     serial = i2c(bus=FTDI_WRAPPER_I2C(controller, port))
     serial._managed = True
