@@ -28,7 +28,7 @@ def test_init(mock_controller):
     mock_controller.side_effect = [instance]
 
     ftdi_i2c(device='ftdi://dummy', address='0xFF')
-    mock_controller.assert_called()
+    mock_controller.assert_called_with()
     instance.configure.assert_called_with('ftdi://dummy')
     instance.get_port.assert_called_with(0xFF)
 
@@ -71,4 +71,4 @@ def test_cleanup(mock_controller):
 
     serial = ftdi_i2c(device='ftdi://dummy', address=0x3C)
     serial.cleanup()
-    instance.terminate.assert_called_once()
+    instance.terminate.assert_called_once_with()

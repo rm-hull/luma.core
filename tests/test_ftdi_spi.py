@@ -33,7 +33,7 @@ def test_init(mock_controller):
     mock_controller.assert_called_with(cs_count=1)
     instance.configure.assert_called_with('ftdi://dummy')
     instance.get_port.assert_called_with(cs=0, freq=16000000, mode=0)
-    instance.get_gpio.assert_called()
+    instance.get_gpio.assert_called_with()
     gpio.set_direction.assert_called_with(0x60, 0x60)
 
 
@@ -83,4 +83,4 @@ def test_cleanup(mock_controller):
 
     serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, CS=3, DC=5, RESET=6)
     serial.cleanup()
-    instance.terminate.assert_called_once()
+    instance.terminate.assert_called_once_with()
