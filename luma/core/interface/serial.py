@@ -298,7 +298,26 @@ class noop(object):
 
 
 def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
+    """
+    Bridges an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
+    (Serial Peripheral Interface) bus over an FTDI USB device to provide :py:func:`data` and 
+    :py:func:`command` methods.
 
+    :param device: A URI describing the location of the FTDI device. If ``None`` is 
+        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_ 
+        for further details of the naming scheme used.
+    :type device: string
+    :param bus_speed_hz: SPI bus speed, defaults to 12MHz.
+    :type bus_speed_hz: int
+    :param CS: The ADx pin to connect chip select (CS) to (defaults to 3).
+    :type CS: int
+    :param DC: The ADx pin to connect data/command select (DC) to (defaults to 5).
+    :type DC: int
+    :param RESET: The ADx pin to connect reset (RES / RST) to (defaults to 6).
+    :type RESET: int
+    
+    .. versionadded:: 1.9.0
+    """
     from pyftdi.spi import SpiController
     from luma.core.interface.serial import spi
     from luma.core.interface.ftdi import FTDI_WRAPPER_SPI, FTDI_WRAPPER_GPIO, ftdi_pin
@@ -323,15 +342,35 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
 
 
 def ftdi_i2c(device='ftdi://::/1', address=0x3C):
+    """
+    Bridges an `I²C <https://en.wikipedia.org/wiki/I%C2%B2C>`_ (Inter-Integrated
+    Circuit) interface over an FTDI USB device to provide :py:func:`data` and 
+    :py:func:`command` methods.
 
+    :param device: A URI describing the location of the FTDI device. If ``None`` is 
+        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_ 
+        for further details of the naming scheme used.
+    :type device: string
+    :param address: I²C address, default: ``0x3C``.
+    :type address: int
+    :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
+    
+    .. versionadded:: 1.9.0
+    """
     from pyftdi.i2c import I2cController
     from luma.core.interface.serial import i2c
     from luma.core.interface.ftdi import FTDI_WRAPPER_I2C
 
+    try:
+        addr = int(str(address), 0)
+    except ValueError:
+        raise luma.core.error.DeviceAddressError(
+            'I2C device address invalid: {}'.format(address))
+
     controller = I2cController()
     controller.configure(device)
 
-    port = controller.get_port(int(str(address), 0))
+    port = controller.get_port(addr)
 
     serial = i2c(bus=FTDI_WRAPPER_I2C(controller, port))
     serial._managed = True

@@ -11,6 +11,7 @@ import pytest
 import sys
 from luma.core.interface.serial import ftdi_i2c
 from helpers import Mock, patch, pyftdi_missing
+import luma.core.error
 
 
 def fib(n):
@@ -72,3 +73,12 @@ def test_cleanup(mock_controller):
     serial = ftdi_i2c(device='ftdi://dummy', address=0x3C)
     serial.cleanup()
     instance.terminate.assert_called_once_with()
+
+
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
+@patch('pyftdi.i2c.I2cController')
+def test_init_device_address_error(mock_controller):
+    address = 'foo'
+    with pytest.raises(luma.core.error.DeviceAddressError) as ex:
+        ftdi_i2c(device='ftdi://dummy', address=address)
+    assert str(ex.value) == 'I2C device address invalid: {}'.format(address)
