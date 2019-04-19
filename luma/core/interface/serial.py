@@ -300,11 +300,11 @@ class noop(object):
 def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
     """
     Bridges an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
-    (Serial Peripheral Interface) bus over an FTDI USB device to provide :py:func:`data` and 
+    (Serial Peripheral Interface) bus over an FTDI USB device to provide :py:func:`data` and
     :py:func:`command` methods.
 
-    :param device: A URI describing the location of the FTDI device. If ``None`` is 
-        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_ 
+    :param device: A URI describing the location of the FTDI device. If ``None`` is
+        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_
         for further details of the naming scheme used.
     :type device: string
     :param bus_speed_hz: SPI bus speed, defaults to 12MHz.
@@ -315,7 +315,7 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
     :type DC: int
     :param RESET: The ADx pin to connect reset (RES / RST) to (defaults to 6).
     :type RESET: int
-    
+
     .. versionadded:: 1.9.0
     """
     from pyftdi.spi import SpiController
@@ -344,17 +344,17 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, CS=3, DC=5, RESET=6):
 def ftdi_i2c(device='ftdi://::/1', address=0x3C):
     """
     Bridges an `I²C <https://en.wikipedia.org/wiki/I%C2%B2C>`_ (Inter-Integrated
-    Circuit) interface over an FTDI USB device to provide :py:func:`data` and 
+    Circuit) interface over an FTDI USB device to provide :py:func:`data` and
     :py:func:`command` methods.
 
-    :param device: A URI describing the location of the FTDI device. If ``None`` is 
-        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_ 
+    :param device: A URI describing the location of the FTDI device. If ``None`` is
+        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_
         for further details of the naming scheme used.
     :type device: string
     :param address: I²C address, default: ``0x3C``.
     :type address: int
     :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
-    
+
     .. versionadded:: 1.9.0
     """
     from pyftdi.i2c import I2cController
