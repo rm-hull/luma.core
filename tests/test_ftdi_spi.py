@@ -29,7 +29,7 @@ def test_init(mock_controller):
     instance.get_gpio = Mock(return_value=gpio)
     mock_controller.side_effect = [instance]
 
-    ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, CS=3, DC=5, RESET=6)
+    ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, gpio_CS=3, gpio_DC=5, gpio_RST=6)
     mock_controller.assert_called_with(cs_count=1)
     instance.configure.assert_called_with('ftdi://dummy')
     instance.get_port.assert_called_with(cs=0, freq=16000000, mode=0)
@@ -48,7 +48,7 @@ def test_command(mock_controller):
     instance.get_gpio = Mock(return_value=gpio)
     mock_controller.side_effect = [instance]
 
-    serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, CS=3, DC=5, RESET=6)
+    serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, gpio_CS=3, gpio_DC=5, gpio_RST=6)
     serial.command(*cmds)
     gpio.write.assert_has_calls([call(0x00), call(0x40), call(0x40)])
     port.write.assert_called_once_with(cmds)
@@ -65,7 +65,7 @@ def test_data(mock_controller):
     instance.get_gpio = Mock(return_value=gpio)
     mock_controller.side_effect = [instance]
 
-    serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, CS=3, DC=5, RESET=6)
+    serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, gpio_CS=3, gpio_DC=5, gpio_RST=6)
     serial.data(data)
     gpio.write.assert_has_calls([call(0x00), call(0x40), call(0x60)])
     port.write.assert_called_once_with(data)
@@ -81,6 +81,6 @@ def test_cleanup(mock_controller):
     instance.get_gpio = Mock(return_value=gpio)
     mock_controller.side_effect = [instance]
 
-    serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, CS=3, DC=5, RESET=6)
+    serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, gpio_CS=3, gpio_DC=5, gpio_RST=6)
     serial.cleanup()
     instance.terminate.assert_called_once_with()

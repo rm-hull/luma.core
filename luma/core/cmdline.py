@@ -163,8 +163,8 @@ class make_serial(object):
         from luma.core.interface.serial import ftdi_spi
         return ftdi_spi(device=self.opts.ftdi_device,
                         bus_speed_hz=self.opts.spi_bus_speed,
-                        DC=self.opts.gpio_data_command,
-                        RESET=self.opts.gpio_reset)
+                        gpio_DC=self.opts.gpio_data_command,
+                        gpio_RESET=self.opts.gpio_reset)
 
     def ftdi_i2c(self):
         from luma.core.interface.serial import ftdi_i2c
