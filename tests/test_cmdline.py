@@ -7,15 +7,15 @@
 Tests for the :py:mod:`luma.core.cmdline` module.
 """
 
+import pytest
 import errno
+import sys
 
 from luma.core import cmdline, error
 from luma.core.interface.serial import __all__ as iface_types
 
 from helpers import (get_reference_file, patch, Mock, i2c_error,
-    rpi_gpio_missing, spidev_missing)
-
-import pytest
+    rpi_gpio_missing, spidev_missing, pyftdi_missing)
 
 
 test_config_file = get_reference_file('config-test.txt')
@@ -288,12 +288,14 @@ def test_create_device_emulator():
         assert device == display_name
 
 
-def test_make_serial_ftdi_spi():
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
+@patch('pyftdi.spi.SpiController')
+def test_make_serial_ftdi_spi(mock_controller):
     """
     :py:func:`luma.core.cmdline.make_serial.ftdi_spi` returns an SPI instance.
     """
     class opts(test_spi_opts):
-        ftdi_device = 'ftdi://::/1'
+        ftdi_device = 'ftdi://dummy'
         gpio_data_command = 5
         gpio_reset = 6
         gpio_backlight = 7
