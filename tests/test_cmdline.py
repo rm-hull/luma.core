@@ -286,3 +286,17 @@ def test_create_device_emulator():
         }):
         device = cmdline.create_device(args, display_types=display_types)
         assert device == display_name
+
+
+def test_make_serial_ftdi_spi():
+    """
+    :py:func:`luma.core.cmdline.make_serial.ftdi_spi` returns an SPI instance.
+    """
+    class opts(test_spi_opts):
+        ftdi_device = 'ftdi://::/1'
+        gpio_data_command = 5
+        gpio_reset = 6
+        gpio_backlight = 7
+
+    factory = cmdline.make_serial(opts)
+    assert 'luma.core.interface.serial.spi' in repr(factory.ftdi_spi())
