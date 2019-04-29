@@ -302,3 +302,18 @@ def test_make_serial_ftdi_spi(mock_controller):
 
     factory = cmdline.make_serial(opts)
     assert 'luma.core.interface.serial.spi' in repr(factory.ftdi_spi())
+
+
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
+@patch('pyftdi.i2c.I2cController')
+def test_make_serial_ftdi_i2c(mock_controller):
+    """
+    :py:func:`luma.core.cmdline.make_serial.ftdi_i2c` returns an I2C instance.
+    """
+    class opts:
+        ftdi_device = 'ftdi://dummy'
+        i2c_port = 200
+        i2c_address = 0x710
+
+    factory = cmdline.make_serial(opts)
+    assert 'luma.core.interface.serial.i2c' in repr(factory.ftdi_i2c())
