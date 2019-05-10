@@ -7,15 +7,15 @@
 Tests for the :py:mod:`luma.core.cmdline` module.
 """
 
+import pytest
 import errno
+import sys
 
 from luma.core import cmdline, error
 from luma.core.interface.serial import __all__ as iface_types
 
 from helpers import (get_reference_file, patch, Mock, i2c_error,
-    rpi_gpio_missing, spidev_missing)
-
-import pytest
+    rpi_gpio_missing, spidev_missing, pyftdi_missing)
 
 
 test_config_file = get_reference_file('config-test.txt')
@@ -286,3 +286,34 @@ def test_create_device_emulator():
         }):
         device = cmdline.create_device(args, display_types=display_types)
         assert device == display_name
+
+
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
+@patch('pyftdi.spi.SpiController')
+def test_make_serial_ftdi_spi(mock_controller):
+    """
+    :py:func:`luma.core.cmdline.make_serial.ftdi_spi` returns an SPI instance.
+    """
+    class opts(test_spi_opts):
+        ftdi_device = 'ftdi://dummy'
+        gpio_data_command = 5
+        gpio_reset = 6
+        gpio_backlight = 7
+
+    factory = cmdline.make_serial(opts)
+    assert 'luma.core.interface.serial.spi' in repr(factory.ftdi_spi())
+
+
+@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
+@patch('pyftdi.i2c.I2cController')
+def test_make_serial_ftdi_i2c(mock_controller):
+    """
+    :py:func:`luma.core.cmdline.make_serial.ftdi_i2c` returns an I2C instance.
+    """
+    class opts:
+        ftdi_device = 'ftdi://dummy'
+        i2c_port = 200
+        i2c_address = 0x710
+
+    factory = cmdline.make_serial(opts)
+    assert 'luma.core.interface.serial.i2c' in repr(factory.ftdi_i2c())

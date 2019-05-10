@@ -5,6 +5,7 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | *upcoming* | * Improve I2C render speed by not chunking into 32-byte blocks      | TBC        |
+|            | * Add support for bridging FTDI to I2C/SPI                          |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.8.3**  | * Improve command line help output                                  | 2019/01/07 |
 |            | * Split API docs into separate pages                                |            |
