@@ -4,6 +4,9 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| *upcoming* | * Allow viewport pseudo-display to dither when rendering to         | TBC        |
+|            |   device with lower-fidelity color mode                             |            |
++------------+---------------------------------------------------------------------+------------+
 | **1.9.0**  | * Improve I2C render speed by not chunking into 32-byte blocks      | 2019/05/10 |
 |            | * Add support for bridging FTDI to I2C/SPI                          |            |
 +------------+---------------------------------------------------------------------+------------+
