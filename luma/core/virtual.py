@@ -38,15 +38,33 @@ def range_overlap(a_min, a_max, b_min, b_max):
 
 
 class viewport(mixin.capabilities):
-
-    def __init__(self, device, width, height):
-        self.capabilities(width, height, rotate=0, mode=device.mode)
+    """
+    The viewport offers a positionable window into a larger resolution pseudo-display,
+    that also supports the concept of hotspots (which act like live displays).
+    :param device: The device to project the enlarged pseudo-display viewport onto.
+    :param width: The number of horizontal pixels.
+    :type width: int
+    :param height: The number of vertical pixels.
+    :type height: int
+    :param mode: The supported color model, one of ``"1"``, ``"RGB"`` or
+        ``"RGBA"`` only.
+    :type mode: str
+    :param dither: By default, any color (other than black) will be `generally`
+        treated as white when displayed on monochrome devices. However, this behaviour
+        can be changed by adding ``dither=True`` and the image will be converted from RGB
+        space into a 1-bit monochrome image where dithering is employed to differentiate
+        colors at the expense of resolution.
+    :type dither: bool
+    """
+    def __init__(self, device, width, height, mode=None, dither=False):
+        self.capabilities(width, height, rotate=0, mode=mode or device.mode)
         if hasattr(device, "segment_mapper"):
             self.segment_mapper = device.segment_mapper
         self._device = device
         self._backing_image = Image.new(self.mode, self.size)
         self._position = (0, 0)
         self._hotspots = []
+        self.dither = dither
 
     def display(self, image):
         assert(image.mode == self.mode)
@@ -106,6 +124,9 @@ class viewport(mixin.capabilities):
             pool.wait_completion()
 
         im = self._backing_image.crop(box=self._crop_box())
+        if self.dither:
+            im = im.convert(self._device.mode)
+
         self._device.display(im)
         del im
 

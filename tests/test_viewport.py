@@ -142,3 +142,26 @@ def test_viewport_hotspot():
         virtual.remove_hotspot(widget, (19, 56))
 
         assert_identical_image(reference, device.image, img_path)
+
+
+def test_viewport_dithering():
+    img_path = get_reference_image('hotspot_dither.png')
+
+    with open(img_path, 'rb') as p:
+        reference = Image.open(p)
+        device = dummy(mode="1")
+        virtual = viewport(device, 200, 200, mode='RGBA', dither=True)
+
+        def draw_fn(draw, width, height):
+            draw.rectangle((0, 0, 64, 32), fill="red")
+            draw.rectangle((64, 0, 128, 32), fill="yellow")
+            draw.rectangle((0, 32, 64, 64), fill="blue")
+            draw.rectangle((64, 32, 128, 64), fill="white")
+
+        widget = hotspot(device.width, device.height, draw_fn)
+
+        virtual.add_hotspot(widget, (19, 56))
+        virtual.set_position((28, 30))
+        virtual.remove_hotspot(widget, (19, 56))
+
+        assert_identical_image(reference, device.image, img_path)
