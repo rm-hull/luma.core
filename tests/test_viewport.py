@@ -153,10 +153,10 @@ def test_viewport_dithering():
         virtual = viewport(device, 200, 200, mode='RGBA', dither=True)
 
         def draw_fn(draw, width, height):
-            draw.rectangle((0, 0, 64, 32), fill="red")
-            draw.rectangle((64, 0, 128, 32), fill="yellow")
-            draw.rectangle((0, 32, 64, 64), fill="blue")
-            draw.rectangle((64, 32, 128, 64), fill="white")
+            draw.rectangle((0, 0, width / 2, height / 2), fill="red")
+            draw.rectangle((width / 2, 0, width, height / 2), fill="yellow")
+            draw.rectangle((0, height / 2, width / 2, height), fill="blue")
+            draw.rectangle((width / 2, height / 2, width, height), fill="white")
 
         widget = hotspot(device.width, device.height, draw_fn)
 
