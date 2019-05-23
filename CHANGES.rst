@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *upcoming* | * Allow viewport pseudo-display to dither when rendering to         | TBC        |
+| **1.10.0** | * Allow viewport pseudo-display to dither when rendering to         | 2019/05/23 |
 |            |   device with lower-fidelity color mode                             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.9.0**  | * Improve I2C render speed by not chunking into 32-byte blocks      | 2019/05/10 |
