@@ -48,13 +48,13 @@ class viewport(mixin.capabilities):
     :param height: The number of vertical pixels.
     :type height: int
     :param mode: The supported color model, one of ``"1"``, ``"RGB"`` or
-    ``"RGBA"`` only.
+        ``"RGBA"`` only.
     :type mode: str
     :param dither: By default, any color (other than black) will be `generally`
-    treated as white when displayed on monochrome devices. However, this behaviour
-    can be changed by adding ``dither=True`` and the image will be converted from RGB
-    space into a 1-bit monochrome image where dithering is employed to differentiate
-    colors at the expense of resolution.
+        treated as white when displayed on monochrome devices. However, this behaviour
+        can be changed by adding ``dither=True`` and the image will be converted from RGB
+        space into a 1-bit monochrome image where dithering is employed to differentiate
+        colors at the expense of resolution.
     :type dither: bool
     """
     def __init__(self, device, width, height, mode=None, dither=False):
