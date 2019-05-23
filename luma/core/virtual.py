@@ -41,6 +41,7 @@ class viewport(mixin.capabilities):
     """
     The viewport offers a positionable window into a larger resolution pseudo-display,
     that also supports the concept of hotspots (which act like live displays).
+
     :param device: The device to project the enlarged pseudo-display viewport onto.
     :param width: The number of horizontal pixels.
     :type width: int
