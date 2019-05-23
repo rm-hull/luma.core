@@ -65,7 +65,7 @@ class viewport(mixin.capabilities):
         self._backing_image = Image.new(self.mode, self.size)
         self._position = (0, 0)
         self._hotspots = []
-        self.dither = dither
+        self._dither = dither
 
     def display(self, image):
         assert(image.mode == self.mode)
@@ -125,7 +125,7 @@ class viewport(mixin.capabilities):
             pool.wait_completion()
 
         im = self._backing_image.crop(box=self._crop_box())
-        if self.dither:
+        if self._dither:
             im = im.convert(self._device.mode)
 
         self._device.display(im)
