@@ -103,15 +103,26 @@ class i2c(object):
         :type data: list, bytearray
         """
         if self._managed:
-            self._bus.i2c_rdwr(self._i2c_msg_write(self._addr, [self._data_mode] + data))
+            block_size = 4096
+            write = self._write_large_block
         else:
-            i = 0
-            n = len(data)
-            write = self._bus.write_i2c_block_data
-            while i < n:
-                write(self._addr, self._data_mode, list(data[i:i + 32]))
-                i += 32
+            block_size = 32
+            write = self._write_block
+        
+        i = 0
+        n = len(data)
+        while i < n:
+            write(list(data[i:i + block_size]))
+            i += block_size
 
+    def _write_block(self, data):
+        assert len(data) <= 32
+        self._bus.write_i2c_block_data(self._addr, self._data_mode, data)
+
+    def _write_large_block(self, data):
+        assert len(data) <= 4096
+        self._bus.i2c_rdwr(self._i2c_msg_write(self._addr, [self._data_mode] + data))
+    
     def cleanup(self):
         """
         Clean up I²C resources
