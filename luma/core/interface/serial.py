@@ -108,7 +108,7 @@ class i2c(object):
         else:
             block_size = 32
             write = self._write_block
-        
+
         i = 0
         n = len(data)
         while i < n:
@@ -122,7 +122,7 @@ class i2c(object):
     def _write_large_block(self, data):
         assert len(data) <= 4096
         self._bus.i2c_rdwr(self._i2c_msg_write(self._addr, [self._data_mode] + data))
-    
+
     def cleanup(self):
         """
         Clean up I²C resources
