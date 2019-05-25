@@ -102,7 +102,7 @@ class i2c(object):
         :param data: A data sequence.
         :type data: list, bytearray
         """
-        
+
         # block size is the maximum data payload that will be tolerated.
         # The managed i2c will transfer blocks of upto 4K (using i2c_rdwr)
         # whereas we must use the default 32 byte block size when unmanaged
