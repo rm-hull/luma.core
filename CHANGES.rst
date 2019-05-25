@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **1.10.1** | * Fix [Error 22] emitted from within I2C serial adapter when used   | TBC        |
+| **1.10.1** | * Fix [Error 22] emitted from within I2C serial adapter when used   | 2019/05/25 |
 |            |   with SSD1327 device                                               |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.10.0** | * Allow viewport pseudo-display to dither when rendering to         | 2019/05/23 |
