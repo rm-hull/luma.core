@@ -13,7 +13,7 @@ import smbus2
 from luma.core.interface.serial import i2c
 import luma.core.error
 
-from helpers import Mock, patch, call, i2c_error
+from helpers import Mock, patch, call, i2c_error, fib
 
 
 smbus = Mock(unsafe=True)
@@ -21,13 +21,6 @@ smbus = Mock(unsafe=True)
 
 def setup_function(function):
     smbus.reset_mock()
-
-
-def fib(n):
-    a, b = 0, 1
-    for _ in range(n):
-        yield a
-        a, b = b, a + b
 
 
 def test_init_device_not_found():

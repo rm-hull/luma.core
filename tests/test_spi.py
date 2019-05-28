@@ -12,7 +12,7 @@ import pytest
 from luma.core.interface.serial import spi
 import luma.core.error
 
-from helpers import Mock, call, get_spidev, rpi_gpio_missing
+from helpers import Mock, call, get_spidev, rpi_gpio_missing, fib
 
 
 spidev = Mock(unsafe=True)
@@ -28,13 +28,6 @@ def setup_function(function):
     gpio.OUT = 4
     gpio.HIGH = 5
     gpio.LOW = 6
-
-
-def fib(n):
-    a, b = 0, 1
-    for _ in range(n):
-        yield a
-        a, b = b, a + b
 
 
 def verify_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25):
