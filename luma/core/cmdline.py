@@ -190,11 +190,14 @@ def create_device(args, display_types=None):
 
     elif args.display in display_types.get('lcd'):
         import luma.lcd.device
-        import luma.lcd.aux
         Device = getattr(luma.lcd.device, args.display)
         serial = getattr(make_serial(args), args.interface)()
         device = Device(serial_interface=serial, **vars(args))
-        luma.lcd.aux.backlight(gpio=serial._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
+        try:
+            import luma.lcd.aux
+            luma.lcd.aux.backlight(gpio=serial._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low").enable(True)
+        except ImportError:
+            pass
 
     elif args.display in display_types.get('led_matrix'):
         import luma.led_matrix.device
