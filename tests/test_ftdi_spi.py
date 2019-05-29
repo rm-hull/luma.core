@@ -10,14 +10,7 @@ Tests for the :py:class:`luma.core.interface.serial.ftdi_spi` class.
 import pytest
 import sys
 from luma.core.interface.serial import ftdi_spi
-from helpers import Mock, call, patch, pyftdi_missing
-
-
-def fib(n):
-    a, b = 0, 1
-    for _ in range(n):
-        yield a
-        a, b = b, a + b
+from helpers import Mock, call, patch, pyftdi_missing, fib
 
 
 @pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
