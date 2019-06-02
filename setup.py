@@ -31,13 +31,14 @@ needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
     'mock;python_version<"3.3"',
-    "pytest>=3.1",
+    "pytest==4.5",
     "pytest-cov"
 ]
 
 install_deps = [
     'pillow>=4.0.0',
-    'smbus2'
+    'smbus2',
+    'pyftdi;python_version>="3.5"'
 ]
 
 setup(
@@ -48,7 +49,7 @@ setup(
     description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
     license="MIT",
-    keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c",
+    keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
     url="https://github.com/rm-hull/luma.core",
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
     namespace_packages=["luma"],

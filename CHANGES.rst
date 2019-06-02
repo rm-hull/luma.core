@@ -4,7 +4,16 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *upcoming* | * Improve I2C render speed by not chunking into 32-byte blocks      | TBC        |
+| **1.11.0** | * Support luma.lcd.aux (if present)                                 | 2019/06/02 |
++------------+---------------------------------------------------------------------+------------+
+| **1.10.1** | * Fix [Error 22] emitted from within I2C serial adapter when used   | 2019/05/25 |
+|            |   with SSD1327 device                                               |            |
++------------+---------------------------------------------------------------------+------------+
+| **1.10.0** | * Allow viewport pseudo-display to dither when rendering to         | 2019/05/23 |
+|            |   device with lower-fidelity color mode                             |            |
++------------+---------------------------------------------------------------------+------------+
+| **1.9.0**  | * Improve I2C render speed by not chunking into 32-byte blocks      | 2019/05/10 |
+|            | * Add support for bridging FTDI to I2C/SPI                          |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.8.3**  | * Improve command line help output                                  | 2019/01/07 |
 |            | * Split API docs into separate pages                                |            |

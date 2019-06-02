@@ -23,6 +23,7 @@ rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
     platform.system())
 spidev_missing = 'spidev is not supported on this platform: {}'.format(
     platform.system())
+pyftdi_missing = 'pyftdi is not supported on Python {}'.format(platform.python_version())
 
 
 def get_reference_file(fname):
@@ -63,3 +64,10 @@ def i2c_error(path_name, err_no):
     def fake_open(a, b):
         raise expected_error
     return fake_open
+
+
+def fib(n):
+    a, b = 0, 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
