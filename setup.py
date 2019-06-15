@@ -5,7 +5,7 @@ import re
 import os
 import sys
 from io import open
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read_file(*parts):
@@ -52,8 +52,8 @@ setup(
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
     url="https://github.com/rm-hull/luma.core",
     download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
+    packages=find_packages(),
     namespace_packages=["luma"],
-    packages=["luma", "luma.core", "luma.core.legacy", "luma.core.interface"],
     install_requires=install_deps,
     setup_requires=pytest_runner,
     tests_require=test_deps,
