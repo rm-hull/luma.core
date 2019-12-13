@@ -270,15 +270,19 @@ class spi(bitbang):
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
-                 gpio_DC=24, gpio_RST=25):
+                 gpio_CS=None, gpio_DC=24, gpio_RST=25):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
-        bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
+        bitbang.__init__(self, gpio, transfer_size, CE=gpio_CS, DC=gpio_DC, RST=gpio_RST)
 
         try:
             self._spi = spi or self.__spidev__()
             self._spi.open(port, device)
             self._spi.cshigh = cs_high
+            if gpio_CS:
+                self._spi.no_cs = True # disable spidev's handling of the chip select pin
+                self._cs_high = cs_high
+                
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
@@ -288,7 +292,14 @@ class spi(bitbang):
         self._spi.max_speed_hz = bus_speed_hz
 
     def _write_bytes(self, data):
+        gpio = self._gpio
+        if self._CE:
+            gpio.output(self._CE, gpio.HIGH if self._cs_high else gpio.LOW)
+        
         self._spi.writebytes(data)
+        
+        if self._CE:
+            gpio.output(self._CE, gpio.LOW if self._cs_high else gpio.HIGH)
 
     def cleanup(self):
         """
