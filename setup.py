@@ -48,6 +48,7 @@ setup(
     author_email="richard.hull@destructuring-bind.org",
     description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
+    long_description_content_type="text/x-rst",
     license="MIT",
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
     url="https://github.com/rm-hull/luma.core",
