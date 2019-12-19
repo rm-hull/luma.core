@@ -26,8 +26,8 @@ Luma.Core
 
 .. image:: https://img.shields.io/maintenance/yes/2019.svg?maxAge=2592000
 
-**luma.core** is a component library providing a Pillow-compatible drawing
-canvas, and other functionality to support drawing primitives and
+**luma.core** is a component library providing a `Pillow <https://pillow.readthedocs.io/>`_-compatible
+drawing canvas, and other functionality to support drawing primitives and
 text-rendering capabilities for small displays on the Raspberry Pi and other
 single board computers:
 
@@ -68,7 +68,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017-18 Richard Hull and contributors
+Copyright (c) 2017-2019 Richard Hull and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

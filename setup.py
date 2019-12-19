@@ -26,7 +26,7 @@ README = read_file("README.rst")
 CONTRIB = read_file("CONTRIBUTING.rst")
 CHANGES = read_file("CHANGES.rst")
 version = find_version("luma", "core", "__init__.py")
-
+project_url = "https://github.com/rm-hull/luma.core"
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
@@ -48,10 +48,17 @@ setup(
     author_email="richard.hull@destructuring-bind.org",
     description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
+    long_description_content_type="text/x-rst",
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
     license="MIT",
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
-    url="https://github.com/rm-hull/luma.core",
-    download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
+    url=project_url,
+    download_url=project_url + "/tarball/" + version,
+    project_urls={
+        'Documentation': 'https://luma-core.readthedocs.io',
+        'Source': project_url,
+        'Issue Tracker': project_url + '/issues',
+    },
     packages=find_packages(),
     namespace_packages=["luma"],
     install_requires=install_deps,
@@ -85,9 +92,9 @@ setup(
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7"
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8"
     ]
 )
