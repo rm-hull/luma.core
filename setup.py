@@ -26,7 +26,7 @@ README = read_file("README.rst")
 CONTRIB = read_file("CONTRIBUTING.rst")
 CHANGES = read_file("CHANGES.rst")
 version = find_version("luma", "core", "__init__.py")
-
+project_url = "https://github.com/rm-hull/luma.core"
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
@@ -51,8 +51,13 @@ setup(
     long_description_content_type="text/x-rst",
     license="MIT",
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
-    url="https://github.com/rm-hull/luma.core",
-    download_url="https://github.com/rm-hull/luma.core/tarball/" + version,
+    url=project_url,
+    download_url=project_url + "/tarball/" + version,
+    project_urls={
+        'Documentation': 'https://luma-core.readthedocs.io',
+        'Source': project_url,
+        'Issue Tracker': project_url + '/issues',
+    },
     packages=find_packages(),
     namespace_packages=["luma"],
     install_requires=install_deps,
