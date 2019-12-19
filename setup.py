@@ -77,6 +77,7 @@ setup(
         'test': test_deps,
         'qa': [
             'flake8',
+            'flake8-2020',
             'rstcheck'
         ]
     },
