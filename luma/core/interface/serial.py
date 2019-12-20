@@ -280,9 +280,9 @@ class spi(bitbang):
             self._spi.open(port, device)
             self._spi.cshigh = cs_high
             if gpio_CS:
-                self._spi.no_cs = True # disable spidev's handling of the chip select pin
+                self._spi.no_cs = True  # disable spidev's handling of the chip select pin
                 self._cs_high = cs_high
-                
+
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
@@ -295,9 +295,9 @@ class spi(bitbang):
         gpio = self._gpio
         if self._CE:
             gpio.output(self._CE, gpio.HIGH if self._cs_high else gpio.LOW)
-        
+
         self._spi.writebytes(data)
-        
+
         if self._CE:
             gpio.output(self._CE, gpio.LOW if self._cs_high else gpio.HIGH)
 
