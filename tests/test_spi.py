@@ -36,11 +36,13 @@ def verify_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25):
     gpio.setmode.assert_not_called()
     gpio.setup.assert_has_calls([call(dc, gpio.OUT), call(rst, gpio.OUT)])
 
+
 def verify_spi_init_with_custom_cs(port, device, bus_speed_hz=8000000, dc=24, rst=25, cs=23):
     spidev.open.assert_called_once_with(port, device)
     assert spidev.max_speed_hz == bus_speed_hz
     gpio.setmode.assert_not_called()
     gpio.setup.assert_has_calls([call(cs, gpio.OUT), call(dc, gpio.OUT), call(rst, gpio.OUT)])
+
 
 def test_init():
     port = 5
@@ -57,6 +59,7 @@ def test_init():
         call(rst, gpio.HIGH)
     ])
 
+
 def test_init_invalid_bus_speed():
     with pytest.raises(AssertionError):
         spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=942312)
@@ -70,6 +73,7 @@ def test_command():
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.LOW)])
     spidev.writebytes.assert_called_once_with(cmds)
 
+
 def test_command_with_custom_cs():
     cmds = [3, 1, 4, 2]
     serial = spi(gpio=gpio, spi=spidev, port=9, device=1, gpio_CS=23)
@@ -79,6 +83,7 @@ def test_command_with_custom_cs():
     spidev.writebytes.assert_called_once_with(cmds)
     gpio.output.assert_has_calls([call(23, gpio.HIGH)])
 
+
 def test_data():
     data = list(fib(100))
     serial = spi(gpio=gpio, spi=spidev, port=9, device=1)
@@ -86,6 +91,7 @@ def test_data():
     verify_spi_init(9, 1)
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.HIGH)])
     spidev.writebytes.assert_called_once_with(data)
+
 
 def test_data_with_custom_cs():
     data = list(fib(100))
@@ -95,6 +101,7 @@ def test_data_with_custom_cs():
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.HIGH), call(23, gpio.LOW)])
     spidev.writebytes.assert_called_once_with(data)
     gpio.output.assert_has_calls([call(23, gpio.HIGH)])
+
 
 def test_cleanup():
     serial = spi(gpio=gpio, spi=spidev, port=9, device=1)
