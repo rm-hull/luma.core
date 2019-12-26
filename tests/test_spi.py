@@ -78,7 +78,7 @@ def test_command_with_custom_cs():
     cmds = [3, 1, 4, 2]
     serial = spi(gpio=gpio, spi=spidev, port=9, device=1, gpio_CS=23)
     serial.command(*cmds)
-    verify_spi_init(9, 1)
+    verify_spi_init_with_custom_cs(9, 1)
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.LOW), call(23, gpio.LOW)])
     spidev.writebytes.assert_called_once_with(cmds)
     gpio.output.assert_has_calls([call(23, gpio.HIGH)])
@@ -97,7 +97,7 @@ def test_data_with_custom_cs():
     data = list(fib(100))
     serial = spi(gpio=gpio, spi=spidev, port=9, device=1, gpio_CS=23)
     serial.data(data)
-    verify_spi_init(9, 1)
+    verify_spi_init_with_custom_cs(9, 1)
     gpio.output.assert_has_calls([call(25, gpio.HIGH), call(24, gpio.HIGH), call(23, gpio.LOW)])
     spidev.writebytes.assert_called_once_with(data)
     gpio.output.assert_has_calls([call(23, gpio.HIGH)])
