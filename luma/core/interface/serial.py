@@ -309,7 +309,8 @@ class gpio_cs_spi(spi):
     :param gpio_CS: The GPIO pin to connect chip select (CS / CE) to (defaults to None).
     :type gpio_CS: int
     """
-    def __init__(self, *args, gpio_CS=None, **kwargs):
+    def __init__(self, *args, **kwargs):
+        gpio_CS = kwargs.pop("gpio_CS", None)  # Python 2.7 doesn't allow var args and default values at the same time
         super().__init__(*args, **kwargs)
 
         if gpio_CS:
