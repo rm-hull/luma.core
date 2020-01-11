@@ -311,7 +311,7 @@ class gpio_cs_spi(spi):
     """
     def __init__(self, *args, **kwargs):
         gpio_CS = kwargs.pop("gpio_CS", None)  # Python 2.7 doesn't allow var args and default values at the same time
-        super().__init__(*args, **kwargs)
+        super(gpio_cs_spi, self).__init__(*args, **kwargs)
 
         if gpio_CS:
             self._gpio_CS = gpio_CS
@@ -322,7 +322,7 @@ class gpio_cs_spi(spi):
         if self._gpio_CS:
             self._gpio.output(self._gpio_CS, self._gpio.HIGH if self._spi.cshigh else self._gpio.LOW)
 
-        super()._write_bytes(*args, **kwargs)
+        super(gpio_cs_spi, self)._write_bytes(*args, **kwargs)
 
         if self._gpio_CS:
             self._gpio.output(self._gpio_CS, self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
