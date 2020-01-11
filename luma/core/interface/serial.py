@@ -265,26 +265,20 @@ class spi(bitbang):
     :type gpio_DC: int
     :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 25).
     :type gpio_RST: int
-    :param gpio_CS: The GPIO pin to connect chip select (CS / CE) to (defaults to None).
-    :type gpio_CS: int
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
-                 gpio_DC=24, gpio_RST=25, gpio_CS=None):
+                 gpio_DC=24, gpio_RST=25):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
-        bitbang.__init__(self, gpio, transfer_size, CE=gpio_CS, DC=gpio_DC, RST=gpio_RST)
+        bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
 
         try:
             self._spi = spi or self.__spidev__()
             self._spi.open(port, device)
             self._spi.cshigh = cs_high
-            if gpio_CS:
-                self._spi.no_cs = True  # disable spidev's handling of the chip select pin
-                self._cs_high = cs_high
-
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
@@ -294,14 +288,7 @@ class spi(bitbang):
         self._spi.max_speed_hz = bus_speed_hz
 
     def _write_bytes(self, data):
-        gpio = self._gpio
-        if self._CE:
-            gpio.output(self._CE, gpio.HIGH if self._cs_high else gpio.LOW)
-
         self._spi.writebytes(data)
-
-        if self._CE:
-            gpio.output(self._CE, gpio.LOW if self._cs_high else gpio.HIGH)
 
     def cleanup(self):
         """
@@ -309,6 +296,35 @@ class spi(bitbang):
         """
         self._spi.close()
         super(spi, self).cleanup()
+
+
+class gpio_cs_spi(spi):
+    """
+    Wraps the `spi` class to allow the Chip Select to be used with any GPIO pin.
+    The gpio pin to use is defined during instantiation with the keyword argument `gpio_CS`.
+
+    Behaviour is otherwise the same, refer to the documentation on the `spi` class
+    for information on other parameters and raised exceptions.
+
+    :param gpio_CS: The GPIO pin to connect chip select (CS / CE) to (defaults to None).
+    :type gpio_CS: int
+    """
+    def __init__(self, *args, gpio_CS=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if gpio_CS:
+            self._gpio_CS = gpio_CS
+            self._spi.no_cs = True  # disable spidev's handling of the chip select pin
+            self._gpio.setup(self._gpio_CS, self._gpio.OUT, initial=self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
+
+    def _write_bytes(self, *args, **kwargs):
+        if self._gpio_CS:
+            self._gpio.output(self._gpio_CS, self._gpio.HIGH if self._spi.cshigh else self._gpio.LOW)
+
+        super()._write_bytes(*args, **kwargs)
+
+        if self._gpio_CS:
+            self._gpio.output(self._gpio_CS, self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
 
 
 class noop(object):
