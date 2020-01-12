@@ -298,6 +298,36 @@ class spi(bitbang):
         super(spi, self).cleanup()
 
 
+class gpio_cs_spi(spi):
+    """
+    Wraps the `spi` class to allow the Chip Select to be used with any GPIO pin.
+    The gpio pin to use is defined during instantiation with the keyword argument `gpio_CS`.
+
+    Behaviour is otherwise the same, refer to the documentation on the `spi` class
+    for information on other parameters and raised exceptions.
+
+    :param gpio_CS: The GPIO pin to connect chip select (CS / CE) to (defaults to None).
+    :type gpio_CS: int
+    """
+    def __init__(self, *args, **kwargs):
+        gpio_CS = kwargs.pop("gpio_CS", None)  # Python 2.7 doesn't allow var args and default values at the same time
+        super(gpio_cs_spi, self).__init__(*args, **kwargs)
+
+        if gpio_CS:
+            self._gpio_CS = gpio_CS
+            self._spi.no_cs = True  # disable spidev's handling of the chip select pin
+            self._gpio.setup(self._gpio_CS, self._gpio.OUT, initial=self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
+
+    def _write_bytes(self, *args, **kwargs):
+        if self._gpio_CS:
+            self._gpio.output(self._gpio_CS, self._gpio.HIGH if self._spi.cshigh else self._gpio.LOW)
+
+        super(gpio_cs_spi, self)._write_bytes(*args, **kwargs)
+
+        if self._gpio_CS:
+            self._gpio.output(self._gpio_CS, self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
+
+
 class noop(object):
     """
     Does nothing, used for pseudo-devices / emulators / anything really.
