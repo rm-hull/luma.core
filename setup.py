@@ -30,7 +30,7 @@ project_url = "https://github.com/rm-hull/luma.core"
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
-    "pytest",
+    "pytest==4.5",
     "pytest-cov"
 ]
 
