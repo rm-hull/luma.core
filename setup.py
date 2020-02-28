@@ -30,15 +30,14 @@ project_url = "https://github.com/rm-hull/luma.core"
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
-    'mock;python_version<"3.3"',
-    "pytest==4.5",
+    "pytest",
     "pytest-cov"
 ]
 
 install_deps = [
     'pillow>=4.0.0',
     'smbus2',
-    'pyftdi;python_version>="3.5"'
+    'pyftdi'
 ]
 
 setup(
@@ -49,7 +48,7 @@ setup(
     description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
     long_description_content_type="text/x-rst",
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
+    python_requires='>=3.5, <4',
     license="MIT",
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
     url=project_url,
@@ -67,9 +66,6 @@ setup(
     extras_require={
         ':platform_system=="Linux"': [
             'spidev', 'RPI.GPIO'
-        ],
-        ':python_version<"3.3"': [
-            'monotonic'
         ],
         'docs': [
             'sphinx>=1.5.1'
@@ -89,8 +85,6 @@ setup(
         "Topic :: Education",
         "Topic :: System :: Hardware",
         "Topic :: System :: Hardware :: Hardware Drivers",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
