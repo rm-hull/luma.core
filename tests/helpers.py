@@ -17,7 +17,6 @@ rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
     platform.system())
 spidev_missing = 'spidev is not supported on this platform: {}'.format(
     platform.system())
-pyftdi_missing = 'pyftdi is not supported on Python {}'.format(platform.python_version())
 
 
 def get_reference_file(fname):

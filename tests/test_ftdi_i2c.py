@@ -11,11 +11,10 @@ import pytest
 import sys
 from unittest.mock import Mock, patch
 from luma.core.interface.serial import ftdi_i2c
-from helpers import pyftdi_missing, fib
+from helpers import fib
 import luma.core.error
 
 
-@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.i2c.I2cController')
 def test_init(mock_controller):
     instance = Mock()
@@ -28,7 +27,6 @@ def test_init(mock_controller):
     instance.get_port.assert_called_with(0xFF)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.i2c.I2cController')
 def test_command(mock_controller):
     cmds = [3, 1, 4, 2]
@@ -42,7 +40,6 @@ def test_command(mock_controller):
     port.write_to.assert_called_once_with(0x00, cmds)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.i2c.I2cController')
 def test_data(mock_controller):
     data = list(fib(100))
@@ -56,7 +53,6 @@ def test_data(mock_controller):
     port.write_to.assert_called_once_with(0x40, data)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.i2c.I2cController')
 def test_cleanup(mock_controller):
     port = Mock()
@@ -69,7 +65,6 @@ def test_cleanup(mock_controller):
     instance.terminate.assert_called_once_with()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
 @patch('pyftdi.i2c.I2cController')
 def test_init_device_address_error(mock_controller):
     address = 'foo'
