@@ -8,11 +8,7 @@ Test helpers.
 
 import os.path
 import platform
-
-try:
-    from unittest.mock import patch, call, Mock
-except ImportError:
-    from mock import patch, call, Mock  # noqa: F401
+from unittest.mock import patch, call, Mock
 
 import pytest
 
