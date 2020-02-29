@@ -7,7 +7,7 @@ from luma.core.device import dummy
 from luma.core.legacy import text, textsize, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, LCD_FONT
 
-from helpers import Mock, call
+from unittest.mock import Mock, call
 
 
 def test_textsize():

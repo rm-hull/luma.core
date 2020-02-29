@@ -10,11 +10,12 @@ Tests for the :py:mod:`luma.core.cmdline` module.
 import pytest
 import errno
 import sys
+from unittest.mock import patch, Mock
 
 from luma.core import cmdline, error
 from luma.core.interface.serial import __all__ as iface_types
 
-from helpers import (get_reference_file, patch, Mock, i2c_error,
+from helpers import (get_reference_file, i2c_error,
     rpi_gpio_missing, spidev_missing, pyftdi_missing)
 
 

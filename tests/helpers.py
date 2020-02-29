@@ -8,8 +8,6 @@ Test helpers.
 
 import os.path
 import platform
-from unittest.mock import patch, call, Mock
-
 import pytest
 
 from PIL import ImageChops, ImageFont

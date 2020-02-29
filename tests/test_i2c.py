@@ -10,10 +10,11 @@ Tests for the :py:class:`luma.core.interface.serial.i2c` class.
 import errno
 import pytest
 import smbus2
+from unittest.mock import Mock, patch, call
 from luma.core.interface.serial import i2c
 import luma.core.error
 
-from helpers import Mock, patch, call, i2c_error, fib
+from helpers import i2c_error, fib
 
 
 smbus = Mock(unsafe=True)

@@ -4,7 +4,7 @@
 # See LICENSE.rst for details.
 
 
-from helpers import patch
+from unittest.mock import patch
 
 from luma.core.device import dummy
 

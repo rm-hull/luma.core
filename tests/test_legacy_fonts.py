@@ -14,7 +14,6 @@ from luma.core.legacy import text, textsize
 import luma.core.legacy.font
 from luma.core.legacy.font import proportional
 
-
 import pytest
 from helpers import get_reference_image, assert_identical_image
 

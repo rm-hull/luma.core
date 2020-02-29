@@ -8,11 +8,12 @@ Tests for the :py:class:`luma.core.interface.serial.spi` class.
 """
 
 import pytest
+from unittest.mock import Mock, call
 
 from luma.core.interface.serial import spi
 import luma.core.error
 
-from helpers import Mock, call, get_spidev, rpi_gpio_missing, fib
+from helpers import get_spidev, rpi_gpio_missing, fib
 
 
 spidev = Mock(unsafe=True)

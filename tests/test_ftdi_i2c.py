@@ -9,8 +9,9 @@ Tests for the :py:class:`luma.core.interface.serial.ftdi_i2c` class.
 
 import pytest
 import sys
+from unittest.mock import Mock, patch
 from luma.core.interface.serial import ftdi_i2c
-from helpers import Mock, patch, pyftdi_missing, fib
+from helpers import pyftdi_missing, fib
 import luma.core.error
 
 

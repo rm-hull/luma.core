@@ -8,9 +8,10 @@ Tests for the :py:class:`luma.core.interface.serial.ftdi_spi` class.
 """
 
 import pytest
+from unittest.mock import Mock, call, patch
 import sys
 from luma.core.interface.serial import ftdi_spi
-from helpers import Mock, call, patch, pyftdi_missing, fib
+from helpers import pyftdi_missing, fib
 
 
 @pytest.mark.skipif(sys.version_info < (3, 5), reason=pyftdi_missing)
