@@ -9,7 +9,6 @@ Tests for the :py:mod:`luma.core.cmdline` module.
 
 import pytest
 import errno
-import sys
 from unittest.mock import patch, Mock
 
 from luma.core import cmdline, error
