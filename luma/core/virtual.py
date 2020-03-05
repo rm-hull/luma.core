@@ -4,10 +4,6 @@
 
 import time
 from textwrap import TextWrapper
-try:
-    monotonic = time.monotonic
-except AttributeError:  # pragma: no cover
-    from monotonic import monotonic
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -202,11 +198,11 @@ class snapshot(hotspot):
         """
         Only requests a redraw after ``interval`` seconds have elapsed.
         """
-        return monotonic() - self.last_updated > self.interval
+        return time.monotonic() - self.last_updated > self.interval
 
     def paste_into(self, image, xy):
         super(snapshot, self).paste_into(image, xy)
-        self.last_updated = monotonic()
+        self.last_updated = time.monotonic()
 
 
 class terminal(object):
