@@ -8,12 +8,6 @@ Test helpers.
 
 import os.path
 import platform
-
-try:
-    from unittest.mock import patch, call, Mock
-except ImportError:
-    from mock import patch, call, Mock  # noqa: F401
-
 import pytest
 
 from PIL import ImageChops, ImageFont
@@ -23,7 +17,6 @@ rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
     platform.system())
 spidev_missing = 'spidev is not supported on this platform: {}'.format(
     platform.system())
-pyftdi_missing = 'pyftdi is not supported on Python {}'.format(platform.python_version())
 
 
 def get_reference_file(fname):

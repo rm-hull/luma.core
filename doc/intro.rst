@@ -1,7 +1,7 @@
 Introduction
 ------------
 **luma.core** is a component library providing a Pillow-compatible drawing
-canvas, and other functionality to support drawing primitives and
+canvas for Python 3, and other functionality to support drawing primitives and
 text-rendering capabilities for small displays on the Raspberry Pi and other
 single board computers:
 

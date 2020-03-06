@@ -7,12 +7,13 @@
 Tests for the :py:class:`luma.core.interface.serial.bitbang` class.
 """
 
+from unittest.mock import Mock, call
 from luma.core.interface.serial import bitbang
 import luma.core.error
 
 import pytest
 
-from helpers import Mock, call, rpi_gpio_missing
+from helpers import rpi_gpio_missing
 
 
 gpio = Mock(unsafe=True)
