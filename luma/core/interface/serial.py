@@ -265,12 +265,14 @@ class spi(bitbang):
     :type gpio_DC: int
     :param gpio_RST: The GPIO pin to connect reset (RES / RST) to (defaults to 25).
     :type gpio_RST: int
+    :param spi_mode: SPI mode as two bit pattern of clock polarity and phase [CPOL|CPHA], 0-3 (default:None)
+    :type spi_mode: int
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
-                 gpio_DC=24, gpio_RST=25):
+                 gpio_DC=24, gpio_RST=25, spi_mode=None):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
         bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
@@ -278,6 +280,8 @@ class spi(bitbang):
         try:
             self._spi = spi or self.__spidev__()
             self._spi.open(port, device)
+            if spi_mode:
+                self._spi.mode = spi_mode
             self._spi.cshigh = cs_high
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
