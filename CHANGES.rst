@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **1.14.0** | * Drop support for Python 2.7, only 3.5 or newer is supported now   | TBD        |
+| **1.14.0** | * Drop support for Python 2.7, only 3.5 or newer is supported now   | 2020/04/07 |
 |            | * Add support for SPI mode (clock polarity and phase)               |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.13.0** | * Add support for using any GPIO pin as a CS pin for SPI            | 2020/01/12 |
