@@ -193,11 +193,16 @@ class snapshot(hotspot):
         super(snapshot, self).__init__(width, height, draw_fn)
         self.interval = interval
         self.last_updated = 0.0
+        self.first_redraw = True
 
     def should_redraw(self):
         """
         Only requests a redraw after ``interval`` seconds have elapsed.
         """
+        if self.first_redraw is True:
+            self.first_redraw = False
+            return True
+
         return time.monotonic() - self.last_updated > self.interval
 
     def paste_into(self, image, xy):
