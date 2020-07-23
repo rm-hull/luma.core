@@ -190,9 +190,10 @@ class snapshot(hotspot):
     updates.
     """
     def __init__(self, width, height, draw_fn=None, interval=1.0):
+        assert interval > 0
         super(snapshot, self).__init__(width, height, draw_fn)
         self.interval = interval
-        self.last_updated = 0.0
+        self.last_updated = -interval
 
     def should_redraw(self):
         """
