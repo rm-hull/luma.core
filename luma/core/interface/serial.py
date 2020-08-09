@@ -13,7 +13,7 @@ import luma.core.error
 from luma.core import lib
 
 
-__all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c"]
+__all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c", "parallel"]
 
 
 class i2c(object):
@@ -490,3 +490,287 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
     serial._managed = True
     serial._i2c_msg_write = lambda address, data: (address, data)
     return serial
+
+
+@lib.rpi_gpio
+class parallel(object):
+    """
+    Implements a parallel bus style interface for HD44780 style displays that
+    provides :py:func:`data` and :py:func:`command` methods. The default pin
+    assignments provided are from `Adafruit <https://learn.adafruit.com/drive-a-16x2-lcd-directly-with-a-raspberry-pi/wiring>`.
+
+    :param gpio: GPIO interface (must be compatible with
+        `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_)
+    :param pulse_time: length of time in seconds that the enable line should be
+        held high during a data or command transfer
+    :type pulse_time: float
+    :param RS: The GPIO pin register select (RS) line (low for command, high
+        for data)
+    :type RS: int
+    :param E: The GPIO pin to connect the enable (E) line to.
+    :type E: int
+    :param PINS: The GPIO pins that form the data bus (a list of 4 or 8 pins
+        depending upon implementation ordered from LSD to MSD)
+    :type PINS: list[int]
+    """
+
+    from time import sleep
+
+    def __init__(self, gpio=None, pulse_time=1e-6 * 50, **kwargs):
+
+        self._managed = gpio is None
+        self._gpio = gpio or self.__rpi_gpio__()
+        self._gpio.setwarnings(False)
+        self._pulse_time = pulse_time
+
+        self._RS = self._configure(kwargs.get("RS", 22))
+        self._E = self._configure(kwargs.get("E", 17))
+        self._PINS = self._configure(kwargs.get('PINS', list((25, 24, 23, 18))))
+
+        self._datalines = len(self._PINS)
+        assert self._datalines in (4, 8), 'You\'ve provided {0} pins but a bus must contain either four or eight pins'.format(len(self._PINS))
+        self._bitmode = self._datalines  # Used by device to autoset its own bitmode
+
+        self._cmd_mode = self._gpio.LOW  # Command mode = Hold low
+        self._data_mode = self._gpio.HIGH  # Data mode = Pull high
+
+    def _configure(self, pin):
+        pins = pin if type(pin) == list else [pin] if pin else []
+        for p in pins:
+            self._gpio.setup(p, self._gpio.OUT)
+        return pin
+
+    def command(self, *cmd):
+        """
+        Sends a command or sequence of commands through the bus
+        If the bus is in four bit mode, only the lowest 4 bits of the data
+        value will be sent.
+
+        This means that the device needs to send high and low bits separately
+        if the device is operating using a 4 bit bus (e.g. to send a 0x32 in
+        4 bit mode the device would use command(0x03, 0x02))
+
+        :param cmd: A spread of commands.
+        :type cmd: int
+        """
+        self._write(list(cmd), self._cmd_mode)
+
+    def data(self, data):
+        """
+        Sends a data byte or sequence of data bytes through to the bus.
+        If the bus is in four bit mode, only the lowest 4 bits of the data
+        value will be sent.
+
+        This means that the device needs to send high and low bits separately
+        if the device is operating using a 4 bit bus (e.g. to send a 0x32 in
+        4 bit mode the device would use data(0x03, 0x02))
+
+        :param data: A data sequence.
+        :type data: list, bytearray
+        """
+        self._write(data, self._data_mode)
+
+    def _write(self, data, mode):
+        gpio = self._gpio
+        gpio.output(self._RS, mode)
+        gpio.output(self._E, gpio.LOW)
+        for value in data:
+            for i in range(self._datalines):
+                gpio.output(self._PINS[i], (value >> i) & 0x01)
+            gpio.output(self._E, gpio.HIGH)
+            parallel.sleep(self._pulse_time)
+            gpio.output(self._E, gpio.LOW)
+
+    def cleanup(self):
+        """
+        Clean up GPIO resources if managed.
+        """
+        if self._managed:
+            self._gpio.cleanup()
+
+
+class pcf8574(i2c):
+    """
+    Wraps i2c interface to provide :py:func:`data` and :py:func:`command` methods
+    for a device using a pcf8574 backpack.
+
+    :param bus: A *smbus* implementation, if ``None`` is supplied (default),
+        `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
+        Typically this is overridden in tests, or if there is a specific
+        reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
+        over smbus2.
+    :type bus:
+    :param port: I²C port number, usually 0 or 1 (default).
+    :type port: int
+    :param address: I²C address, default: ``0x3C``.
+    :type address: int
+    :param pulse_time: length of time in seconds that the enable line should be
+        held high during a data or command transfer (default: 50μs)
+    :type pulse_time: float
+    :param backlight_enabled: Determines whether to activate the display's backlight
+    :type backlight_enabled: bool
+    :param RS: where register/select is connected to the backpack (default: 0)
+    :type RS: int
+    :param E: where enable pin is connected to the backpack (default: 2)
+    :type E: int
+    :param PINS: The PCF8574 pins that form the data bus in LSD to MSD order
+    :type PINS: list[int]
+    :param BACKLIGHT: value aligned with backlight pin (default: 3)
+    :type BACKLIGHT: int
+    :param COMMAND: determines whether RS high sets device to expect a command
+        byte or a data byte.  Must be either 'high' (default) or 'low'
+    :type COMMAND: str
+
+    :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
+    :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
+    :raises luma.core.error.DevicePermissionError: Permission to access I2C device
+        denied.
+
+    .. note::
+       1. Only one of ``bus`` OR ``port`` arguments should be supplied;
+          if both are, then ``bus`` takes precedence.
+       2. If ``bus`` is provided, there is an implicit expectation
+          that it has already been opened.
+       3. Default wiring is...
+
+        RS - Register Select
+        E - Enable
+        RW - Read/Write (note: unused by this driver)
+        D4-D7 - The upper data pins
+
+                   RS  RW   E   D4  D5  D6  D7  BACKLIGHT
+        Display     4   5   6   11  12  13  14
+        Backpack   P0  P1  P2   P4  P5  P6  P7         P3
+
+        If you're PCF8574 is wired up differently to this you will need to provide
+        the correct values for the RS, E, COMMAND, BACKLIGHT parameters.
+        RS, E and BACKLIGHT are set to the pin numbers of the backpack pins
+        they are connect to from P0-P7.
+
+        COMMAND is set to 'high' if the Register Select (RS) pin needs to be high
+        to inform the device that a command byte is being sent or 'low' if RS low
+        is used for commands.
+
+        PINS is a list of the pin positions that match where the devices data
+        pins have been connected on the backpack (P0-P7).  For many devices this
+        will be d4->P4, d5->P5, d6->P6, and d7->P7 ([4, 5, 6, 7]) which is the
+        default.
+
+        Example:
+
+        If your data lines D4-D7 are connected to the PCF8574s pins P0-P3 with
+        the RS pin connected to P4, the enable pin to P5, the backlight pin
+        connected to P7, and the RS value to indicate command is low, your
+        initialization would look something like...
+
+        pcf8574(port=1, address=0x27, PINS=[0,1,2,3], RS=0x10, E=0x20,
+            COMMAND='low', BACKLIGHT=0x40)
+
+        Explanation:
+        PINS are set to [0, 1, 2, 3] which assigns P0 to D4, P1 to D5, P2 to D6,
+        and P3 to D7.  RS is set to 4 to associate with P4. Similarly E is set
+        to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
+        of the backpack.  COMMAND is set to 'low' so that RS will be set to low
+        when a command is sent and high when data is sent.
+    """
+    _BACKLIGHT = 3
+    _ENABLE = 2
+    _RS = 0
+    _OFFSET = 4
+    _CMD = 'low'
+
+    from time import sleep
+
+    def __init__(self, pulse_time=1e-6 * 50, backlight_enabled=True, *args, **kwargs):
+        super(pcf8574, self).__init__(*args, **kwargs)
+
+        self._pulse_time = pulse_time
+        self._bitmode = 4  # PCF8574 can only be used to transfer 4 bits at a time
+
+        self._PINS = kwargs.get('PINS', list((4, 5, 6, 7)))
+        self._datalines = len(self._PINS)
+        assert self._datalines == 4, 'You\'ve provided {0} data pins but the PCF8574 only supports four'.format(len(self._PINS))
+
+        self._rs = self._mask(kwargs.get("RS", self._RS))
+        self._cmd = 0xFF if kwargs.get("COMMAND", self._CMD).lower() == 'high' else 0x00
+        self._data = 0x00 if self._cmd else 0xFF
+        self._cmd_mode = self._rs & self._cmd
+        self._data_mode = self._rs & self._data
+        self._enable = self._mask(kwargs.get("ENABLE", self._ENABLE))
+        self._backlight_enabled = self._mask(kwargs.get("BACKLIGHT", self._BACKLIGHT)) if backlight_enabled else 0x00
+
+    def command(self, *cmd):
+        """
+        Sends a command or sequence of commands through to the I²C address
+        - maximum allowed is 32 bytes in one go.
+
+        :param cmd: A spread of commands in high_bits, low_bits order.
+        :type cmd: int
+        :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
+
+        IMPORTANT: the PCF8574 only supports four bit transfers.  It is the
+        devices responsibility to break each byte sent into a high bit
+        and a low bit transfer.
+
+        Example:
+            To set an HD44780s cursor to the beginning of the first line requires
+            sending 10000000 0x80.  This is 1000 (0x08) at the high side of the byte
+            and 0001 (0x01) on the low side of the byte.
+
+            To send this using the pcf8574 interface you need to send...
+            d = pcf8574(bus=1, address=0x27)
+            d.command([0x08, 0x00])
+        """
+        self._write(list(cmd), self._cmd_mode)
+
+    def data(self, data):
+        """
+        Sends a data byte or sequence of data bytes to the I²C address.
+
+        :param data: A data sequence.
+        :type data: list, bytearray
+
+        IMPORTANT: the PCF8574 only supports four bit transfers.  It is the
+        devices responsibility to break each byte sent into a high bit
+        and a low bit transfer.
+
+        Example:
+            To send an ascii 'A' (0x41) to the display you need to send binary
+            01000001.  This is 0100 (0x40) at the high side of the byte
+            and 0001 (0x01) on the low side of the byte.
+
+            To send this using the pcf8574 interface you need to send...
+            d = pcf8574(bus=1, address=0x27)
+            d.command([0x04, 0x01])
+        """
+        self._write(data, self._data_mode)
+
+    def _mask(self, pin):
+        """
+        Return a mask that contains a 1 in the pin position
+        """
+        return 1 << pin
+
+    def _compute_pins(self, value):
+        """
+        Set bits in value according to the assigned pin positions on the PCF8574
+        """
+        retv = 0
+        for i in range(self._datalines):
+            retv |= ((value >> i) & 0x01) << self._PINS[i]
+        return retv
+
+    def _write(self, data, mode):
+        try:
+            for value in data:
+                self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))
+                self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value) | self._enable)
+                pcf8574.sleep(self._pulse_time)
+                self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))
+        except (IOError, OSError) as e:
+            if e.errno in [errno.EREMOTEIO, errno.EIO]:
+                # I/O error
+                raise luma.core.error.DeviceNotFoundError(
+                    'I2C device not found on address: 0x{0:02X}'.format(self._addr))
+            else:  # pragma: no cover
+                raise

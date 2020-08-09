@@ -190,10 +190,9 @@ class snapshot(hotspot):
     updates.
     """
     def __init__(self, width, height, draw_fn=None, interval=1.0):
-        assert interval > 0
         super(snapshot, self).__init__(width, height, draw_fn)
         self.interval = interval
-        self.last_updated = -interval
+        self.last_updated = 0.0
 
     def should_redraw(self):
         """
@@ -549,3 +548,66 @@ class sevensegment(object):
                     if byte & 0x01:
                         draw.point((x, y), fill="white")
                     byte >>= 1
+
+
+class character(object):
+    """
+    Abstraction that wraps a device, this class provides a ``text`` property
+    which can be used to set and get a text value allowing the device to be
+    treated as a character style display such as the HD44780 LCD
+
+    If the device is actually a character style device, be careful to provide
+    a font that adheres to the pixel dimensions of the display.
+
+    :param device: A device instance.
+    :param font: The font to be used to paint the characters within the ``text``
+        property.  If the device contains a font (e.g. hd44780, ws0010) it will
+        be used as the default if no font is provided.
+    :type font: `PIL.ImageFont` object
+    :param undefined: The default character to substitute when an unrenderable
+        character is supplied to the text property.
+    :type undefined: char
+    """
+
+    def __init__(self, device, font=None, undefined="_"):
+        self.device = device
+        self._undefined = undefined
+
+        self.font = font if font else device.font if hasattr(device, 'font') else None
+        assert self.font, 'No font available'
+        self.text = ''
+
+    @property
+    def text(self):
+        """
+        Returns the current state of the text buffer. This may not reflect
+        accurately what is displayed on the device if the font does
+        not have a symbol for a requested text value.
+        """
+        return self._text_buffer
+
+    @text.setter
+    def text(self, value):
+        """
+        Updates the display with the given value.
+
+        :param value: The value to render onto the device. Any characters which
+            cannot be rendered will be converted into the ``undefined``
+            character supplied in the constructor. Newline characters '\n' work
+            as expected but no other control characters (e.g. \r) are honored.
+        :type value: str
+        """
+        self._text_buffer = observable(mutable_string(value),
+            observer=self._flush)
+
+    def _flush(self, buf):
+        # Replace any characters that are not in the font with the undefined character
+        buf = ''.join([i if i == '\n' or self.font.getsize(i)[0] > 0 else self._undefined for i in buf])
+
+        # Draw text onto display's image using the provided font
+        with canvas(self.device) as draw:
+            # Erase canvas
+            draw.rectangle((0, 0, self.device.width, self.device.height), fill='black', outline='black')
+
+            # Place text
+            draw.text((0, 0), buf, fill='white', font=self.font, spacing=0)
