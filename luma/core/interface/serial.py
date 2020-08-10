@@ -8,6 +8,7 @@ is I²C, SPI or bit-banging GPIO.
 """
 
 import errno
+from time import sleep
 
 import luma.core.error
 from luma.core import lib
@@ -516,8 +517,6 @@ class parallel(object):
     .. versionadded:: 1.15.0
     """
 
-    from time import sleep
-
     def __init__(self, gpio=None, pulse_time=1e-6 * 50, **kwargs):
 
         self._managed = gpio is None
@@ -580,7 +579,7 @@ class parallel(object):
             for i in range(self._datalines):
                 gpio.output(self._PINS[i], (value >> i) & 0x01)
             gpio.output(self._E, gpio.HIGH)
-            parallel.sleep(self._pulse_time)
+            sleep(self._pulse_time)
             gpio.output(self._E, gpio.LOW)
 
     def cleanup(self):
@@ -684,8 +683,6 @@ class pcf8574(i2c):
     _OFFSET = 4
     _CMD = 'low'
 
-    from time import sleep
-
     def __init__(self, pulse_time=1e-6 * 50, backlight_enabled=True, *args, **kwargs):
         super(pcf8574, self).__init__(*args, **kwargs)
 
@@ -770,7 +767,7 @@ class pcf8574(i2c):
             for value in data:
                 self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))
                 self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value) | self._enable)
-                pcf8574.sleep(self._pulse_time)
+                sleep(self._pulse_time)
                 self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))
         except (IOError, OSError) as e:
             if e.errno in [errno.EREMOTEIO, errno.EIO]:
