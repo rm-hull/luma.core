@@ -13,7 +13,7 @@ import luma.core.error
 from luma.core import lib
 
 
-__all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c", "parallel"]
+__all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c", "parallel", "pcf8574"]
 
 
 class i2c(object):
