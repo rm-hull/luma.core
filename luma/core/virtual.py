@@ -568,6 +568,8 @@ class character(object):
     :param undefined: The default character to substitute when an unrenderable
         character is supplied to the text property.
     :type undefined: char
+
+    .. versionadded:: 1.15.0
     """
 
     def __init__(self, device, font=None, undefined="_"):

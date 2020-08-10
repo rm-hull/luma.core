@@ -512,6 +512,8 @@ class parallel(object):
     :param PINS: The GPIO pins that form the data bus (a list of 4 or 8 pins
         depending upon implementation ordered from LSD to MSD)
     :type PINS: list[int]
+
+    .. versionadded:: 1.15.0
     """
 
     from time import sleep
@@ -672,6 +674,8 @@ class pcf8574(i2c):
        to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
        of the backpack.  COMMAND is set to 'low' so that RS will be set to low
        when a command is sent and high when data is sent.
+
+    .. versionadded:: 1.15.0
     """
 
     _BACKLIGHT = 3
