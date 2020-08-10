@@ -49,7 +49,7 @@ def test_i2c_command_device_not_found_error():
     try:
         for error_code in [errno.EREMOTEIO, errno.EIO]:
             expected_error.errno = error_code
-            errorbus.write_i2c_block_data.side_effect = expected_error
+            errorbus.write_byte.side_effect = expected_error
 
             serial = pcf8574(bus=errorbus, address=address)
             with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
