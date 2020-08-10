@@ -606,8 +606,5 @@ class character(object):
 
         # Draw text onto display's image using the provided font
         with canvas(self.device) as draw:
-            # Erase canvas
-            draw.rectangle((0, 0, self.device.width, self.device.height), fill='black', outline='black')
-
             # Place text
             draw.text((0, 0), buf, fill='white', font=self.font, spacing=0)

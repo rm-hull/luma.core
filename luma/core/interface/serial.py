@@ -633,46 +633,47 @@ class pcf8574(i2c):
           that it has already been opened.
        3. Default wiring is...
 
-        RS - Register Select
-        E - Enable
-        RW - Read/Write (note: unused by this driver)
-        D4-D7 - The upper data pins
+       RS - Register Select
+       E - Enable
+       RW - Read/Write (note: unused by this driver)
+       D4-D7 - The upper data pins
 
-                   RS  RW   E   D4  D5  D6  D7  BACKLIGHT
-        Display     4   5   6   11  12  13  14
-        Backpack   P0  P1  P2   P4  P5  P6  P7         P3
+       :          RS  RW   E   D4  D5  D6  D7  BACKLIGHT
+       Display     4   5   6   11  12  13  14
+       Backpack   P0  P1  P2   P4  P5  P6  P7         P3
 
-        If you're PCF8574 is wired up differently to this you will need to provide
-        the correct values for the RS, E, COMMAND, BACKLIGHT parameters.
-        RS, E and BACKLIGHT are set to the pin numbers of the backpack pins
-        they are connect to from P0-P7.
+       If your PCF8574 is wired up differently to this you will need to provide
+       the correct values for the RS, E, COMMAND, BACKLIGHT parameters.
+       RS, E and BACKLIGHT are set to the pin numbers of the backpack pins
+       they are connect to from P0-P7.
 
-        COMMAND is set to 'high' if the Register Select (RS) pin needs to be high
-        to inform the device that a command byte is being sent or 'low' if RS low
-        is used for commands.
+       COMMAND is set to 'high' if the Register Select (RS) pin needs to be high
+       to inform the device that a command byte is being sent or 'low' if RS low
+       is used for commands.
 
-        PINS is a list of the pin positions that match where the devices data
-        pins have been connected on the backpack (P0-P7).  For many devices this
-        will be d4->P4, d5->P5, d6->P6, and d7->P7 ([4, 5, 6, 7]) which is the
-        default.
+       PINS is a list of the pin positions that match where the devices data
+       pins have been connected on the backpack (P0-P7).  For many devices this
+       will be d4->P4, d5->P5, d6->P6, and d7->P7 ([4, 5, 6, 7]) which is the
+       default.
 
-        Example:
+       Example:
 
-        If your data lines D4-D7 are connected to the PCF8574s pins P0-P3 with
-        the RS pin connected to P4, the enable pin to P5, the backlight pin
-        connected to P7, and the RS value to indicate command is low, your
-        initialization would look something like...
+       If your data lines D4-D7 are connected to the PCF8574s pins P0-P3 with
+       the RS pin connected to P4, the enable pin to P5, the backlight pin
+       connected to P7, and the RS value to indicate command is low, your
+       initialization would look something like...
 
-        pcf8574(port=1, address=0x27, PINS=[0,1,2,3], RS=0x10, E=0x20,
-            COMMAND='low', BACKLIGHT=0x40)
+       pcf8574(port=1, address=0x27, PINS=[0,1,2,3], RS=0x10, E=0x20,
+       COMMAND='low', BACKLIGHT=0x40)
 
-        Explanation:
-        PINS are set to [0, 1, 2, 3] which assigns P0 to D4, P1 to D5, P2 to D6,
-        and P3 to D7.  RS is set to 4 to associate with P4. Similarly E is set
-        to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
-        of the backpack.  COMMAND is set to 'low' so that RS will be set to low
-        when a command is sent and high when data is sent.
+       Explanation:
+       PINS are set to [0, 1, 2, 3] which assigns P0 to D4, P1 to D5, P2 to D6,
+       and P3 to D7.  RS is set to 4 to associate with P4. Similarly E is set
+       to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
+       of the backpack.  COMMAND is set to 'low' so that RS will be set to low
+       when a command is sent and high when data is sent.
     """
+
     _BACKLIGHT = 3
     _ENABLE = 2
     _RS = 0
@@ -714,8 +715,8 @@ class pcf8574(i2c):
 
         Example:
             To set an HD44780s cursor to the beginning of the first line requires
-            sending 10000000 0x80.  This is 1000 (0x08) at the high side of the byte
-            and 0001 (0x01) on the low side of the byte.
+            sending 0b10000000 (0x80).  This is 0b1000 (0x08) at the high side of
+            the byte and 0b0000 (0x00) on the low side of the byte.
 
             To send this using the pcf8574 interface you need to send...
             d = pcf8574(bus=1, address=0x27)
