@@ -30,3 +30,4 @@ Contributors
 * Daniel Smullen (@drspangle)
 * Hans Liss (@hansliss)
 * Phil Howard (@gadgetoid)
+* Manuel Baesler (@baslr)

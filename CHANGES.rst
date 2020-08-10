@@ -4,6 +4,13 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| **1.14.1** | * Pin spidev at v3.4 or lower; v3.5 seems to cause SystemException  | 2020/07/26 |
+|            |   running on latest linux kernel                                    |            |
+|            | * Fix bug in snapshot: should always redraw on startup              |            |
++------------+---------------------------------------------------------------------+------------+
+| **1.14.0** | * Drop support for Python 2.7, only 3.5 or newer is supported now   | 2020/04/07 |
+|            | * Add support for SPI mode (clock polarity and phase)               |            |
++------------+---------------------------------------------------------------------+------------+
 | **1.13.0** | * Add support for using any GPIO pin as a CS pin for SPI            | 2020/01/12 |
 +------------+---------------------------------------------------------------------+------------+
 | **1.12.0** | * Rework namespace support for subprojects                          | 2019/06/15 |

@@ -96,7 +96,7 @@ def test_snapshot_last_updated():
         assert width == 10
 
     sshot = snapshot(10, 10, draw_fn, interval)
-    assert sshot.last_updated == 0.0
+    assert sshot.last_updated == -interval
     assert sshot.should_redraw() is True
     sshot.paste_into(Image.new("RGB", (10, 10)), (0, 0))
     assert sshot.should_redraw() is False
