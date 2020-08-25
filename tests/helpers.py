@@ -35,6 +35,11 @@ def get_reference_font(fname, fsize=12):
     return ImageFont.truetype(path, fsize)
 
 
+def get_reference_pil_font(fname):
+    path = get_reference_file(os.path.join('font', fname))
+    return ImageFont.load(path)
+
+
 def get_spidev():
     try:
         import spidev
