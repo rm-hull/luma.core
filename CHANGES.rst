@@ -4,6 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| **1.15.0** | * Parallel bus and I²C backpack support                             | 2020/08/10 |
++------------+---------------------------------------------------------------------+------------+
 | **1.14.1** | * Pin spidev at v3.4 or lower; v3.5 seems to cause SystemException  | 2020/07/26 |
 |            |   running on latest linux kernel                                    |            |
 |            | * Fix bug in snapshot: should always redraw on startup              |            |
