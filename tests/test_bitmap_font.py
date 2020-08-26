@@ -14,11 +14,10 @@ from PIL import Image, ImageDraw
 from luma.core import bitmap_font
 from luma.core.bitmap_font import embedded_fonts
 
-from helpers import get_reference_pil_font, get_reference_file
+from helpers import get_reference_pillow_font, get_reference_file
 
 
 FONTDATA = {
-    # TODO: Extend and verify Unicode Mappings
     'metrics': [
         # A00 ENGLISH_JAPANESE 5x8 METRICS
         {
@@ -93,6 +92,15 @@ FONTDATA = {
 
 
 def make_sprite_table(fnt):
+    """
+    Generate a page filled with glyphs from character value 16-255 using the
+    provided font
+
+    :param fnt: the font to use to draw the page
+    :type fnt: `PIL.ImageFont`
+    :return: Image containing the drawn glyphs
+    :rtype: `PIL.Image`
+    """
     img = Image.new('1', (80, 120), 0)
     drw = ImageDraw.Draw(img)
     for i in range(240):
@@ -100,31 +108,94 @@ def make_sprite_table(fnt):
     return img
 
 
-def test_load_from_pil(bm_font):
-    fnt = get_reference_pil_font('hd44780a02.pil')
+@pytest.fixture()
+def bm_font(request):
+    """
+    Fixture which loads a bitmap_font persists it to disk
+    The fixture removes the file when it is finished.
+    """
+    filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
+    bmf = bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8),
+        (5, 8), FONTDATA['mappings'][1])
+    bmf.save('test.bmf')
+
+    def tear_down():
+        os.remove('test.bmf')
+    request.addfinalizer(tear_down)
+
+    return bmf
+
+
+@pytest.fixture()
+def load_all_embedded(request):
+    """
+    Fixture which loads the two fonts contained within the test FONTDATA information
+    """
+    fnt_cnt = len(FONTDATA['metrics'])
+    bmfs = [None] * fnt_cnt
+
+    for i in range(fnt_cnt):
+        m = FONTDATA['metrics'][i]
+        sp_data = FONTDATA['fonts'][i]
+        mappings = FONTDATA['mappings'][i]
+        sprite_table = Image.frombytes('1', m['table_size'], sp_data)
+        bmfs[i] = bitmap_font.load_sprite_table(sprite_table, m['index'], m['xwidth'],
+            m['glyph_size'], m['cell_size'], mappings)
+        sprite_table.close()
+    return bmfs
+
+
+def test_load_from_pillow_font():
+    """
+    Test the loading of a pillow font from disk by loading the font from bitmap_font
+    and PIL.ImageFont, rendering a page of glyphs which each and testing to make
+    sure the results are the same.
+    """
+    fnt = get_reference_pillow_font('hd44780a02.pil')
     filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
-    bmf = bitmap_font.load_pil_font(filename)
+    bmf = bitmap_font.load_pillow_font(filename)
 
     img1 = make_sprite_table(fnt)
     img2 = make_sprite_table(bmf)
 
     assert img1 == img2
 
+
+def test_load_from_pillow_exceptions():
+    """
+    Test that exceptions are thrown as appropriate if bitmap_font is asked to
+    load a pillow font that is not a PIL.ImageFont file, is damaged or does not
+    include the required font metrics data.
+    """
+
+    with pytest.raises(SyntaxError) as ex:
+        filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
+        bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
+    assert str(ex.value) == "Not a PIL.ImageFont file"
+
     with pytest.raises(SyntaxError) as ex:
         filename = get_reference_file(os.path.join('font', 'hd44780a02_nodata.pil'))
-        bitmap_font.load_pil_font(filename, FONTDATA['mappings'][1])
-    assert str(ex.value) == "PILfont file missing metric data"
+        bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
+    assert str(ex.value) == "PIL.ImageFont file missing metric data"
 
     with pytest.raises(SyntaxError) as ex:
         filename = get_reference_file(os.path.join('font', 'hd44780a02_incomplete.pil'))
-        bitmap_font.load_pil_font(filename, FONTDATA['mappings'][1])
-    assert str(ex.value) == "PILfont file metric data incomplete"
+        bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
+    assert str(ex.value) == "PIL.ImageFont file metric data incomplete"
+
+    filename = get_reference_file(os.path.join('font', 'wrong_mode.pil'))
+    with pytest.raises(OSError) as ex:
+        bitmap_font.load_pillow_font(filename)
+    assert str(ex.value) == 'cannot find glyph data file'
 
 
 def test_mapping():
-    fnt = get_reference_pil_font('hd44780a02.pil')
+    """
+    Test to make sure that values that have unicode mappings work correctly
+    """
+    fnt = get_reference_pillow_font('hd44780a02.pil')
     filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
-    bmf = bitmap_font.load_pil_font(filename, FONTDATA['mappings'][1])
+    bmf = bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
 
     size = bmf.getsize('\u0010')
     img1 = Image.new('1', size, 0)
@@ -137,74 +208,46 @@ def test_mapping():
 
     assert img1 == img2
 
-    with pytest.raises(SyntaxError) as ex:
-        filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
-        bitmap_font.load_pil_font(filename, FONTDATA['mappings'][1])
-    assert str(ex.value) == "Not a PILfont file"
-
 
 def test_load_sprite_table():
-    fnt = get_reference_pil_font('hd44780a02.pil')
+    """
+    Test loading a font from a sprite_table
+    """
+    fnt = get_reference_pillow_font('hd44780a02.pil')
     filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
-    bmf = bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 10), FONTDATA['mappings'][1])
+    bmf = bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
 
-    img1 = Image.new('1', (25, 8), 0)
-    img2 = Image.new('1', (25, 8), 0)
-
-    drw = ImageDraw.Draw(img1)
-    drw.text((0, 0), 'HELLO', font=fnt, fill='white')
-    drw = ImageDraw.Draw(img2)
-    drw.text((0, 0), 'HELLO', font=bmf, fill='white')
+    img1 = make_sprite_table(fnt)
+    img2 = make_sprite_table(bmf)
 
     assert img1 == img2
 
+
+def test_load_sprite_table_exceptions():
+    """
+    Test that exceptions are thrown as appropriate if bitmap_font is asked to
+    load from a sprite table from a filename that does not exist, is not a
+    PIL.Image file, or is damaged.
+    """
     with pytest.raises(FileNotFoundError) as ex:
         filename = 'badfile'
-        bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 10), FONTDATA['mappings'][1])
+        bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
     assert str(ex.value) == '[Errno 2] No such file or directory: \'{0}\''.format(filename)
 
     with pytest.raises(ValueError) as ex:
         filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
-        bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 10), FONTDATA['mappings'][1])
+        bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
     assert str(ex.value) == 'File {0} not a valid sprite table'.format(filename)
 
     with pytest.raises(ValueError) as ex:
-        bitmap_font.load_sprite_table(1, range(16, 256), 5, (5, 8), (5, 10), FONTDATA['mappings'][1])
+        bitmap_font.load_sprite_table(1, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
     assert str(ex.value) == 'Provided image is not an instance of PIL.Image'
 
 
-@pytest.fixture()
-def bm_font(request):
-    filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
-    bmf = bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8),
-        (5, 10), FONTDATA['mappings'][1])
-    bmf.save('test.bmf')
-
-    def tear_down():
-        os.remove('test.bmf')
-    request.addfinalizer(tear_down)
-
-    return bmf
-
-
-@pytest.fixture()
-def load_all_embedded(request):
-    fnt_cnt = len(FONTDATA['metrics'])
-    bmfs = [None] * fnt_cnt
-
-    for i in range(fnt_cnt):
-        m = FONTDATA['metrics'][i]
-        sp_data = FONTDATA['fonts'][i]
-        mappings = FONTDATA['mappings'][i]
-        sprite_table = Image.frombytes('1', m['table_size'], sp_data)
-        bmfs[i] = bitmap_font.load_sprite_table(sprite_table, m['index'], m['xwidth'],
-            m['glyph_size'], m['cell_size'], mappings)
-        sprite_table.close()
-
-    return bmfs
-
-
 def test_dumps_loads_saves_load(bm_font):
+    """
+    Test which verifies the loading and restoring of bitmap_fonts
+    """
     bmf = bm_font
 
     data = bmf.dumps()
@@ -221,10 +264,23 @@ def test_dumps_loads_saves_load(bm_font):
     with pytest.raises(SyntaxError) as ex:
         filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
         bitmap_font.load(filename)
-    assert str(ex.value) == 'Not a LUMA.CORE.BITMAP_FONT file'
+    assert str(ex.value) == 'Not a luma.core.bitmap_font file'
+
+
+def test_loads_exception():
+    """
+    Test exception when attempting to load font data that is incomplete
+    """
+    data = cbor2.dumps({'xwidth': 5, 'glyph_size': (5, 8)})
+    with pytest.raises(Exception) as ex:
+        bitmap_font.loads(data)
+    assert str(ex.value) == 'Cannot parse fontdata. It is invalid.'
 
 
 def test_combine(load_all_embedded):
+    """
+    Test which verifies that fonts can be combined successfully
+    """
     bmfs = load_all_embedded
 
     # Demonstrate that \u25b6 and \u25c0 are not in bmfs[0]
@@ -275,6 +331,11 @@ def test_combine(load_all_embedded):
 
 
 def test_embedded_font(load_all_embedded):
+    """
+    Tests the embedded_fonts class.  Loads FONTDATA.  Changes current font
+    by name and number.  Combines two fonts and verifies that combined
+    characters get rendered correctly.
+    """
     bmfs = load_all_embedded
     ebf = embedded_fonts(FONTDATA)
 
@@ -298,6 +359,14 @@ def test_embedded_font(load_all_embedded):
 
     assert img1 == img2
 
+
+def test_embedded_font_exceptions():
+    """
+    Tests exceptions when attempting to select a font that does not exist
+    within the embedded_fonts object
+    """
+    ebf = embedded_fonts(FONTDATA)
+
     with pytest.raises(ValueError) as ex:
         ebf.current = 2
     assert str(ex.value) == 'No font with index {0}'.format(2)
@@ -312,6 +381,10 @@ def test_embedded_font(load_all_embedded):
 
 
 def test_metrics(load_all_embedded):
+    """
+    Tests that bitmap_font correctly handles fonts that have characters within
+    the font that have offsets.
+    """
     bmfs = load_all_embedded
 
     img1 = Image.new('1', (10, 8), 0)
@@ -326,7 +399,7 @@ def test_metrics(load_all_embedded):
     drw.text(((5, 2)), 'j', font=bmfs[0], fill='white', spacing=0)
 
     # Make j descend 2 pixels below the baseline
-    j = bmfs[0].lookup(ord('j'))
+    j = bmfs[0]._lookup(ord('j'))
     dst = bmfs[0].metrics[j]['dst']
     dst[1] = dst[1] + 2
     dst[3] = dst[3] + 2
@@ -349,17 +422,3 @@ def test_metrics(load_all_embedded):
     drw = ImageDraw.Draw(img2)
     drw.text(((0, 0)), 'ij', font=restore, fill='white', spacing=0)
     assert img1d == img2
-
-
-def test_load_fontdata():
-    data = cbor2.dumps({'xwidth': 5, 'glyph_size': (5, 8)})
-    with pytest.raises(Exception) as ex:
-        bitmap_font.loads(data)
-    assert str(ex.value) == 'Cannot parse fontdata. It is invalid.'
-
-
-def test_load_image_fail():
-    filename = get_reference_file(os.path.join('font', 'wrong_mode.pil'))
-    with pytest.raises(OSError) as ex:
-        bitmap_font.load_pil_font(filename)
-    assert str(ex.value) == 'cannot find glyph data file'

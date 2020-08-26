@@ -14,6 +14,7 @@ from luma.core.device import parallel_device
 def test_4bit():
     serial = Mock(unsafe=True)
     serial._bitmode = 4
+    serial._pulse_time = 1
     pd = parallel_device(serial_interface=serial)
 
     pd.command(0x10, 0x11, 0xff)
@@ -28,6 +29,7 @@ def test_4bit():
 def test_8bit():
     serial = Mock(unsafe=True)
     serial._bitmode = 8
+    serial._pulse_time = 1
     pd = parallel_device(serial_interface=serial)
 
     pd.command(0x10, 0x11, 0xff)

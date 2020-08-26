@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import cbor2
 from pathlib import Path
-from PIL import Image, ImageFont, UnidentifiedImageError
 from math import ceil
 from copy import deepcopy
+from PIL import Image, ImageFont, UnidentifiedImageError
+import cbor2
+from luma.core.util import from_16_to_8, from_8_to_16
 
 
 class bitmap_font():
@@ -26,7 +27,7 @@ class bitmap_font():
         Because this font is implemented completely in Python it will be slower
         than a native PIL.ImageFont object.
 
-    .. versionadded:: 1.15.1
+    .. versionadded:: 1.16.0
     """
 
     PUA_SPACE = 0xF8000
@@ -35,14 +36,19 @@ class bitmap_font():
         self.mappings = {}
         self.metrics = []
 
-    def load(self, file):
+    def load(self, filename):
         """
-        Load luma.core.bitmap_font
+        Load font from filename
+
+        :param filename: the filename of the file containing the font data
+        :type filename: str
+        :return: a font object
+        :rtype: luma.core.bitmap_font
         """
-        with open(file, 'rb') as fp:
+        with open(filename, 'rb') as fp:
             s = fp.readline()
             if s != b'LUMA.CORE.BITMAP_FONT\n':
-                raise SyntaxError('Not a LUMA.CORE.BITMAP_FONT file')
+                raise SyntaxError('Not a luma.core.bitmap_font file')
             fontdata = cbor2.load(fp)
 
         self._load_fontdata(fontdata)
@@ -52,12 +58,19 @@ class bitmap_font():
         """
         Load luma.core.bitmap_font from a string of serialized data produced
         by the dumps method
+
+        :param fontdata: The serialized font data that will be used to initialize
+            the font.  This data is produced by the luma.core.bitmap_font.dumps
+            method.
+        :type fontdata: bytes
+        :return: a font object
+        :rtype: luma.core.bitmap_font
         """
         fontdata = cbor2.loads(fontdata)
         self._load_fontdata(fontdata)
         return self
 
-    def load_pil_font(self, file, mappings=None):
+    def load_pillow_font(self, file, mappings=None):
         """
         Create luma.core.bitmap_font from a PIL ImageFont style font.
 
@@ -67,19 +80,21 @@ class bitmap_font():
             Mappings allow the appropriate unicode values to be provided for
             each character contained within the font
         :type mappings: dict
+        :return: a font object
+        :rtype: luma.core.bitmap_font
         """
         with open(file, 'rb') as fp:
             if fp.readline() != b"PILfont\n":
-                raise SyntaxError("Not a PILfont file")
+                raise SyntaxError("Not a PIL.ImageFont file")
             while True:
                 s = fp.readline()
                 if not s:
-                    raise SyntaxError("PILfont file missing metric data")
+                    raise SyntaxError("PIL.ImageFont file missing metric data")
                 if s == b"DATA\n":
                     break
             data = fp.read(256 * 20)
             if len(data) != 256 * 20:
-                raise SyntaxError("PILfont file metric data incomplete")
+                raise SyntaxError("PIL.ImageFont file metric data incomplete")
 
         sprite_table = self._get_image(file)
         self._populate_metrics(sprite_table, data, range(256), mappings)
@@ -109,6 +124,8 @@ class bitmap_font():
             Mappings allow the appropriate unicode values to be provided for
             each character contained within the font
         :type mappings: dict
+        :return: a font object
+        :rtype: luma.core.bitmap_font
 
         .. note:
             Font contained within table must adhere to the following conditions
@@ -133,7 +150,7 @@ class bitmap_font():
             right = left + glyph_size[0]
             bottom = top + glyph_size[1]
             data = data + line + [left, top, right, bottom]
-        self._populate_metrics(sprite_table, self._from_16_to_8(data), index, mappings)
+        self._populate_metrics(sprite_table, from_16_to_8(data), index, mappings)
         return self
 
     def save(self, filename):
@@ -147,14 +164,17 @@ class bitmap_font():
 
     def dumps(self):
         """
-        Return luma.core.bitmap_font data serialized as a string
+        Serializes the font data for transfer or storage
+
+        :return: serialized font data
+        :rtype: bytes
         """
         fontdata = self._generate_fontdata()
         return cbor2.dumps(fontdata)
 
     def _generate_fontdata(self):
         """
-        Utility function to create an efficient serializable representation
+        Utility method to create an efficient serializable representation
         of a luma.core.bitmap_font
         """
         cell_size = (self.width, self.height)
@@ -200,7 +220,7 @@ class bitmap_font():
             table_width, table_height = fontdata['sprite_table_dimensions']
             image = Image.frombytes('1', (table_width, table_height), fontdata['sprite_table'])
             metrics = fontdata.get('metrics')
-        except Exception:
+        except (KeyError, TypeError, ValueError):
             raise ValueError('Cannot parse fontdata. It is invalid.')
 
         self.metrics = []
@@ -230,14 +250,17 @@ class bitmap_font():
             except:
                 pass
             else:
-                if image.mode in "1L":
+                if image.mode in ['1', 'L']:
                     break
                 image.close()
         else:
             raise OSError('cannot find glyph data file')
         return image
 
-    def lookup(self, val):
+    def _lookup(self, val):
+        """
+        Utility method to determine a characters placement within the metrics list
+        """
         if val in self.mappings:
             return self.mappings[val]
         if val + self.PUA_SPACE in self.mappings:
@@ -246,14 +269,14 @@ class bitmap_font():
 
     def _getsize(self, text):
         """
-        Utility function to compute the rendered size of a line of text.  It
+        Utility method to compute the rendered size of a line of text.  It
         also computes the minimum column value for the line of text. This is
         needed in case the font has a negative horizontal offset which
         requires that the size be expanded to accomodate the extra pixels.
         """
         min_col = max_col = cp = 0
         for c in text:
-            m = self.lookup(ord(c))
+            m = self._lookup(ord(c))
             if m is None:
                 # Ignore characters that do not exist in font
                 continue
@@ -277,7 +300,7 @@ class bitmap_font():
         """
 
         # TODO: Test for potential character overwrite if horizontal offset is < 0
-        assert mode in "1L"
+        assert mode in ['1', 'L']
         width, height, min = self._getsize(text)
         image = Image.new(mode, (width, height))
 
@@ -285,7 +308,7 @@ class bitmap_font():
         cp = -min if min < 0 else 0
 
         for c in text:
-            m = self.lookup(ord(c))
+            m = self._lookup(ord(c))
             if m is None:
                 # Ignore characters that do not exist in font
                 continue
@@ -295,30 +318,6 @@ class bitmap_font():
             image.paste(char['img'], (px, py))
             cp += char['xwidth']
         return image.im
-
-    def _from_16_to_8(self, data):
-        """
-        Utility function to take a list of 16 bit values and turn it into
-        a list of 8 bit values
-        """
-        list = []
-        for i in data:
-            list = list + [i >> 8] + [i & 0xff]
-        return list
-
-    def _from_8_to_16(self, data):
-        """
-        Utility function to take a list of 8 bit values and turn it into a list
-        of 16 bit values
-        """
-        return [self._unsigned_16_to_signed((data[i] << 8) + data[i + 1])
-            for i in range(0, len(data), 2)] if data is not None else None
-
-    def _unsigned_16_to_signed(self, value):
-        """
-        Utility function to convert unsigned 16 bit value to a signed value
-        """
-        return ((value) & 0x7FFF) - (0x8000 & (value))
 
     def _populate_metrics(self, sprite_table, data, index, mappings):
         """
@@ -348,7 +347,7 @@ class bitmap_font():
         self.mappings = {}
 
         for i, c in enumerate(index):
-            metric = self._from_8_to_16(data[i * 20:(i + 1) * 20])
+            metric = from_8_to_16(data[i * 20:(i + 1) * 20])
 
             # If character is empty and is not the space character, skip it
             if sum(metric) == 0 and c != 0x20:
@@ -413,7 +412,7 @@ class bitmap_font():
             for c in characters:
                 if ord(c) in self.mappings and not force:
                     continue
-                m = source_font.lookup(ord(c))
+                m = source_font._lookup(ord(c))
                 if m is not None:
                     v = source_font.metrics[m]
                 else:
@@ -434,8 +433,8 @@ class bitmap_font():
 
 def load(filename):
     """
-    Load a LUMA.CORE.BITMAP_FONT file.  This function creates a
-    luma.core.bitmap_font object from the given LUMA.CORE.BITMAP_FONT file, and
+    Load a luma.core.bitmap_font file.  This function creates a
+    luma.core.bitmap_font object from the given luma.core.bitmap_font file, and
     returns the corresponding font object.
 
     :param filename: Filename of font file.
@@ -465,7 +464,7 @@ def loads(data):
     return f
 
 
-def load_pil_font(filename, mappings=None):
+def load_pillow_font(filename, mappings=None):
     """
     Load a PIL font file.  This function creates a luma.core.bitmap_font object
     from the given PIL bitmap font file, and returns the corresponding font object.
@@ -479,7 +478,7 @@ def load_pil_font(filename, mappings=None):
     :exception SyntaxError: If the file does not contain the expected data
     """
     f = bitmap_font()
-    f.load_pil_font(filename, mappings)
+    f.load_pillow_font(filename, mappings)
     return f
 
 
@@ -539,13 +538,22 @@ class embedded_fonts(ImageFont.ImageFont):
     Utility class to manage the set of fonts that are embedded within a
     compatible device.
 
-    :param data: The font data from the device
-    :type data: A struct that contains 'metrics', 'mappings', a 'fonts' sections
+    :param data: The font data from the device.  See note below.
+    :type data: dict
     :param selected_font: The font that should be loaded as this device's
         default.  Will accept the font's index or its name.
     :type selected_font: str or int
 
-    .. versionadded:: 1.15.1
+    ..note:
+        The class is used by devices which have embedded fonts and is not intended
+        to be used directly. To initialize it requires providing a dictionary
+        of font data including a `PIL.Image.tobytes` representation of a
+        sprite_table which contains the glyphs of the font organized in
+        consistent rows and columns, a metrics dictionary which provides the
+        information on how to retrieve fonts from the sprite_table, and a
+        mappings dictionary that provides unicode to table mappings.
+
+    .. versionadded:: 1.16.0
     """
     def __init__(self, data, selected_font=0):
         self.data = data
