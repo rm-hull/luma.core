@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-20 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -15,6 +15,9 @@ from luma.core import lib
 
 
 __all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c", "parallel", "pcf8574"]
+
+#: Default amount of time to wait for a pulse to complete if the device the interface is connected to requires a pin to be 'pulsed' from low to high to low for it to accept data or a command
+PULSE_TIME = 1e-6 * 50
 
 
 class i2c(object):
@@ -517,7 +520,7 @@ class parallel(object):
     .. versionadded:: 1.15.0
     """
 
-    def __init__(self, gpio=None, pulse_time=1e-6 * 50, **kwargs):
+    def __init__(self, gpio=None, pulse_time=PULSE_TIME, **kwargs):
 
         self._managed = gpio is None
         self._gpio = gpio or self.__rpi_gpio__()
@@ -683,7 +686,7 @@ class pcf8574(i2c):
     _OFFSET = 4
     _CMD = 'low'
 
-    def __init__(self, pulse_time=1e-6 * 50, backlight_enabled=True, *args, **kwargs):
+    def __init__(self, pulse_time=PULSE_TIME, backlight_enabled=True, *args, **kwargs):
         super(pcf8574, self).__init__(*args, **kwargs)
 
         self._pulse_time = pulse_time

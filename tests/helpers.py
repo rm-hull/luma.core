@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -33,6 +33,18 @@ def get_reference_image(fname):
 def get_reference_font(fname, fsize=12):
     path = get_reference_file(os.path.join('font', fname))
     return ImageFont.truetype(path, fsize)
+
+
+def get_reference_pillow_font(fname):
+    """
+    Load PIL.ImageFont type font from provided fname
+
+    :param fname: The name of the file that contains the PIL.ImageFont
+    :type fname: str
+    :returns `PIL.ImageFont` object
+    """
+    path = get_reference_file(os.path.join('font', fname))
+    return ImageFont.load(path)
 
 
 def get_spidev():
