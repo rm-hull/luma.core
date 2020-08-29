@@ -5,6 +5,7 @@ API Documentation
    :maxdepth: 1
 
    ansi_color
+   bitmap_font
    cmdline
    const
    device

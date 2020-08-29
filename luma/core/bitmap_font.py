@@ -344,13 +344,13 @@ class bitmap_font():
                     rev_map[v].append(k)
                 else:
                     rev_map[v] = [k]
-        self.mappings = {}
 
+        self.mappings = {}
         for i, c in enumerate(index):
             metric = from_8_to_16(data[i * 20:(i + 1) * 20])
 
-            # If character is empty and is not the space character, skip it
-            if sum(metric) == 0 and c != 0x20:
+            # If character position has no data, skip it
+            if sum(metric) == 0:
                 continue
 
             xwidth = metric[0]
@@ -367,7 +367,10 @@ class bitmap_font():
             if c in rev_map:
                 for u in rev_map[c]:
                     self.mappings[u] = idx
-            self.glyph_index[img.tobytes()] = idx
+            i2b = img.tobytes()
+            # Only add new glyphs except always add space character
+            if i2b not in self.glyph_index or c == 0x20:
+                self.glyph_index[i2b] = c
             idx += 1
 
         self._calculate_font_size()

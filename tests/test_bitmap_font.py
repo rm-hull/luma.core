@@ -422,3 +422,17 @@ def test_metrics(load_all_embedded):
     drw = ImageDraw.Draw(img2)
     drw.text(((0, 0)), 'ij', font=restore, fill='white', spacing=0)
     assert img1d == img2
+
+
+def test_glyph_index(load_all_embedded):
+    """
+    Verify that glyph_table contains expected values
+    """
+    bmfs = load_all_embedded
+
+    # Test space 'A' and 'a' characters
+    for i in [0x20, 0x41, 0x61]:
+        img = Image.new('1', (5, 8), 0)
+        drw = ImageDraw.Draw(img)
+        drw.text((0, 0), chr(i), font=bmfs[0], fill='white')
+        assert bmfs[0].glyph_index[img.tobytes()] == i, '{0} does not match its glyph_index value'.format(i)
