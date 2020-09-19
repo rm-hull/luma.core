@@ -4,3 +4,10 @@
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`luma.core.interface.parallel`
+"""""""""""""""""""""""""""""""""""
+.. automodule:: luma.core.interface.parallel
+    :members:
+    :undoc-members:
+    :show-inheritance:
