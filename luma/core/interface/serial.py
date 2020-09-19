@@ -570,7 +570,7 @@ class pcf8574(i2c):
        If your data lines D4-D7 are connected to the PCF8574s pins P0-P3 with
        the RS pin connected to P4, the enable pin to P5, the backlight pin
        connected to P7, and the RS value to indicate command is low, your
-       initialization would look something like...
+       initialization would look something like:
 
        ``pcf8574(port=1, address=0x27, PINS=[0,1,2,3], RS=4, E=5,
        COMMAND='low', BACKLIGHT=7)``

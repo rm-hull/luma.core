@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **1.16.2** | * Added new parallel interface module                               | 2020/09/20 |
+| **1.16.2** | * Added new parallel interface module                               | TBA        |
 |            | * Renamed parallel class to bitbang_6800; moved to parallel module  |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.16.1** | * Fix bug in bitmap_font: glyph_index now computed correctly        | 2020/08/29 |

@@ -12,7 +12,11 @@ from luma.core import lib
 
 __all__ = ["bitbang_6800"]
 
-#: Default amount of time to wait for a pulse to complete if the device the interface is connected to requires a pin to be 'pulsed' from low to high to low for it to accept data or a command
+'''
+Default amount of time to wait for a pulse to complete if the device the
+interface is connected to requires a pin to be 'pulsed' from low to high to
+low for it to accept data or a command
+'''
 PULSE_TIME = 1e-6 * 50
 
 
@@ -37,11 +41,10 @@ class bitbang_6800(object):
         depending upon implementation ordered from LSD to MSD)
     :type PINS: list[int]
 
-    .. versionadded:: 1.15.1
+    .. versionadded:: 1.16.2
     """
 
     def __init__(self, gpio=None, pulse_time=PULSE_TIME, **kwargs):
-
         self._managed = gpio is None
         self._gpio = gpio or self.__rpi_gpio__()
         self._gpio.setwarnings(False)
