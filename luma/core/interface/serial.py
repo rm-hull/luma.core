@@ -525,7 +525,7 @@ class pcf8574(i2c):
     :param BACKLIGHT: value aligned with backlight pin (default: 3)
     :type BACKLIGHT: int
     :param COMMAND: determines whether RS high sets device to expect a command
-        byte or a data byte.  Must be either 'high' (default) or 'low'
+        byte or a data byte.  Must be either ``high`` (default) or ``low``
     :type COMMAND: str
 
     :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
@@ -538,7 +538,7 @@ class pcf8574(i2c):
           if both are, then ``bus`` takes precedence.
        2. If ``bus`` is provided, there is an implicit expectation
           that it has already been opened.
-       3. Default wiring is...
+       3. Default wiring:
 
        * RS - Register Select
        * E - Enable
@@ -572,14 +572,14 @@ class pcf8574(i2c):
        connected to P7, and the RS value to indicate command is low, your
        initialization would look something like:
 
-       ``pcf8574(port=1, address=0x27, PINS=[0,1,2,3], RS=4, E=5,
+       ``pcf8574(port=1, address=0x27, PINS=[0, 1, 2, 3], RS=4, E=5,
        COMMAND='low', BACKLIGHT=7)``
 
        Explanation:
-       PINS are set to [0, 1, 2, 3] which assigns P0 to D4, P1 to D5, P2 to D6,
+       PINS are set to ``[0, 1, 2, 3]`` which assigns P0 to D4, P1 to D5, P2 to D6,
        and P3 to D7.  RS is set to 4 to associate with P4. Similarly E is set
        to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
-       of the backpack.  COMMAND is set to 'low' so that RS will be set to low
+       of the backpack.  COMMAND is set to ``low`` so that RS will be set to low
        when a command is sent and high when data is sent.
 
     .. versionadded:: 1.15.0
