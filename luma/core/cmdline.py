@@ -265,6 +265,7 @@ def create_parser(description):
     misc_group.add_argument('--mode', type=str, default='RGB', help='Colour mode (SSD1322, SSD1325 and emulator only). Allowed values are: {0}'.format(', '.join(color_choices)), choices=color_choices, metavar='MODE')
     misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help='Framebuffer implementation (SSD1331, SSD1322, ST7735 displays only). Allowed values are: {0}'.format(', '.join(framebuffer_choices)), choices=framebuffer_choices, metavar='FRAMEBUFFER')
     misc_group.add_argument('--bgr', dest='bgr', action='store_true', help='Set if LCD pixels laid out in BGR (ST7735 displays only).')
+    misc_group.add_argument('--inverse', dest='inverse', action='store_true', help='Set if LCD has swapped black and white (ST7735 displays only).')
     misc_group.set_defaults(bgr=False)
     misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only)')
     misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only)')
