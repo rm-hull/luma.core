@@ -6,7 +6,7 @@ luma.core **|**
 `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|** 
 `luma.oled <https://github.com/rm-hull/luma.oled>`__ 
 
-Luma.Core
+luma.core
 =========
 
 .. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
@@ -65,7 +65,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017-2019 Richard Hull and contributors
+Copyright (c) 2017-2020 Richard Hull and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
