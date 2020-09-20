@@ -498,7 +498,7 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
 
 class pcf8574(i2c):
     """
-    Wraps i2c interface to provide :py:func:`data` and :py:func:`command` methods
+    I²C interface to provide :py:func:`data` and :py:func:`command` methods
     for a device using a pcf8574 backpack.
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
