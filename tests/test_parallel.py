@@ -4,11 +4,11 @@
 # See LICENSE.rst for details.
 
 """
-Tests for the :py:class:`luma.core.interface.serial.parallel` class.
+Tests for the :py:module:`luma.core.interface.parallel` module.
 """
 
 from unittest.mock import Mock, call
-from luma.core.interface.serial import parallel
+from luma.core.interface.parallel import bitbang_6800
 import luma.core.error
 
 import pytest
@@ -35,7 +35,7 @@ def test_data():
     eight_to_four = lambda data: [f(x) for x in data for f in (lambda x: x >> 4, lambda x: 0x0F & x)]
 
     data = (0x41, 0x42, 0x43)  # ABC
-    serial = parallel(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23, 18])
+    serial = bitbang_6800(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23, 18])
 
     serial.command(*eight_to_four([0x80]))
     serial.data(eight_to_four(data))
@@ -62,13 +62,13 @@ def test_data():
 
 def test_wrong_number_of_pins():
     try:
-        parallel(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23])
+        bitbang_6800(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23])
     except AssertionError as ex:
         assert str(ex) == 'You\'ve provided 3 pins but a bus must contain either four or eight pins'
 
 
 def test_cleanup():
-    serial = parallel(gpio=gpio)
+    serial = bitbang_6800(gpio=gpio)
     serial._managed = True
     serial.cleanup()
     gpio.cleanup.assert_called_once_with()
@@ -76,7 +76,7 @@ def test_cleanup():
 
 def test_unsupported_gpio_platform():
     try:
-        parallel()
+        bitbang_6800()
     except luma.core.error.UnsupportedPlatform as ex:
         assert str(ex) == 'GPIO access not available'
     except ImportError:
