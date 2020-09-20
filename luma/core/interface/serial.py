@@ -627,9 +627,10 @@ class pcf8574(i2c):
             sending 0b10000000 (0x80).  This is 0b1000 (0x08) at the high side of
             the byte and 0b0000 (0x00) on the low side of the byte.
 
-            To send this using the pcf8574 interface you need to send...
-            d = pcf8574(bus=1, address=0x27)
-            d.command([0x08, 0x00])
+            To send this using the pcf8574 interface you need to send::
+
+              d = pcf8574(bus=1, address=0x27)
+              d.command([0x08, 0x00])
         """
         self._write(list(cmd), self._cmd_mode)
 
@@ -649,9 +650,10 @@ class pcf8574(i2c):
             01000001.  This is 0100 (0x40) at the high side of the byte
             and 0001 (0x01) on the low side of the byte.
 
-            To send this using the pcf8574 interface you need to send...
-            d = pcf8574(bus=1, address=0x27)
-            d.command([0x04, 0x01])
+            To send this using the pcf8574 interface you need to send::
+
+              d = pcf8574(bus=1, address=0x27)
+              d.command([0x04, 0x01])
         """
         self._write(data, self._data_mode)
 
