@@ -6,7 +6,7 @@ luma.core **|**
 `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|** 
 `luma.oled <https://github.com/rm-hull/luma.oled>`__ 
 
-Luma.Core
+luma.core
 =========
 
 .. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
@@ -14,9 +14,6 @@ Luma.Core
 
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
    :target: https://coveralls.io/github/rm-hull/luma.core?branch=master
-
-.. image:: https://requires.io/github/rm-hull/luma.core/requirements.svg?branch=master
-   :target: https://requires.io/github/rm-hull/luma.core/requirements/?branch=master
 
 .. image:: https://img.shields.io/pypi/pyversions/luma.core.svg
    :target: https://pypi.python.org/pypi/luma.core
@@ -68,7 +65,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017-2019 Richard Hull and contributors
+Copyright (c) 2017-2020 Richard Hull and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

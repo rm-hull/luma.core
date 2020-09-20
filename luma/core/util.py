@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-20 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import sys
@@ -88,3 +88,63 @@ class observable(object):
 
     def __repr__(self):
         return self.target.__repr__()
+
+
+def from_16_to_8(data):
+    """
+    Utility function to take a list of 16 bit values and turn it into
+    a list of 8 bit values
+
+    :param data: list of 16 bit values to convert
+    :type data: list
+    :return: a list of 8 bit values
+    :rtype: list
+
+    .. versionadded:: 1.16.0
+    """
+    return [f(x) for x in data for f in (lambda x: (x & 0xFF00) >> 8, lambda x: 0xFF & x)]
+
+
+def from_8_to_16(data):
+    """
+    Utility function to take a list of 8 bit values and turn it into a list
+    of signed 16 bit integers
+
+    :param data: list of 8 bit values to convert
+    :type data: list
+    :return: a list of 16 bit values
+    :rtype: list
+
+    .. versionadded:: 1.16.0
+    """
+    return [unsigned_16_to_signed(((data[i] & 0xFF) << 8) + (data[i + 1] & 0xFF))
+        for i in range(0, len(data), 2)] if data is not None else None
+
+
+def unsigned_16_to_signed(value):
+    """
+    Utility function to convert unsigned 16 bit value to a signed value
+
+    :param value: the 16 bit value that needs to be converted
+    :type value: int
+    :return: a signed integer
+    :rtype: int
+
+    .. versionadded:: 1.16.0
+    """
+    return ((value) & 0x7FFF) - (0x8000 & (value))
+
+
+def bytes_to_nibbles(data):
+    """
+    Utility function to take a list of bytes (8 bit values) and turn it into
+    a list of nibbles (4 bit values)
+
+    :param data: a list of 8 bit values that will be converted
+    :type data: list
+    :return: a list of 4 bit values
+    :rtype: list
+
+    .. versionadded:: 1.16.0
+    """
+    return [f(x) for x in data for f in (lambda x: x >> 4, lambda x: 0x0F & x)]
