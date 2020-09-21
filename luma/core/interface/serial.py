@@ -522,7 +522,8 @@ class pcf8574(i2c):
     :type E: int
     :param PINS: The PCF8574 pins that form the data bus in LSD to MSD order
     :type PINS: list[int]
-    :param BACKLIGHT: value aligned with backlight pin (default: 3)
+    :param BACKLIGHT: Pin number of the pcf8574 (counting from zero) that the
+        backlight is controlled from (default: 3)
     :type BACKLIGHT: int
     :param COMMAND: determines whether RS high sets device to expect a command
         byte or a data byte.  Must be either ``high`` (default) or ``low``
