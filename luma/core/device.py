@@ -97,10 +97,10 @@ class parallel_device(device):
     Wrapper class to manage communications with devices that can operate in
     four or eight bit modes.
 
-    ..note:
+    .. note::
         parallel_devices require specific timings which are managed by using
-        time.sleep to cause the process to block for small amounts of time.  If
-        your application is especially time sensitive, consider running the
+        ``time.sleep`` to cause the process to block for small amounts of time.
+        If your application is especially time sensitive, consider running the
         drivers in a separate thread.
 
     .. versionadded:: 1.16.0
@@ -126,7 +126,7 @@ class parallel_device(device):
         :param exec_time: Amount of time to wait for the command to finish
             execution.  If not provided, the device default will be used instead
         :type exec_time: float
-        :param only_low_bits: If true, only the lowest four bits of the command
+        :param only_low_bits: If ``True``, only the lowest four bits of the command
             will be sent.  This is necessary on some devices during initialization
         :type only_low_bits: bool
         """

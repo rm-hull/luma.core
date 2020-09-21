@@ -25,7 +25,7 @@ class bitbang_6800(object):
     """
     Implements a 6800 style parallel-bus interface that provides :py:func:`data`
     and :py:func:`command` methods. The default pin assignments provided are
-    from `Adafruit <https://learn.adafruit.com/drive-a-16x2-lcd-directly-with-a-raspberry-pi/wiring>`.
+    from `Adafruit <https://learn.adafruit.com/drive-a-16x2-lcd-directly-with-a-raspberry-pi/wiring>`_.
 
     :param gpio: GPIO interface (must be compatible with
         `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_)
@@ -75,7 +75,7 @@ class bitbang_6800(object):
 
         This means that the device needs to send high and low bits separately
         if the device is operating using a 4 bit bus (e.g. to send a 0x32 in
-        4 bit mode the device would use command(0x03, 0x02))
+        4 bit mode the device would use ``command(0x03, 0x02)``).
 
         :param cmd: A spread of commands.
         :type cmd: int
@@ -90,7 +90,7 @@ class bitbang_6800(object):
 
         This means that the device needs to send high and low bits separately
         if the device is operating using a 4 bit bus (e.g. to send a 0x32 in
-        4 bit mode the device would use data([0x03, 0x02]))
+        4 bit mode the device would use ``data([0x03, 0x02])``).
 
         :param data: A data sequence.
         :type data: list, bytearray

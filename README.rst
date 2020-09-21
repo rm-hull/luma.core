@@ -36,6 +36,14 @@ single board computers:
 * sprite animation,
 * flexible framebuffering (depending on device capabilities)
 
+Documentation
+-------------
+
+API documentation can be found at https://luma-core.readthedocs.io/en/latest/
+
+Drivers
+-------
+
 Device drivers extend **luma.core** to provide the correct initialization
 sequences for specific physical display devices/chipsets.
 
@@ -45,6 +53,9 @@ There are several drivers for different classes of device available:
 * `luma.lcd <https://github.com/rm-hull/luma.lcd/>`_
 * `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix/>`_
 * `luma.emulator <https://github.com/rm-hull/luma.emulator/>`_
+
+Emulators
+---------
 
 There are emulators that run in real-time (with pygame) and others that can
 take screenshots, or assemble animated GIFs, as per the examples below. Source
