@@ -155,6 +155,9 @@ class bitbang(object):
         only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
+    :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
+        a duration of 100ms or more to fully reset the display (default:0)
+    :type reset_hold_time: float
     :param SCLK: The GPIO pin to connect the SPI clock to.
     :type SCLK: int
     :param SDA: The GPIO pin to connect the SPI data (MOSI) line to.
@@ -166,7 +169,7 @@ class bitbang(object):
     :param RST: The GPIO pin to connect reset (RES / RST) to.
     :type RST: int
     """
-    def __init__(self, gpio=None, transfer_size=4096, **kwargs):
+    def __init__(self, gpio=None, transfer_size=4096, reset_hold_time=0, **kwargs):
 
         self._transfer_size = transfer_size
         self._managed = gpio is None
@@ -182,6 +185,7 @@ class bitbang(object):
 
         if self._RST is not None:
             self._gpio.output(self._RST, self._gpio.LOW)  # Reset device
+            sleep(reset_hold_time)
             self._gpio.output(self._RST, self._gpio.HIGH)  # Keep RESET pulled high
 
     def _configure(self, pin):
@@ -271,15 +275,18 @@ class spi(bitbang):
     :type gpio_RST: int
     :param spi_mode: SPI mode as two bit pattern of clock polarity and phase [CPOL|CPHA], 0-3 (default:None)
     :type spi_mode: int
+    :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
+        a duration of 100ms or more to fully reset the display (default:0)
+    :type reset_hold_time: float
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
-                 gpio_DC=24, gpio_RST=25, spi_mode=None):
+                 gpio_DC=24, gpio_RST=25, spi_mode=None, reset_hold_time=0):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
-        bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
+        bitbang.__init__(self, gpio, transfer_size, reset_hold_time, DC=gpio_DC, RST=gpio_RST)
 
         try:
             self._spi = spi or self.__spidev__()
