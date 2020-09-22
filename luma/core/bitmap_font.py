@@ -5,7 +5,7 @@
 from pathlib import Path
 from math import ceil
 from copy import deepcopy
-from PIL import Image, ImageFont, UnidentifiedImageError
+from PIL import Image, ImageFont
 import cbor2
 from luma.core.util import from_16_to_8, from_8_to_16
 
@@ -522,7 +522,10 @@ def load_sprite_table(sprite_table, index, xwidth, glyph_size, cell_size=None, m
         try:
             sprite_table = Image.open(sprite_table)
             need_to_close = True
-        except UnidentifiedImageError:
+        # Differentiate between file not found and invalid sprite table
+        except FileNotFoundError:
+            raise
+        except IOError:
             raise ValueError('File {0} not a valid sprite table'.format(sprite_table))
 
     if isinstance(sprite_table, Image.Image):
