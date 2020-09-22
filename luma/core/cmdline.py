@@ -156,6 +156,7 @@ class make_serial(object):
                    cs_high=self.opts.spi_cs_high,
                    transfer_size=self.opts.spi_transfer_size,
                    reset_hold_time=self.opts.gpio_reset_hold_time,
+                   reset_release_time=self.opts.gpio_reset_release_time,
                    gpio_DC=self.opts.gpio_data_command,
                    gpio_RST=self.opts.gpio_reset,
                    gpio=self.gpio or GPIO)
@@ -261,6 +262,7 @@ def create_parser(description):
     gpio_group.add_argument('--gpio-reset', type=int, default=25, help='GPIO pin for RESET (SPI devices only)')
     gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544, ST7735 devices only)')
     gpio_group.add_argument('--gpio-reset-hold-time', type=float, default=0, help='Duration to hold reset line active on startup (seconds) (SPI devices only)')
+    gpio_group.add_argument('--gpio-reset-release-time', type=float, default=0, help='Duration to pause for after reset line was made active on startup (seconds) (SPI devices only)')
 
     misc_group = parser.add_argument_group('Misc')
     misc_group.add_argument('--block-orientation', type=int, default=0, help='Fix 90° phase error (MAX7219 LED matrix only). Allowed values are: {0}'.format(', '.join([str(x) for x in block_orientation_choices])), choices=block_orientation_choices, metavar='ORIENTATION')
