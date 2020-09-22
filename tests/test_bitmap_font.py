@@ -223,7 +223,7 @@ def test_load_sprite_table():
     assert img1 == img2
 
 
-def test_load_sprite_table_exceptions():
+def test_load_sprite_table_exceptions_1():
     """
     Test that exceptions are thrown as appropriate if bitmap_font is asked to
     load from a sprite table from a filename that does not exist, is not a
@@ -234,6 +234,13 @@ def test_load_sprite_table_exceptions():
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
     assert str(ex.value) == '[Errno 2] No such file or directory: \'{0}\''.format(filename)
 
+
+def test_load_sprite_table_exceptions_2():
+    """
+    Test that exceptions are thrown as appropriate if bitmap_font is asked to
+    load from a sprite table from a filename that does not exist, is not a
+    PIL.Image file, or is damaged.
+    """
     with pytest.raises(ValueError) as ex:
         filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
