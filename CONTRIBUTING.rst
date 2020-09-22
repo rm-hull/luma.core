@@ -32,3 +32,4 @@ Contributors
 * Phil Howard (@gadgetoid)
 * Manuel Baesler (@baslr)
 * Dhrone (@dhrone)
+* @jakiee3y

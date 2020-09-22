@@ -498,7 +498,7 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
 
 class pcf8574(i2c):
     """
-    Wraps i2c interface to provide :py:func:`data` and :py:func:`command` methods
+    I²C interface to provide :py:func:`data` and :py:func:`command` methods
     for a device using a pcf8574 backpack.
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
@@ -522,10 +522,11 @@ class pcf8574(i2c):
     :type E: int
     :param PINS: The PCF8574 pins that form the data bus in LSD to MSD order
     :type PINS: list[int]
-    :param BACKLIGHT: value aligned with backlight pin (default: 3)
+    :param BACKLIGHT: Pin number of the pcf8574 (counting from zero) that the
+        backlight is controlled from (default: 3)
     :type BACKLIGHT: int
     :param COMMAND: determines whether RS high sets device to expect a command
-        byte or a data byte.  Must be either 'high' (default) or 'low'
+        byte or a data byte.  Must be either ``high`` (default) or ``low``
     :type COMMAND: str
 
     :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
@@ -538,7 +539,7 @@ class pcf8574(i2c):
           if both are, then ``bus`` takes precedence.
        2. If ``bus`` is provided, there is an implicit expectation
           that it has already been opened.
-       3. Default wiring is...
+       3. Default wiring:
 
        * RS - Register Select
        * E - Enable
@@ -572,14 +573,14 @@ class pcf8574(i2c):
        connected to P7, and the RS value to indicate command is low, your
        initialization would look something like:
 
-       ``pcf8574(port=1, address=0x27, PINS=[0,1,2,3], RS=4, E=5,
+       ``pcf8574(port=1, address=0x27, PINS=[0, 1, 2, 3], RS=4, E=5,
        COMMAND='low', BACKLIGHT=7)``
 
        Explanation:
-       PINS are set to [0, 1, 2, 3] which assigns P0 to D4, P1 to D5, P2 to D6,
+       PINS are set to ``[0, 1, 2, 3]`` which assigns P0 to D4, P1 to D5, P2 to D6,
        and P3 to D7.  RS is set to 4 to associate with P4. Similarly E is set
        to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
-       of the backpack.  COMMAND is set to 'low' so that RS will be set to low
+       of the backpack.  COMMAND is set to ``low`` so that RS will be set to low
        when a command is sent and high when data is sent.
 
     .. versionadded:: 1.15.0
@@ -627,9 +628,10 @@ class pcf8574(i2c):
             sending 0b10000000 (0x80).  This is 0b1000 (0x08) at the high side of
             the byte and 0b0000 (0x00) on the low side of the byte.
 
-            To send this using the pcf8574 interface you need to send...
-            d = pcf8574(bus=1, address=0x27)
-            d.command([0x08, 0x00])
+            For example, to send this using the pcf8574 interface::
+
+              d = pcf8574(bus=1, address=0x27)
+              d.command([0x08, 0x00])
         """
         self._write(list(cmd), self._cmd_mode)
 
@@ -649,9 +651,10 @@ class pcf8574(i2c):
             01000001.  This is 0100 (0x40) at the high side of the byte
             and 0001 (0x01) on the low side of the byte.
 
-            To send this using the pcf8574 interface you need to send...
-            d = pcf8574(bus=1, address=0x27)
-            d.command([0x04, 0x01])
+            For example, to send this using the pcf8574 interface::
+
+              d = pcf8574(bus=1, address=0x27)
+              d.command([0x04, 0x01])
         """
         self._write(data, self._data_mode)
 

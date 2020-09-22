@@ -6,7 +6,7 @@ luma.core **|**
 `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|** 
 `luma.oled <https://github.com/rm-hull/luma.oled>`__ 
 
-Luma.Core
+luma.core
 =========
 
 .. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
@@ -36,6 +36,14 @@ single board computers:
 * sprite animation,
 * flexible framebuffering (depending on device capabilities)
 
+Documentation
+-------------
+
+API documentation can be found at https://luma-core.readthedocs.io/en/latest/
+
+Drivers
+-------
+
 Device drivers extend **luma.core** to provide the correct initialization
 sequences for specific physical display devices/chipsets.
 
@@ -45,6 +53,9 @@ There are several drivers for different classes of device available:
 * `luma.lcd <https://github.com/rm-hull/luma.lcd/>`_
 * `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix/>`_
 * `luma.emulator <https://github.com/rm-hull/luma.emulator/>`_
+
+Emulators
+---------
 
 There are emulators that run in real-time (with pygame) and others that can
 take screenshots, or assemble animated GIFs, as per the examples below. Source
@@ -65,7 +76,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017-2019 Richard Hull and contributors
+Copyright (c) 2017-2020 Richard Hull and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
