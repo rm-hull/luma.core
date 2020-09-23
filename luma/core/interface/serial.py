@@ -155,6 +155,13 @@ class bitbang(object):
         only support maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
     :type transfer_size: int
+    :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
+        a duration of 100ms or more to fully reset the display (default:0)
+    :type reset_hold_time: float
+    :param reset_release_time: The number of seconds to delay afer reset. Some devices may require
+        a duration of 150ms or more after reset was triggered before the device can accept the
+        initialization sequence (default:0)
+    :type reset_release_time: float
     :param SCLK: The GPIO pin to connect the SPI clock to.
     :type SCLK: int
     :param SDA: The GPIO pin to connect the SPI data (MOSI) line to.
@@ -166,7 +173,7 @@ class bitbang(object):
     :param RST: The GPIO pin to connect reset (RES / RST) to.
     :type RST: int
     """
-    def __init__(self, gpio=None, transfer_size=4096, **kwargs):
+    def __init__(self, gpio=None, transfer_size=4096, reset_hold_time=0, reset_release_time=0, **kwargs):
 
         self._transfer_size = transfer_size
         self._managed = gpio is None
@@ -182,7 +189,9 @@ class bitbang(object):
 
         if self._RST is not None:
             self._gpio.output(self._RST, self._gpio.LOW)  # Reset device
+            sleep(reset_hold_time)
             self._gpio.output(self._RST, self._gpio.HIGH)  # Keep RESET pulled high
+            sleep(reset_release_time)
 
     def _configure(self, pin):
         if pin is not None:
@@ -271,15 +280,23 @@ class spi(bitbang):
     :type gpio_RST: int
     :param spi_mode: SPI mode as two bit pattern of clock polarity and phase [CPOL|CPHA], 0-3 (default:None)
     :type spi_mode: int
+    :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
+        a duration of 100ms or more to fully reset the display (default:0)
+    :type reset_hold_time: float
+    :param reset_release_time: The number of seconds to delay afer reset. Some devices may require
+        a duration of 150ms or more after reset was triggered before the device can accept the
+        initialization sequence (default:0)
+    :type reset_release_time: float
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
                  bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
-                 gpio_DC=24, gpio_RST=25, spi_mode=None):
+                 gpio_DC=24, gpio_RST=25, spi_mode=None,
+                 reset_hold_time=0, reset_release_time=0):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
-        bitbang.__init__(self, gpio, transfer_size, DC=gpio_DC, RST=gpio_RST)
+        bitbang.__init__(self, gpio, transfer_size, reset_hold_time, reset_release_time, DC=gpio_DC, RST=gpio_RST)
 
         try:
             self._spi = spi or self.__spidev__()
@@ -419,7 +436,8 @@ class __FTDI_WRAPPER_I2C:
         self._controller.terminate()
 
 
-def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, gpio_RST=6):
+def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, gpio_RST=6,
+        reset_hold_time=0, reset_release_time=0):
     """
     Bridges an `SPI <https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus>`_
     (Serial Peripheral Interface) bus over an FTDI USB device to provide :py:func:`data` and
@@ -437,6 +455,13 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, 
     :type gpio_DC: int
     :param gpio_RST: The ADx pin to connect reset (RES / RST) to (defaults to 6).
     :type gpio_RST: int
+        :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
+        a duration of 100ms or more to fully reset the display (default:0)
+    :type reset_hold_time: float
+    :param reset_release_time: The number of seconds to delay afer reset. Some devices may require
+        a duration of 150ms or more after reset was triggered before the device can accept the
+        initialization sequence (default:0)
+    :type reset_release_time: float
 
     .. versionadded:: 1.9.0
     """
@@ -456,7 +481,9 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, 
         __FTDI_WRAPPER_SPI(controller, slave),
         __FTDI_WRAPPER_GPIO(gpio),
         gpio_DC=gpio_DC,
-        gpio_RST=gpio_RST)
+        gpio_RST=gpio_RST,
+        reset_hold_time=reset_hold_time,
+        reset_release_time=reset_release_time)
     serial._managed = True
     return serial
 

@@ -30,6 +30,8 @@ class test_spi_opts(object):
     gpio_data_command = 24
     gpio_reset = 25
     gpio_backlight = 18
+    gpio_reset_hold_time = 0
+    gpio_reset_release_time = 0
 
     interface = 'spi'
 
