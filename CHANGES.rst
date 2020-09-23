@@ -6,7 +6,7 @@ ChangeLog
 +============+=====================================================================+============+
 | *TBC*      | * Added --inverse option for ST7735 to cmdline opt                  | TBC        |
 |            | * Allow SPI interface to define reset duration                      |            |
-|            | * Change bitmap_image to be compatible with Pillow < 7.0            |            |
+|            | * Change bitmap_font to be compatible with Pillow < 7.0             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.16.2** | * Added new parallel interface module                               | 2020/09/20 |
 |            | * Renamed parallel class to bitbang_6800; moved to parallel module  |            |
