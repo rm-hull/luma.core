@@ -260,7 +260,7 @@ def create_parser(description):
     general_group.add_argument('--width', type=int, default=128, help='Width of the device in pixels')
     general_group.add_argument('--height', type=int, default=64, help='Height of the device in pixels')
     general_group.add_argument('--rotate', '-r', type=int, default=0, help='Rotation factor. Allowed values are: {0}'.format(', '.join([str(x) for x in rotation_choices])), choices=rotation_choices, metavar='ROTATION')
-    general_group.add_argument('--interface', '-i', type=str, default=interface_types[0], help='interface type. Allowed values are: {0}'.format(', '.join(interface_types)), choices=interface_types, metavar='INTERFACE')
+    general_group.add_argument('--interface', '-i', type=str, default=interface_types[0], help='Interface type. Allowed values are: {0}'.format(', '.join(interface_types)), choices=interface_types, metavar='INTERFACE')
 
     i2c_group = parser.add_argument_group('I2C')
     i2c_group.add_argument('--i2c-port', type=int, default=1, help='I2C bus number')
