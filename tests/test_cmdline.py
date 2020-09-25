@@ -206,7 +206,7 @@ def test_make_interface_bitbang_6800():
 
     try:
         factory = cmdline.make_interface(opts)
-        assert 'luma.core.interface.parallel' in repr(factory.bitbang_6800())
+        assert 'luma.core.interface.parallel.bitbang_6800' in repr(factory.bitbang_6800())
     except ImportError:
         # non-rpi platform, e.g. macos
         pytest.skip(rpi_gpio_missing)
@@ -228,7 +228,7 @@ def test_make_interface_bitbang_6800_alt_gpio():
         }):
         try:
             factory = cmdline.make_interface(opts)
-            assert 'luma.core.interface.parallel' in repr(factory.bitbang_6800())
+            assert 'luma.core.interface.parallel.bitbang_6800' in repr(factory.bitbang_6800())
         except ImportError:
             pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
