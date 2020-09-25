@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **1.17.0**   * Added --inverse option for ST7735 to cmdline opt                  | 2020/09/25 |
+| **1.17.0** | * Added --inverse option for ST7735 to cmdline opt                  | 2020/09/25 |
 |            | * Allow SPI interface to define reset duration                      |            |
 |            | * Change bitmap_font to be compatible with Pillow < 7.0             |            |
 +------------+---------------------------------------------------------------------+------------+
