@@ -135,21 +135,7 @@ class make_interface(object):
 
     def bitbang(self):
         from luma.core.interface.serial import bitbang
-        if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
-            GPIO = importlib.import_module(self.opts.gpio)
-
-            if hasattr(self.opts, 'gpio_mode') and self.opts.gpio_mode is not None:
-                (packageName, _, attrName) = self.opts.gpio_mode.rpartition('.')
-                pkg = importlib.import_module(packageName)
-                mode = getattr(pkg, attrName)
-                GPIO.setmode(mode)
-            else:
-                GPIO.setmode(GPIO.BCM)
-
-            atexit.register(GPIO.cleanup)
-        else:
-            GPIO = None
-
+        GPIO = self.__init_alternative_GPIO()
         return bitbang(transfer_size=self.opts.spi_transfer_size,
                        reset_hold_time=self.opts.gpio_reset_hold_time,
                        reset_release_time=self.opts.gpio_reset_release_time,
@@ -157,21 +143,7 @@ class make_interface(object):
 
     def spi(self):
         from luma.core.interface.serial import spi
-        if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
-            GPIO = importlib.import_module(self.opts.gpio)
-
-            if hasattr(self.opts, 'gpio_mode') and self.opts.gpio_mode is not None:
-                (packageName, _, attrName) = self.opts.gpio_mode.rpartition('.')
-                pkg = importlib.import_module(packageName)
-                mode = getattr(pkg, attrName)
-                GPIO.setmode(mode)
-            else:
-                GPIO.setmode(GPIO.BCM)
-
-            atexit.register(GPIO.cleanup)
-        else:
-            GPIO = None
-
+        GPIO = self.__init_alternative_GPIO()
         return spi(port=self.opts.spi_port,
                    device=self.opts.spi_device,
                    bus_speed_hz=self.opts.spi_bus_speed,
@@ -200,6 +172,10 @@ class make_interface(object):
 
     def bitbang_6800(self):
         from luma.core.interface.parallel import bitbang_6800
+        GPIO = self.__init_alternative_GPIO()
+        return bitbang_6800(gpio=self.gpio or GPIO)
+
+    def __init_alternative_GPIO(self):
         if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
             GPIO = importlib.import_module(self.opts.gpio)
 
@@ -215,7 +191,7 @@ class make_interface(object):
         else:
             GPIO = None
 
-        return bitbang_6800(gpio=self.gpio or GPIO)
+        return GPIO
 
 
 def create_device(args, display_types=None):
