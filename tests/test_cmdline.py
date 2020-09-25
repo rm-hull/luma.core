@@ -44,6 +44,18 @@ def test_get_interface_types():
     assert cmdline.get_interface_types() == serial_iface_types + parallel_iface_types
 
 
+def test_ensure_cmdline_opt_contains_all_interfaces():
+    """
+    Checks that the cmdline make_interface factory contains initializers for all interface classes
+    """
+    class opts:
+        pass
+
+    factory = cmdline.make_interface(opts)
+    for interface in cmdline.get_interface_types():
+        assert hasattr(factory, interface)
+
+
 def test_get_display_types():
     """
     Enumerate display types.
@@ -178,6 +190,21 @@ def test_make_interface_spi_alt_gpio():
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
             pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+
+
+def test_make_interface_bitbang():
+    """
+    :py:func:`luma.core.cmdline.make_interface.bitbang` returns an BitBang instance.
+    """
+    try:
+        factory = cmdline.make_interface(test_spi_opts)
+        assert 'luma.core.interface.serial.bitbang' in repr(factory.bitbang())
+    except ImportError:
+        # non-rpi platform, e.g. macos
+        pytest.skip(rpi_gpio_missing)
+    except error.UnsupportedPlatform as e:
+        # non-rpi platform, e.g. ubuntu 64-bit
+        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
 def test_make_interface_pcf8574():

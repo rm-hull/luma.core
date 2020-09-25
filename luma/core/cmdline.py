@@ -133,6 +133,27 @@ class make_interface(object):
         from luma.core.interface.serial import i2c
         return i2c(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
+    def bitbang(self):
+        from luma.core.interface.serial import bitbang
+        if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
+            GPIO = importlib.import_module(self.opts.gpio)
+
+            if hasattr(self.opts, 'gpio_mode') and self.opts.gpio_mode is not None:
+                (packageName, _, attrName) = self.opts.gpio_mode.rpartition('.')
+                pkg = importlib.import_module(packageName)
+                mode = getattr(pkg, attrName)
+                GPIO.setmode(mode)
+            else:
+                GPIO.setmode(GPIO.BCM)
+
+            atexit.register(GPIO.cleanup)
+        else:
+            GPIO = None
+
+        return bitbang(transfer_size=self.opts.spi_transfer_size,
+                       reset_hold_time=self.opts.gpio_reset_hold_time,
+                       reset_release_time=self.opts.gpio_reset_release_time,
+                       gpio=self.gpio or GPIO)
 
     def spi(self):
         from luma.core.interface.serial import spi
