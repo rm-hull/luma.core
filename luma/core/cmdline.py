@@ -133,9 +133,6 @@ class make_interface(object):
         from luma.core.interface.serial import i2c
         return i2c(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
-    def pcf8574(self):
-        from luma.core.interface.serial import pcf8574
-        return pcf8574(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
     def spi(self):
         from luma.core.interface.serial import spi
@@ -175,6 +172,10 @@ class make_interface(object):
     def ftdi_i2c(self):
         from luma.core.interface.serial import ftdi_i2c
         return ftdi_i2c(address=self.opts.i2c_address)
+
+    def pcf8574(self):
+        from luma.core.interface.serial import pcf8574
+        return pcf8574(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
     def bitbang_6800(self):
         from luma.core.interface.parallel import bitbang_6800
