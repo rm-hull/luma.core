@@ -69,3 +69,4 @@ target/
 .DS_Store
 
 .vscode
+.python-version
