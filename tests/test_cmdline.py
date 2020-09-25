@@ -12,7 +12,8 @@ import errno
 from unittest.mock import patch, Mock
 
 from luma.core import cmdline, error
-from luma.core.interface.serial import __all__ as iface_types
+from luma.core.interface.serial import __all__ as serial_iface_types
+from luma.core.interface.parallel import __all__ as parallel_iface_types
 
 from helpers import (get_reference_file, i2c_error,
     rpi_gpio_missing, spidev_missing)
@@ -40,7 +41,7 @@ def test_get_interface_types():
     """
     Enumerate interface types.
     """
-    assert cmdline.get_interface_types() == iface_types
+    assert cmdline.get_interface_types() == serial_iface_types + parallel_iface_types
 
 
 def test_get_display_types():
@@ -126,9 +127,9 @@ def test_create_parser():
             assert args.config == test_config_file
 
 
-def test_make_serial_i2c():
+def test_make_interface_i2c():
     """
-    :py:func:`luma.core.cmdline.make_serial.i2c` returns an I2C instance.
+    :py:func:`luma.core.cmdline.make_interface.i2c` returns an I2C instance.
     """
     class opts:
         i2c_port = 200
@@ -136,19 +137,19 @@ def test_make_serial_i2c():
 
     path_name = '/dev/i2c-{}'.format(opts.i2c_port)
     fake_open = i2c_error(path_name, errno.ENOENT)
-    factory = cmdline.make_serial(opts)
+    factory = cmdline.make_interface(opts)
 
     with patch('os.open', fake_open):
         with pytest.raises(error.DeviceNotFoundError):
             factory.i2c()
 
 
-def test_make_serial_spi():
+def test_make_interface_spi():
     """
-    :py:func:`luma.core.cmdline.make_serial.spi` returns an SPI instance.
+    :py:func:`luma.core.cmdline.make_interface.spi` returns an SPI instance.
     """
     try:
-        factory = cmdline.make_serial(test_spi_opts)
+        factory = cmdline.make_interface(test_spi_opts)
         assert 'luma.core.interface.serial.spi' in repr(factory.spi())
     except ImportError:
         # non-rpi platform, e.g. macos
@@ -158,9 +159,9 @@ def test_make_serial_spi():
         pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
 
 
-def test_make_serial_spi_alt_gpio():
+def test_make_interface_spi_alt_gpio():
     """
-    :py:func:`luma.core.cmdline.make_serial.spi` returns an SPI instance
+    :py:func:`luma.core.cmdline.make_interface.spi` returns an SPI instance
     when using an alternative GPIO implementation.
     """
     class opts(test_spi_opts):
@@ -170,8 +171,64 @@ def test_make_serial_spi_alt_gpio():
             'fake_gpio': Mock(unsafe=True)
         }):
         try:
-            factory = cmdline.make_serial(opts)
+            factory = cmdline.make_interface(opts)
             assert 'luma.core.interface.serial.spi' in repr(factory.spi())
+        except ImportError:
+            pytest.skip(spidev_missing)
+        except error.DeviceNotFoundError as e:
+            # non-rpi platform, e.g. ubuntu 64-bit
+            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+
+
+def test_make_interface_pcf8574():
+    """
+    :py:func:`luma.core.cmdline.make_interface.pcf8574` returns an pcf8574 instance.
+    """
+    class opts:
+        i2c_port = 200
+        i2c_address = 0x710
+
+    path_name = '/dev/i2c-{}'.format(opts.i2c_port)
+    fake_open = i2c_error(path_name, errno.ENOENT)
+    factory = cmdline.make_interface(opts)
+
+    with patch('os.open', fake_open):
+        with pytest.raises(error.DeviceNotFoundError):
+            factory.pcf8574()
+
+
+def test_make_interface_bitbang_6800():
+    """
+    :py:func:`luma.core.cmdline.make_interface.bitbang_6800` returns a Bitbang-6800 instance.
+    """
+    class opts:
+        pass
+        
+    try:
+        factory = cmdline.make_interface(opts)
+        assert 'luma.core.interface.parallel' in repr(factory.bitbang_6800())
+    except ImportError:
+        # non-rpi platform, e.g. macos
+        pytest.skip(rpi_gpio_missing)
+    except error.UnsupportedPlatform as e:
+        # non-rpi platform, e.g. ubuntu 64-bit
+        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+
+
+def test_make_interface_bitbang_6800_alt_gpio():
+    """
+    :py:func:`luma.core.cmdline.make_interface.bitbang_6800` returns an Bitbang-6800 instance
+    when using an alternative GPIO implementation.
+    """
+    class opts():
+        gpio = 'fake_gpio'
+
+    with patch.dict('sys.modules', **{
+            'fake_gpio': Mock(unsafe=True)
+        }):
+        try:
+            factory = cmdline.make_interface(opts)
+            assert 'luma.core.interface.parallel' in repr(factory.bitbang_6800())
         except ImportError:
             pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
@@ -291,9 +348,9 @@ def test_create_device_emulator():
 
 
 @patch('pyftdi.spi.SpiController')
-def test_make_serial_ftdi_spi(mock_controller):
+def test_make_interface_ftdi_spi(mock_controller):
     """
-    :py:func:`luma.core.cmdline.make_serial.ftdi_spi` returns an SPI instance.
+    :py:func:`luma.core.cmdline.make_interface.ftdi_spi` returns an SPI instance.
     """
     class opts(test_spi_opts):
         ftdi_device = 'ftdi://dummy'
@@ -301,19 +358,19 @@ def test_make_serial_ftdi_spi(mock_controller):
         gpio_reset = 6
         gpio_backlight = 7
 
-    factory = cmdline.make_serial(opts)
+    factory = cmdline.make_interface(opts)
     assert 'luma.core.interface.serial.spi' in repr(factory.ftdi_spi())
 
 
 @patch('pyftdi.i2c.I2cController')
-def test_make_serial_ftdi_i2c(mock_controller):
+def test_make_interface_ftdi_i2c(mock_controller):
     """
-    :py:func:`luma.core.cmdline.make_serial.ftdi_i2c` returns an I2C instance.
+    :py:func:`luma.core.cmdline.make_interface.ftdi_i2c` returns an I2C instance.
     """
     class opts:
         ftdi_device = 'ftdi://dummy'
         i2c_port = 200
         i2c_address = 0x710
 
-    factory = cmdline.make_serial(opts)
+    factory = cmdline.make_interface(opts)
     assert 'luma.core.interface.serial.i2c' in repr(factory.ftdi_i2c())

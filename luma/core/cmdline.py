@@ -78,7 +78,7 @@ def get_interface_types():
 
     :rtype: list
     """
-    return get_choices('luma.core.interface.serial')
+    return get_choices('luma.core.interface.serial') + get_choices('luma.core.interface.parallel')
 
 
 def get_display_types():
@@ -121,7 +121,7 @@ def load_config(path):
     return args
 
 
-class make_serial(object):
+class make_interface(object):
     """
     Serial factory.
     """
@@ -132,6 +132,10 @@ class make_serial(object):
     def i2c(self):
         from luma.core.interface.serial import i2c
         return i2c(port=self.opts.i2c_port, address=self.opts.i2c_address)
+
+    def pcf8574(self):
+        from luma.core.interface.serial import pcf8574
+        return pcf8574(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
     def spi(self):
         from luma.core.interface.serial import spi
@@ -172,6 +176,25 @@ class make_serial(object):
         from luma.core.interface.serial import ftdi_i2c
         return ftdi_i2c(address=self.opts.i2c_address)
 
+    def bitbang_6800(self):
+        from luma.core.interface.parallel import bitbang_6800
+        if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
+            GPIO = importlib.import_module(self.opts.gpio)
+
+            if hasattr(self.opts, 'gpio_mode') and self.opts.gpio_mode is not None:
+                (packageName, _, attrName) = self.opts.gpio_mode.rpartition('.')
+                pkg = importlib.import_module(packageName)
+                mode = getattr(pkg, attrName)
+                GPIO.setmode(mode)
+            else:
+                GPIO.setmode(GPIO.BCM)
+
+            atexit.register(GPIO.cleanup)
+        else:
+            GPIO = None
+
+        return bitbang_6800(gpio=self.gpio or GPIO)
+
 
 def create_device(args, display_types=None):
     """
@@ -187,16 +210,16 @@ def create_device(args, display_types=None):
     if args.display in display_types.get('oled'):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
-        Serial = getattr(make_serial(args), args.interface)
-        device = Device(serial_interface=Serial(), **vars(args))
+        interface = getattr(make_interface(args), args.interface)
+        device = Device(serial_interface=interface(), **vars(args))
 
     elif args.display in display_types.get('lcd'):
         import luma.lcd.device
         Device = getattr(luma.lcd.device, args.display)
-        serial = getattr(make_serial(args), args.interface)()
-        backlight_params = dict(gpio=serial._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
+        interface = getattr(make_interface(args), args.interface)()
+        backlight_params = dict(gpio=interface._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
         params = dict(vars(args), **backlight_params)
-        device = Device(serial_interface=serial, **params)
+        device = Device(serial_interface=interface, **params)
         try:
             import luma.lcd.aux
             luma.lcd.aux.backlight(**backlight_params).enable(True)
@@ -207,8 +230,8 @@ def create_device(args, display_types=None):
         import luma.led_matrix.device
         from luma.core.interface.serial import noop
         Device = getattr(luma.led_matrix.device, args.display)
-        Serial = getattr(make_serial(args, gpio=noop()), args.interface)
-        device = Device(serial_interface=Serial(), **vars(args))
+        interface = getattr(make_interface(args, gpio=noop()), args.interface)
+        device = Device(serial_interface=interface(), **vars(args))
 
     elif args.display in display_types.get('emulator'):
         import luma.emulator.device
@@ -239,7 +262,7 @@ def create_parser(description):
     general_group.add_argument('--width', type=int, default=128, help='Width of the device in pixels')
     general_group.add_argument('--height', type=int, default=64, help='Height of the device in pixels')
     general_group.add_argument('--rotate', '-r', type=int, default=0, help='Rotation factor. Allowed values are: {0}'.format(', '.join([str(x) for x in rotation_choices])), choices=rotation_choices, metavar='ROTATION')
-    general_group.add_argument('--interface', '-i', type=str, default=interface_types[0], help='Serial interface type. Allowed values are: {0}'.format(', '.join(interface_types)), choices=interface_types, metavar='INTERFACE')
+    general_group.add_argument('--interface', '-i', type=str, default=interface_types[0], help='interface type. Allowed values are: {0}'.format(', '.join(interface_types)), choices=interface_types, metavar='INTERFACE')
 
     i2c_group = parser.add_argument_group('I2C')
     i2c_group.add_argument('--i2c-port', type=int, default=1, help='I2C bus number')
