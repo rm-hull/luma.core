@@ -38,7 +38,8 @@ install_deps = [
     'pillow>=4.0.0',
     'smbus2',
     'pyftdi',
-    'cbor2'
+    'cbor2',
+    'deprecated'
 ]
 
 setup(

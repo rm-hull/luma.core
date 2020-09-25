@@ -7,7 +7,7 @@ import inspect
 import argparse
 import importlib
 from collections import OrderedDict
-
+from deprecated import deprecated
 
 def get_choices(module_name):
     """
@@ -192,6 +192,11 @@ class make_interface(object):
             GPIO = None
 
         return GPIO
+
+
+@deprecated(version='1.17.1', reason="Use 'make_interface' class instead")
+class make_serial(make_interface):
+    pass
 
 
 def create_device(args, display_types=None):
