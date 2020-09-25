@@ -203,7 +203,7 @@ def test_make_interface_bitbang_6800():
     """
     class opts:
         pass
-        
+
     try:
         factory = cmdline.make_interface(opts)
         assert 'luma.core.interface.parallel' in repr(factory.bitbang_6800())
