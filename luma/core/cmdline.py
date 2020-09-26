@@ -9,6 +9,7 @@ import importlib
 from collections import OrderedDict
 from deprecated import deprecated
 
+
 def get_choices(module_name):
     """
     Retrieve members from ``module_name``'s ``__all__`` list.
