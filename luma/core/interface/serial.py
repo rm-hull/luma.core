@@ -14,7 +14,7 @@ import luma.core.error
 from luma.core import lib
 
 
-__all__ = ["i2c", "spi", "bitbang", "ftdi_spi", "ftdi_i2c", "pcf8574"]
+__all__ = ["i2c", "noop", "spi", "gpio_cs_spi", "bitbang", "ftdi_spi", "ftdi_i2c", "pcf8574"]
 
 #: Default amount of time to wait for a pulse to complete if the device the interface is connected to requires a pin to be 'pulsed' from low to high to low for it to accept data or a command
 PULSE_TIME = 1e-6 * 50

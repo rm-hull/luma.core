@@ -305,7 +305,7 @@ def test_create_device_lcd():
     :py:func:`luma.core.cmdline.create_device` supports LCD displays.
     """
     display_name = 'lcd1234'
-    display_types = {'lcd': [display_name], 'oled': []}
+    display_types = {'lcd': [display_name]}
 
     class args(test_spi_opts):
         display = display_name
@@ -332,7 +332,7 @@ def test_create_device_led_matrix():
     :py:func:`luma.core.cmdline.create_device` supports LED matrix displays.
     """
     display_name = 'matrix1234'
-    display_types = {'led_matrix': [display_name], 'lcd': [], 'oled': []}
+    display_types = {'led_matrix': [display_name]}
 
     class args(test_spi_opts):
         display = display_name
@@ -355,7 +355,7 @@ def test_create_device_emulator():
     :py:func:`luma.core.cmdline.create_device` supports emulators.
     """
     display_name = 'emulator1234'
-    display_types = {'emulator': [display_name], 'led_matrix': [], 'lcd': [], 'oled': []}
+    display_types = {'emulator': [display_name]}
 
     class args(test_spi_opts):
         display = display_name
