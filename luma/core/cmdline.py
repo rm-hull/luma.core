@@ -130,7 +130,7 @@ class make_interface(object):
         self.opts = opts
         self.gpio = gpio
 
-    def noop():
+    def noop(self):
         from luma.core.interface.serial import noop
         return noop()
 
