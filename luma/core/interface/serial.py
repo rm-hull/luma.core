@@ -268,8 +268,6 @@ class spi(bitbang):
     :type device: int
     :param bus_speed_hz: SPI bus speed, defaults to 8MHz.
     :type bus_speed_hz: int
-    :param cs_high: Whether SPI chip select is high, defaults to ``False``.
-    :type cs_high: bool
     :param transfer_size: Maximum amount of bytes to transfer in one go. Some implementations
         only support a maximum of 64 or 128 bytes, whereas RPi/py-spidev supports
         4096 (default).
@@ -291,9 +289,9 @@ class spi(bitbang):
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
     """
     def __init__(self, spi=None, gpio=None, port=0, device=0,
-                 bus_speed_hz=8000000, cs_high=False, transfer_size=4096,
+                 bus_speed_hz=8000000, transfer_size=4096,
                  gpio_DC=24, gpio_RST=25, spi_mode=None,
-                 reset_hold_time=0, reset_release_time=0):
+                 reset_hold_time=0, reset_release_time=0, **kwargs):
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 32]])
 
         bitbang.__init__(self, gpio, transfer_size, reset_hold_time, reset_release_time, DC=gpio_DC, RST=gpio_RST)
@@ -303,7 +301,9 @@ class spi(bitbang):
             self._spi.open(port, device)
             if spi_mode:
                 self._spi.mode = spi_mode
-            self._spi.cshigh = cs_high
+            if "cs_high" in kwargs:
+                import warnings
+                warnings.warn("SPI cs_high is no longer supported in kernel 5.4.51 and beyond, so setting parameter cs_high is now ignored!", RuntimeWarning)
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
@@ -335,22 +335,24 @@ class gpio_cs_spi(spi):
     :type gpio_CS: int
     """
     def __init__(self, *args, **kwargs):
-        gpio_CS = kwargs.pop("gpio_CS", None)  # Python 2.7 doesn't allow var args and default values at the same time
+        gpio_CS = kwargs.pop("gpio_CS", None)
+        cs_high = kwargs.pop("cs_high", None)
         super(gpio_cs_spi, self).__init__(*args, **kwargs)
 
         if gpio_CS:
             self._gpio_CS = gpio_CS
+            self._cs_high = cs_high
             self._spi.no_cs = True  # disable spidev's handling of the chip select pin
-            self._gpio.setup(self._gpio_CS, self._gpio.OUT, initial=self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
+            self._gpio.setup(self._gpio_CS, self._gpio.OUT, initial=self._gpio.LOW if self._cs_high else self._gpio.HIGH)
 
     def _write_bytes(self, *args, **kwargs):
         if self._gpio_CS:
-            self._gpio.output(self._gpio_CS, self._gpio.HIGH if self._spi.cshigh else self._gpio.LOW)
+            self._gpio.output(self._gpio_CS, self._gpio.HIGH if self._cs_high else self._gpio.LOW)
 
         super(gpio_cs_spi, self)._write_bytes(*args, **kwargs)
 
         if self._gpio_CS:
-            self._gpio.output(self._gpio_CS, self._gpio.LOW if self._spi.cshigh else self._gpio.HIGH)
+            self._gpio.output(self._gpio_CS, self._gpio.LOW if self._cs_high else self._gpio.HIGH)
 
 
 class noop(object):

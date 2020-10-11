@@ -67,7 +67,7 @@ setup(
     tests_require=test_deps,
     extras_require={
         ':platform_system=="Linux"': [
-            'spidev<=3.4', 'RPI.GPIO'
+            'spidev', 'RPI.GPIO'
         ],
         'docs': [
             'sphinx>=1.5.1'

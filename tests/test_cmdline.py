@@ -26,7 +26,6 @@ class test_spi_opts(object):
     spi_port = 0
     spi_device = 0
     spi_bus_speed = 8000000
-    spi_cs_high = False
     spi_transfer_size = 4096
     gpio_data_command = 24
     gpio_reset = 25
