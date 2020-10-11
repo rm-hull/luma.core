@@ -130,6 +130,10 @@ class make_interface(object):
         self.opts = opts
         self.gpio = gpio
 
+    def noop():
+        from luma.core.interface.serial import noop
+        return noop()
+
     def i2c(self):
         from luma.core.interface.serial import i2c
         return i2c(port=self.opts.i2c_port, address=self.opts.i2c_address)
@@ -154,6 +158,21 @@ class make_interface(object):
                    gpio_DC=self.opts.gpio_data_command,
                    gpio_RST=self.opts.gpio_reset,
                    gpio=self.gpio or GPIO)
+
+    def gpio_cs_spi(self):
+        from luma.core.interface.serial import gpio_cs_spi
+        GPIO = self.__init_alternative_GPIO()
+        return gpio_cs_spi(port=self.opts.spi_port,
+                           device=self.opts.spi_device,
+                           bus_speed_hz=self.opts.spi_bus_speed,
+                           cs_high=self.opts.spi_cs_high,
+                           transfer_size=self.opts.spi_transfer_size,
+                           reset_hold_time=self.opts.gpio_reset_hold_time,
+                           reset_release_time=self.opts.gpio_reset_release_time,
+                           gpio_DC=self.opts.gpio_data_command,
+                           gpio_RST=self.opts.gpio_reset,
+                           gpio_CS=self.opts.gpio_chip_select,
+                           gpio=self.gpio or GPIO)
 
     def ftdi_spi(self):
         from luma.core.interface.serial import ftdi_spi
@@ -210,13 +229,13 @@ def create_device(args, display_types=None):
     if display_types is None:
         display_types = get_display_types()
 
-    if args.display in display_types.get('oled'):
+    if args.display in display_types.get('oled', []):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         interface = getattr(make_interface(args), args.interface)
         device = Device(serial_interface=interface(), **vars(args))
 
-    elif args.display in display_types.get('lcd'):
+    elif args.display in display_types.get('lcd', []):
         import luma.lcd.device
         Device = getattr(luma.lcd.device, args.display)
         interface = getattr(make_interface(args), args.interface)()
@@ -229,14 +248,14 @@ def create_device(args, display_types=None):
         except ImportError:
             pass
 
-    elif args.display in display_types.get('led_matrix'):
+    elif args.display in display_types.get('led_matrix', []):
         import luma.led_matrix.device
         from luma.core.interface.serial import noop
         Device = getattr(luma.led_matrix.device, args.display)
         interface = getattr(make_interface(args, gpio=noop()), args.interface)
         device = Device(serial_interface=interface(), **vars(args))
 
-    elif args.display in display_types.get('emulator'):
+    elif args.display in display_types.get('emulator', []):
         import luma.emulator.device
         Device = getattr(luma.emulator.device, args.display)
         device = Device(**vars(args))
@@ -276,6 +295,7 @@ def create_parser(description):
     spi_group.add_argument('--spi-device', type=int, default=0, help='SPI device')
     spi_group.add_argument('--spi-bus-speed', type=int, default=8000000, help='SPI max bus speed (Hz)')
     spi_group.add_argument('--spi-transfer-size', type=int, default=4096, help='SPI bus max transfer unit (bytes)')
+    spi_group.add_argument('--spi-cs-high', type=bool, default=False, help='SPI chip select is high (gpio_cs_spi driver only)')
 
     ftdi_group = parser.add_argument_group('FTDI')
     ftdi_group.add_argument('--ftdi-device', type=str, default='ftdi://::/1', help='FTDI device')

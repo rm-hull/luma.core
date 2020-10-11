@@ -5,6 +5,7 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | *TBC*      | * Drop support for Python 3.5, only 3.6 or newer is supported now   |            |
+|            | * Add missing cmdline interfaces: "noop" & "gpio_cs_spi"            |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.17.2** | * Remove SPI cs_high capability (causing SystemException in latest  | 2020/09/11 |
 |            |   version of spidev on 5.4 kernel line)                             |            |
