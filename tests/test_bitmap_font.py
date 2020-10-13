@@ -8,6 +8,8 @@ Tests for the :py:module:`luma.core.bitmap_font` module.
 """
 
 import os
+from pathlib import Path
+
 import cbor2
 import pytest
 from PIL import Image, ImageDraw
@@ -96,7 +98,7 @@ def make_sprite_table(fnt):
     Generate a page filled with glyphs from character value 16-255 using the
     provided font
 
-    :param fnt: the font to use to draw the page
+    :param fnt: The font to use to draw the page
     :type fnt: `PIL.ImageFont`
     :return: Image containing the drawn glyphs
     :rtype: `PIL.Image`
@@ -111,10 +113,10 @@ def make_sprite_table(fnt):
 @pytest.fixture()
 def bm_font(request):
     """
-    Fixture which loads a bitmap_font persists it to disk
+    Fixture which loads a ``bitmap_font`` persists it to disk
     The fixture removes the file when it is finished.
     """
-    filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
+    filename = get_reference_file(Path('font').joinpath('hd44780a02.pbm'))
     bmf = bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8),
         (5, 8), FONTDATA['mappings'][1])
     bmf.save('test.bmf')
@@ -152,7 +154,7 @@ def test_load_from_pillow_font():
     sure the results are the same.
     """
     fnt = get_reference_pillow_font('hd44780a02.pil')
-    filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
+    filename = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
     bmf = bitmap_font.load_pillow_font(filename)
 
     img1 = make_sprite_table(fnt)
@@ -169,21 +171,21 @@ def test_load_from_pillow_exceptions():
     """
 
     with pytest.raises(SyntaxError) as ex:
-        filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
+        filename = get_reference_file(Path('font').joinpath('hd44780a02.pbm'))
         bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
     assert str(ex.value) == "Not a PIL.ImageFont file"
 
     with pytest.raises(SyntaxError) as ex:
-        filename = get_reference_file(os.path.join('font', 'hd44780a02_nodata.pil'))
+        filename = get_reference_file(Path('font').joinpath('hd44780a02_nodata.pil'))
         bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
     assert str(ex.value) == "PIL.ImageFont file missing metric data"
 
     with pytest.raises(SyntaxError) as ex:
-        filename = get_reference_file(os.path.join('font', 'hd44780a02_incomplete.pil'))
+        filename = get_reference_file(Path('font').joinpath('hd44780a02_incomplete.pil'))
         bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
     assert str(ex.value) == "PIL.ImageFont file metric data incomplete"
 
-    filename = get_reference_file(os.path.join('font', 'wrong_mode.pil'))
+    filename = get_reference_file(Path('font').joinpath('wrong_mode.pil'))
     with pytest.raises(OSError) as ex:
         bitmap_font.load_pillow_font(filename)
     assert str(ex.value) == 'cannot find glyph data file'
@@ -194,7 +196,7 @@ def test_mapping():
     Test to make sure that values that have unicode mappings work correctly
     """
     fnt = get_reference_pillow_font('hd44780a02.pil')
-    filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
+    filename = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
     bmf = bitmap_font.load_pillow_font(filename, FONTDATA['mappings'][1])
 
     size = bmf.getsize('\u0010')
@@ -214,7 +216,7 @@ def test_load_sprite_table():
     Test loading a font from a sprite_table
     """
     fnt = get_reference_pillow_font('hd44780a02.pil')
-    filename = get_reference_file(os.path.join('font', 'hd44780a02.pbm'))
+    filename = get_reference_file(Path('font').joinpath('hd44780a02.pbm'))
     bmf = bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
 
     img1 = make_sprite_table(fnt)
@@ -242,7 +244,7 @@ def test_load_sprite_table_exceptions_2():
     PIL.Image file, or is damaged.
     """
     with pytest.raises(ValueError) as ex:
-        filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
+        filename = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
     assert str(ex.value) == 'File {0} not a valid sprite table'.format(filename)
 
@@ -269,14 +271,14 @@ def test_dumps_loads_saves_load(bm_font):
     assert img1 == img3
 
     with pytest.raises(SyntaxError) as ex:
-        filename = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
+        filename = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
         bitmap_font.load(filename)
     assert str(ex.value) == 'Not a luma.core.bitmap_font file'
 
 
 def test_loads_exception():
     """
-    Test exception when attempting to load font data that is incomplete
+    Exception is thrown when attempting to load font data that is incomplete.
     """
     data = cbor2.dumps({'xwidth': 5, 'glyph_size': (5, 8)})
     with pytest.raises(Exception) as ex:
@@ -286,7 +288,7 @@ def test_loads_exception():
 
 def test_combine(load_all_embedded):
     """
-    Test which verifies that fonts can be combined successfully
+    Fonts can be combined successfully.
     """
     bmfs = load_all_embedded
 
@@ -370,7 +372,7 @@ def test_embedded_font(load_all_embedded):
 def test_embedded_font_exceptions():
     """
     Tests exceptions when attempting to select a font that does not exist
-    within the embedded_fonts object
+    within the ``embedded_fonts`` object
     """
     ebf = embedded_fonts(FONTDATA)
 
@@ -389,7 +391,7 @@ def test_embedded_font_exceptions():
 
 def test_metrics(load_all_embedded):
     """
-    Tests that bitmap_font correctly handles fonts that have characters within
+    ``bitmap_font`` correctly handles fonts that have characters within
     the font that have offsets.
     """
     bmfs = load_all_embedded
@@ -433,7 +435,7 @@ def test_metrics(load_all_embedded):
 
 def test_glyph_index(load_all_embedded):
     """
-    Verify that glyph_table contains expected values
+    ``glyph_table`` contains expected values
     """
     bmfs = load_all_embedded
 
