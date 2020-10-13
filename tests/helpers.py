@@ -21,10 +21,13 @@ spidev_missing = 'spidev is not supported on this platform: {}'.format(
 
 def get_reference_file(fname):
     """
+    Get absolute path for ``fname``.
+
     :param fname: Filename.
     :type fname: str
+    :rtype: str
     """
-    return Path(__file__).resolve().parent.joinpath('reference', fname)
+    return str(Path(__file__).resolve().parent.joinpath('reference', fname))
 
 
 def get_reference_image(fname):
@@ -46,11 +49,11 @@ def get_reference_font(fname, fsize=12):
 
 def get_reference_pillow_font(fname):
     """
-    Load PIL.ImageFont type font from provided fname
+    Load :py:class:`PIL.ImageFont` type font from provided fname
 
     :param fname: The name of the file that contains the PIL.ImageFont
     :type fname: str
-    :returns `PIL.ImageFont` object
+    :rtype: :py:class:`PIL.ImageFont`
     """
     path = get_reference_file(Path('font').joinpath(fname))
     return ImageFont.load(path)
