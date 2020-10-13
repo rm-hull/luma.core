@@ -6,10 +6,10 @@
 Test helpers.
 """
 
-import os.path
 import platform
-import pytest
+from pathlib import Path
 
+import pytest
 from PIL import ImageChops, ImageFont
 
 
@@ -20,30 +20,42 @@ spidev_missing = 'spidev is not supported on this platform: {}'.format(
 
 
 def get_reference_file(fname):
-    return os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        'reference',
-        fname))
+    """
+    Get absolute path for ``fname``.
+
+    :param fname: Filename.
+    :type fname: str or pathlib.Path
+    :rtype: str
+    """
+    return str(Path(__file__).resolve().parent.joinpath('reference', fname))
 
 
 def get_reference_image(fname):
-    return get_reference_file(os.path.join('images', fname))
+    """
+    :param fname: Filename.
+    :type fname: str or pathlib.Path
+    """
+    return get_reference_file(Path('images').joinpath(fname))
 
 
 def get_reference_font(fname, fsize=12):
-    path = get_reference_file(os.path.join('font', fname))
+    """
+    :param fname: Filename of the font.
+    :type fname: str or pathlib.Path
+    """
+    path = get_reference_file(Path('font').joinpath(fname))
     return ImageFont.truetype(path, fsize)
 
 
 def get_reference_pillow_font(fname):
     """
-    Load PIL.ImageFont type font from provided fname
+    Load :py:class:`PIL.ImageFont` type font from provided fname
 
     :param fname: The name of the file that contains the PIL.ImageFont
     :type fname: str
-    :returns `PIL.ImageFont` object
+    :rtype: :py:class:`PIL.ImageFont`
     """
-    path = get_reference_file(os.path.join('font', fname))
+    path = get_reference_file(Path('font').joinpath(fname))
     return ImageFont.load(path)
 
 
@@ -58,7 +70,7 @@ def get_spidev():
 def assert_identical_image(reference, target, img_path):
     bbox = ImageChops.difference(reference, target).getbbox()
     assert bbox is None, '{0} is not identical to generated image'.format(
-        os.path.basename(img_path))
+        img_path.name)
 
 
 def i2c_error(path_name, err_no):
