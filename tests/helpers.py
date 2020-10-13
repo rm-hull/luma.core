@@ -24,7 +24,7 @@ def get_reference_file(fname):
     Get absolute path for ``fname``.
 
     :param fname: Filename.
-    :type fname: str
+    :type fname: str or pathlib.Path
     :rtype: str
     """
     return str(Path(__file__).resolve().parent.joinpath('reference', fname))
@@ -33,7 +33,7 @@ def get_reference_file(fname):
 def get_reference_image(fname):
     """
     :param fname: Filename.
-    :type fname: str
+    :type fname: str or pathlib.Path
     """
     return get_reference_file(Path('images').joinpath(fname))
 
@@ -41,7 +41,7 @@ def get_reference_image(fname):
 def get_reference_font(fname, fsize=12):
     """
     :param fname: Filename of the font.
-    :type fname: str
+    :type fname: str or pathlib.Path
     """
     path = get_reference_file(Path('font').joinpath(fname))
     return ImageFont.truetype(path, fsize)
