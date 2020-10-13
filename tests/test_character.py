@@ -3,7 +3,7 @@
 # Copyright (c) 2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import os
+from pathlib import Path
 
 from PIL import Image, ImageFont
 from luma.core.device import dummy
@@ -13,7 +13,7 @@ from helpers import get_reference_file, get_reference_image, assert_identical_im
 
 
 def test_init():
-    path = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
+    path = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
     fnt = ImageFont.load(path)
     device = dummy(width=80, height=16, mode="1")
     character(device, font=fnt)
@@ -21,7 +21,7 @@ def test_init():
 
 
 def test_setter_getter():
-    fnt_path = get_reference_file(os.path.join('font', 'hd44780a02.pil'))
+    fnt_path = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
     img_path = get_reference_image('character_golden_ratio.png')
 
     with open(img_path, 'rb') as img:
