@@ -50,7 +50,7 @@ setup(
     description=("A component library to support SBC display drivers"),
     long_description="\n\n".join([README, CONTRIB, CHANGES]),
     long_description_content_type="text/x-rst",
-    python_requires='>=3.5, <4',
+    python_requires='>=3.6, <4',
     license="MIT",
     keywords="raspberry orange banana pi rpi opi sbc oled lcd led display screen spi i2c ftdi usb",
     url=project_url,
@@ -88,7 +88,6 @@ setup(
         "Topic :: System :: Hardware",
         "Topic :: System :: Hardware :: Hardware Drivers",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8"
