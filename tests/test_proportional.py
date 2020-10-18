@@ -33,8 +33,9 @@ def test_trim_not_nonzero():
     font = proportional(CP437_FONT)
     assert font._trim([0, 0, 0, 0]) == []
 
+
 def test_unicode_not_supported():
     font = proportional(CP437_FONT)
     with pytest.raises(IndexError) as ex:
         font[ord("😀")]
-        assert str(ex.value) == 'Font does not have ASCII code: 123'
+    assert str(ex.value) == 'Font does not have ASCII code: 128512'

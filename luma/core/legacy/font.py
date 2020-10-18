@@ -49,7 +49,7 @@ class proportional(object):
             else:
                 return self._trim(bitmap) + [0]
         except IndexError:
-            raise IndexError("Font does not have ASCII code: {ascii_code}")
+            raise IndexError(f"Font does not have ASCII code: {ascii_code}")
 
     def _trim(self, arr):
         nonzero = [idx for idx, val in enumerate(arr) if val != 0]
