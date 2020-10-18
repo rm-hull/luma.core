@@ -35,7 +35,7 @@ test_deps = [
 ]
 
 install_deps = [
-    'pillow>=4.0.0',
+    'pillow<8.0.0',
     'smbus2',
     'pyftdi',
     'cbor2',
