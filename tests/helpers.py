@@ -68,13 +68,9 @@ def get_spidev():
 
 
 def assert_identical_image(reference, target, img_path):
-    """
-    :param img_path: Location of image.
-    :type img_path: str
-    """
     bbox = ImageChops.difference(reference, target).getbbox()
     assert bbox is None, '{0} is not identical to generated image'.format(
-        img_path)
+        img_path.name)
 
 
 def i2c_error(path_name, err_no):
