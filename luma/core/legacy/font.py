@@ -41,12 +41,15 @@ class proportional(object):
         self.font = font
 
     def __getitem__(self, ascii_code):
-        bitmap = self.font[ascii_code]
-        # Return a slim version of the space character
-        if ascii_code == 32:
-            return [0] * 4
-        else:
-            return self._trim(bitmap) + [0]
+        try:
+            bitmap = self.font[ascii_code]
+            # Return a slim version of the space character
+            if ascii_code == 32:
+                return [0] * 4
+            else:
+                return self._trim(bitmap) + [0]
+        except IndexError:
+            raise IndexError(f"Font does not have ASCII code: {ascii_code}")
 
     def _trim(self, arr):
         nonzero = [idx for idx, val in enumerate(arr) if val != 0]
