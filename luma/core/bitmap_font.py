@@ -402,7 +402,7 @@ class bitmap_font():
         Combine two :py:class:`luma.core.bitmap_font`s
 
         :param source_font: a :py:class:`luma.core.bitmap_font` to copy from
-        :type: :py:class:`luma.core.bitmap_font`
+        :type source_font: :py:class:`luma.core.bitmap_font`
         :param characters: (optional) A list of the characters to transfer from
             the source_font.  If not provided, all of the characters within
             the source_font will be transferred.
