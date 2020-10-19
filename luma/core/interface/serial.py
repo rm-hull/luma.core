@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-20 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -55,7 +55,7 @@ class i2c(object):
             self._addr = int(str(address), 0)
         except ValueError:
             raise luma.core.error.DeviceAddressError(
-                'I2C device address invalid: {}'.format(address))
+                f'I2C device address invalid: {address}')
 
         try:
             self._managed = bus is None
@@ -65,11 +65,11 @@ class i2c(object):
             if e.errno == errno.ENOENT:
                 # FileNotFoundError
                 raise luma.core.error.DeviceNotFoundError(
-                    'I2C device not found: {}'.format(e.filename))
+                    f'I2C device not found: {e.filename}')
             elif e.errno in [errno.EPERM, errno.EACCES]:
                 # PermissionError
                 raise luma.core.error.DevicePermissionError(
-                    'I2C device permission denied: {}'.format(e.filename))
+                    f'I2C device permission denied: {e.filename}')
             else:  # pragma: no cover
                 raise
 
@@ -512,7 +512,7 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
         addr = int(str(address), 0)
     except ValueError:
         raise luma.core.error.DeviceAddressError(
-            'I2C device address invalid: {}'.format(address))
+            f'I2C device address invalid: {address}')
 
     controller = I2cController()
     controller.configure(device)
@@ -629,7 +629,7 @@ class pcf8574(i2c):
 
         self._PINS = kwargs.get('PINS', list((4, 5, 6, 7)))
         self._datalines = len(self._PINS)
-        assert self._datalines == 4, 'You\'ve provided {0} data pins but the PCF8574 only supports four'.format(len(self._PINS))
+        assert self._datalines == 4, f'You\'ve provided {len(self._PINS)} data pins but the PCF8574 only supports four'
 
         self._rs = self._mask(kwargs.get("RS", self._RS))
         self._cmd = 0xFF if kwargs.get("COMMAND", self._CMD).lower() == 'high' else 0x00

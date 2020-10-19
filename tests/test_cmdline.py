@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -146,7 +146,7 @@ def test_make_interface_i2c():
         i2c_port = 200
         i2c_address = 0x710
 
-    path_name = '/dev/i2c-{}'.format(opts.i2c_port)
+    path_name = f'/dev/i2c-{opts.i2c_port}'
     fake_open = i2c_error(path_name, errno.ENOENT)
     factory = cmdline.make_interface(opts)
 
@@ -167,7 +167,7 @@ def test_make_interface_spi():
         pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+        pytest.skip(f'{type(e).__name__} ({str(e)})')
 
 
 def test_make_interface_spi_alt_gpio():
@@ -188,7 +188,7 @@ def test_make_interface_spi_alt_gpio():
             pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
-            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+            pytest.skip(f'{type(e).__name__} ({str(e)})')
 
 
 def test_make_interface_bitbang():
@@ -203,7 +203,7 @@ def test_make_interface_bitbang():
         pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+        pytest.skip(f'{type(e).__name__} ({str(e)})')
 
 
 def test_make_interface_pcf8574():
@@ -214,7 +214,7 @@ def test_make_interface_pcf8574():
         i2c_port = 200
         i2c_address = 0x710
 
-    path_name = '/dev/i2c-{}'.format(opts.i2c_port)
+    path_name = f'/dev/i2c-{opts.i2c_port}'
     fake_open = i2c_error(path_name, errno.ENOENT)
     factory = cmdline.make_interface(opts)
 
@@ -238,7 +238,7 @@ def test_make_interface_bitbang_6800():
         pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+        pytest.skip(f'{type(e).__name__} ({str(e)})')
 
 
 def test_make_interface_bitbang_6800_alt_gpio():
@@ -259,7 +259,7 @@ def test_make_interface_bitbang_6800_alt_gpio():
             pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
-            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+            pytest.skip(f'{type(e).__name__} ({str(e)})')
 
 
 def test_create_device():
@@ -297,7 +297,7 @@ def test_create_device_oled():
             pytest.skip(rpi_gpio_missing)
         except error.UnsupportedPlatform as e:
             # non-rpi platform
-            pytest.skip('{0} ({1})'.format(type(e).__name__, str(e)))
+            pytest.skip(f'{type(e).__name__} ({str(e)})')
 
 
 def test_create_device_lcd():

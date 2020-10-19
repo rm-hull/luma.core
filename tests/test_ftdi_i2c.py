@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019 Richard Hull and contributors
+# Copyright (c) 2019-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -69,4 +69,4 @@ def test_init_device_address_error(mock_controller):
     address = 'foo'
     with pytest.raises(luma.core.error.DeviceAddressError) as ex:
         ftdi_i2c(device='ftdi://dummy', address=address)
-    assert str(ex.value) == 'I2C device address invalid: {}'.format(address)
+    assert str(ex.value) == f'I2C device address invalid: {address}'

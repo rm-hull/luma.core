@@ -55,7 +55,7 @@ class bitbang_6800(object):
         self._PINS = self._configure(kwargs.get('PINS', list((25, 24, 23, 18))))
 
         self._datalines = len(self._PINS)
-        assert self._datalines in (4, 8), 'You\'ve provided {0} pins but a bus must contain either four or eight pins'.format(len(self._PINS))
+        assert self._datalines in (4, 8), f'You\'ve provided {len(self._PINS)} pins but a bus must contain either four or eight pins'
         self._bitmode = self._datalines  # Used by device to autoset its own bitmode
 
         self._cmd_mode = self._gpio.LOW  # Command mode = Hold low
