@@ -1,32 +1,32 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
 Fixed-width font definitions. The following fonts are available:
 
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| Font name         | Notes                                           | Source                                                                                        |
-+===================+=================================================+===============================================================================================+
-| ``CP437_FONT``    | See https://en.wikipedia.org/wiki/Code_page_437 | *unascribed*                                                                                  |
-|                   | for further details.                            |                                                                                               |
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| ``LCD_FONT``      | Only contains characters 0x20-0x7F inclusive    | http://www.avrfreaks.net/forum/code-57-512-and-712-fonts?name=PNphpBB2&file=viewtopic&t=69880 |
-|                   | and Cyrillic chars 0x80-0xBF (except 'Ёё');     |                                                                                               |
-|                   | all others will appear as blanks.               |                                                                                               |
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| ``SEG7_FONT``     | Only contains characters 0x41-0x5A & 0x30-0x39  | https://www.dafont.com/digital-7.font                                                         |
-|                   | inclusive; all others will appear as blanks.    |                                                                                               |
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| ``SINCLAIR_FONT`` | Based on the character set from the Sinclair ZX | http://www.henningkarlsen.com/electronics/r_fonts.php                                         |
-|                   | Spectrum.  Only contains characters 0x20-0x7E   |                                                                                               |
-|                   | inclusive; all others will appear as blanks.    |                                                                                               |
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| ``TINY_FONT``     | Only contains characters 0x20-0x7E inclusive;   | http://www.dafont.com/tiny.font                                                               |
-|                   | all others will appear as blanks.               |                                                                                               |
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
-| ``UKR_FONT``      | Cyrillic Ukrainian font                         | *unascribed*                                                                                  |
-+-------------------+-------------------------------------------------+-----------------------------------------------------------------------------------------------+
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
+| Font name         | Notes                                           | Source                                                                                         |
++===================+=================================================+================================================================================================+
+| ``CP437_FONT``    | See https://en.wikipedia.org/wiki/Code_page_437 | *unascribed*                                                                                   |
+|                   | for further details.                            |                                                                                                |
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
+| ``LCD_FONT``      | Only contains characters 0x20-0x7F inclusive    | https://www.avrfreaks.net/forum/code-57-512-and-712-fonts?name=PNphpBB2&file=viewtopic&t=69880 |
+|                   | and Cyrillic chars 0x80-0xBF (except 'Ёё');     |                                                                                                |
+|                   | all others will appear as blanks.               |                                                                                                |
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
+| ``SEG7_FONT``     | Only contains characters 0x41-0x5A & 0x30-0x39  | https://www.dafont.com/digital-7.font                                                          |
+|                   | inclusive; all others will appear as blanks.    |                                                                                                |
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
+| ``SINCLAIR_FONT`` | Based on the character set from the Sinclair ZX | http://www.henningkarlsen.com/electronics/r_fonts.php                                          |
+|                   | Spectrum.  Only contains characters 0x20-0x7E   |                                                                                                |
+|                   | inclusive; all others will appear as blanks.    |                                                                                                |
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
+| ``TINY_FONT``     | Only contains characters 0x20-0x7E inclusive;   | https://www.dafont.com/tiny.font                                                               |
+|                   | all others will appear as blanks.               |                                                                                                |
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
+| ``UKR_FONT``      | Cyrillic Ukrainian font                         | *unascribed*                                                                                   |
++-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
 """
 
 

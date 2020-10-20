@@ -28,7 +28,7 @@ class bitbang_6800(object):
     from `Adafruit <https://learn.adafruit.com/drive-a-16x2-lcd-directly-with-a-raspberry-pi/wiring>`_.
 
     :param gpio: GPIO interface (must be compatible with
-        `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_)
+        `RPi.GPIO <https://pypi.org/project/RPi.GPIO>`__)
     :param pulse_time: length of time in seconds that the enable line should be
         held high during a data or command transfer
     :type pulse_time: float
