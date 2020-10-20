@@ -399,7 +399,7 @@ class bitmap_font():
 
     def combine(self, source_font, characters=None, force=False):
         """
-        Combine two :py:class:`luma.core.bitmap_font`s
+        Combine two :py:class:`luma.core.bitmap_font` instances.
 
         :param source_font: a :py:class:`luma.core.bitmap_font` to copy from
         :type source_font: :py:class:`luma.core.bitmap_font`
