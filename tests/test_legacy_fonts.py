@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014-18 Richard Hull and contributors
+# Copyright (c) 2014-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -31,7 +31,7 @@ def test_font(fontname):
     with canvas(device) as draw:
         text(draw, (0, 0), charset, "white", font=proportional(font))
 
-    img_path = get_reference_image('{0}.png'.format(fontname))
+    img_path = get_reference_image(f'{fontname}.png')
     with open(img_path, 'rb') as fp:
         reference = Image.open(fp)
         assert_identical_image(reference, device.image, img_path)

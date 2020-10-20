@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 
@@ -50,7 +50,7 @@ def test_drop_and_restore():
     copies = []
     for i in range(10):
         with canvas(hist) as draw:
-            draw.text((10, 10), text="Hello {0}".format(i), fill="white")
+            draw.text((10, 10), text=f"Hello {i}", fill="white")
         hist.savepoint()
         copies.append(device.image)
 

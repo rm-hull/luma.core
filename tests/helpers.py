@@ -13,10 +13,8 @@ import pytest
 from PIL import ImageChops, ImageFont
 
 
-rpi_gpio_missing = 'RPi.GPIO is not supported on this platform: {}'.format(
-    platform.system())
-spidev_missing = 'spidev is not supported on this platform: {}'.format(
-    platform.system())
+rpi_gpio_missing = f'RPi.GPIO is not supported on this platform: {platform.system()}'
+spidev_missing = f'spidev is not supported on this platform: {platform.system()}'
 
 
 def get_reference_file(fname):
@@ -73,8 +71,7 @@ def assert_identical_image(reference, target, img_path):
     :type img_path: str
     """
     bbox = ImageChops.difference(reference, target).getbbox()
-    assert bbox is None, '{0} is not identical to generated image'.format(
-        img_path)
+    assert bbox is None, f'{img_path} is not identical to generated image'
 
 
 def i2c_error(path_name, err_no):
@@ -92,3 +89,7 @@ def fib(n):
     for _ in range(n):
         yield a
         a, b = b, a + b
+
+
+def skip_unsupported_platform(err):
+    pytest.skip(f'{type(err).__name__} ({str(err)})')

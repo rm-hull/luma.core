@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-20 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import time
@@ -540,8 +540,7 @@ class sevensegment(object):
 
         if len(data) > self._bufsize:
             raise OverflowError(
-                "Device's capabilities insufficient for value '{0}'".format(
-                buf))
+                f"Device's capabilities insufficient for value '{buf}'")
 
         with canvas(self.device) as draw:
             for x, byte in enumerate(reversed(data)):

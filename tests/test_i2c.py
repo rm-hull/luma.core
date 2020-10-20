@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -27,18 +27,18 @@ def setup_function(function):
 def test_init_device_not_found():
     port = 200
     address = 0x710
-    path_name = '/dev/i2c-{}'.format(port)
+    path_name = f'/dev/i2c-{port}'
     fake_open = i2c_error(path_name, errno.ENOENT)
 
     with patch('os.open', fake_open):
         with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
             i2c(port=port, address=address)
-        assert str(ex.value) == 'I2C device not found: {}'.format(path_name)
+        assert str(ex.value) == f'I2C device not found: {path_name}'
 
 
 def test_init_device_permission_error():
     port = 1
-    path_name = '/dev/i2c-{}'.format(port)
+    path_name = f'/dev/i2c-{port}'
     fake_open = i2c_error(path_name, errno.EACCES)
 
     with patch('os.open', fake_open):
@@ -46,15 +46,14 @@ def test_init_device_permission_error():
             i2c(port=port)
         except luma.core.error.DevicePermissionError as ex:
             # permission error: device exists but no permission
-            assert str(ex) == 'I2C device permission denied: {}'.format(
-                path_name)
+            assert str(ex) == f'I2C device permission denied: {path_name}'
 
 
 def test_init_device_address_error():
     address = 'foo'
     with pytest.raises(luma.core.error.DeviceAddressError) as ex:
         i2c(address=address)
-    assert str(ex.value) == 'I2C device address invalid: {}'.format(address)
+    assert str(ex.value) == f'I2C device address invalid: {address}'
 
 
 def test_init_no_bus():

@@ -12,11 +12,12 @@ from luma.core.util import from_16_to_8, from_8_to_16
 
 class bitmap_font():
     """
-    An PIL.Imagefont style font
+    An ``PIL.Imagefont`` style font.
 
-    The structure of this class was modeled after the PIL ImageFont class
-    and is intended to be interchangable for PIL.ImageFont objects.  It has
-    the following additional capabilities.
+    The structure of this class was modeled after the PIL ``ImageFont`` class
+    and is intended to be interchangable for :py:class:`PIL.ImageFont` objects.
+
+    It has the following additional capabilities:
 
     * Allows fonts larger than 256 characters to be created
     * Font can be combined with other fonts
@@ -43,7 +44,7 @@ class bitmap_font():
         :param filename: the filename of the file containing the font data
         :type filename: str
         :return: a font object
-        :rtype: luma.core.bitmap_font
+        :rtype: :py:class:`luma.core.bitmap_font`
         """
         with open(filename, 'rb') as fp:
             s = fp.readline()
@@ -56,15 +57,15 @@ class bitmap_font():
 
     def loads(self, fontdata):
         """
-        Load luma.core.bitmap_font from a string of serialized data produced
-        by the dumps method
+        Load :py:class:`luma.core.bitmap_font` from a string of serialized data produced
+        by the ``dumps`` method
 
         :param fontdata: The serialized font data that will be used to initialize
-            the font.  This data is produced by the luma.core.bitmap_font.dumps
+            the font.  This data is produced by the :py:func:`luma.core.bitmap_font.dumps`
             method.
         :type fontdata: bytes
         :return: a font object
-        :rtype: luma.core.bitmap_font
+        :rtype: :py:class:`luma.core.bitmap_font`
         """
         fontdata = cbor2.loads(fontdata)
         self._load_fontdata(fontdata)
@@ -72,7 +73,7 @@ class bitmap_font():
 
     def load_pillow_font(self, file, mappings=None):
         """
-        Create luma.core.bitmap_font from a PIL ImageFont style font.
+        Create :py:class:`luma.core.bitmap_font` from a PIL ImageFont style font.
 
         :param file: The filename of the PIL.ImageFont to load
         :type file: str
@@ -81,7 +82,7 @@ class bitmap_font():
             each character contained within the font
         :type mappings: dict
         :return: a font object
-        :rtype: luma.core.bitmap_font
+        :rtype: :py:class:`luma.core.bitmap_font`
         """
         with open(file, 'rb') as fp:
             if fp.readline() != b"PILfont\n":
@@ -125,7 +126,7 @@ class bitmap_font():
             each character contained within the font
         :type mappings: dict
         :return: a font object
-        :rtype: luma.core.bitmap_font
+        :rtype: :py:class:`luma.core.bitmap_font`
 
         .. note:
             Font contained within table must adhere to the following conditions
@@ -155,7 +156,7 @@ class bitmap_font():
 
     def save(self, filename):
         """
-        Write luma.core.bitmap_font data to a file
+        Write :py:class:`luma.core.bitmap_font` data to a file
         """
         with open(filename, 'wb') as fp:
             fontdata = self._generate_fontdata()
@@ -166,7 +167,7 @@ class bitmap_font():
         """
         Serializes the font data for transfer or storage
 
-        :return: serialized font data
+        :return: Serialized font data
         :rtype: bytes
         """
         fontdata = self._generate_fontdata()
@@ -175,7 +176,7 @@ class bitmap_font():
     def _generate_fontdata(self):
         """
         Utility method to create an efficient serializable representation
-        of a luma.core.bitmap_font
+        of a :py:class:`luma.core.bitmap_font`
         """
         cell_size = (self.width, self.height)
 
@@ -398,10 +399,10 @@ class bitmap_font():
 
     def combine(self, source_font, characters=None, force=False):
         """
-        Combine two luma.core.bitmap_fonts
+        Combine two :py:class:`luma.core.bitmap_font` instances.
 
-        :param source_font: a luma.core.bitmap_font to copy from
-        :type: luma.core.bitmap_font
+        :param source_font: a :py:class:`luma.core.bitmap_font` to copy from
+        :type source_font: :py:class:`luma.core.bitmap_font`
         :param characters: (optional) A list of the characters to transfer from
             the source_font.  If not provided, all of the characters within
             the source_font will be transferred.
@@ -419,7 +420,7 @@ class bitmap_font():
                 if m is not None:
                     v = source_font.metrics[m]
                 else:
-                    raise ValueError('{0} is not a valid character within the source font'.format(c))
+                    raise ValueError(f'{c} is not a valid character within the source font')
                 self.metrics.append(v)
                 self.mappings[ord(c)] = len(self.metrics) - 1
         else:
@@ -436,13 +437,13 @@ class bitmap_font():
 
 def load(filename):
     """
-    Load a luma.core.bitmap_font file.  This function creates a
-    luma.core.bitmap_font object from the given luma.core.bitmap_font file, and
-    returns the corresponding font object.
+    Load a :py:class:`luma.core.bitmap_font` file.  This function creates a
+    :py:class:`luma.core.bitmap_font` object from the given :py:class:`luma.core.bitmap_font`
+    file, and returns the corresponding font object.
 
     :param filename: Filename of font file.
     :type filename: str
-    :return: A luma.core.bitmap_font object.
+    :return: A :py:class:`luma.core.bitmap_font` object.
     :exception OSError: If the file could not be read.
     :exception SyntaxError: If the file does not contain the expected data
     """
@@ -453,13 +454,13 @@ def load(filename):
 
 def loads(data):
     """
-    Load a luma.core.bitmap_font from a string of serialized data.  This function
-    creates a luma.core.bitmap object from serialized data produced from the
-    dumps method and returns the corresponding font object.
+    Load a :py:class:`luma.core.bitmap_font` from a string of serialized data.  This function
+    creates a :py:class:`luma.core.bitmap_font` object from serialized data produced from the
+    ``dumps`` method and returns the corresponding font object.
 
-    :param data: Serialized luma.core.bitmap_font data.
+    :param data: Serialized :py:class:`luma.core.bitmap_font` data.
     :type data: str
-    :return: A luma.core.bitmap_font object.
+    :return: A :py:class:`luma.core.bitmap_font` object.
     :exception ValueError: If the data does not a valid luma.core.bitmap_font
     """
     f = bitmap_font()
@@ -487,7 +488,7 @@ def load_pillow_font(filename, mappings=None):
 
 def load_sprite_table(sprite_table, index, xwidth, glyph_size, cell_size=None, mappings=None):
     """
-    Create a luma.core.bitmap_font from a sprite table.
+    Create a :py:class:`luma.core.bitmap_font` from a sprite table.
 
     :param sprite_table: Filename of a sprite_table file or a PIL.Image containing the
         sprite_table
@@ -526,7 +527,7 @@ def load_sprite_table(sprite_table, index, xwidth, glyph_size, cell_size=None, m
         except FileNotFoundError:
             raise
         except IOError:
-            raise ValueError('File {0} not a valid sprite table'.format(sprite_table))
+            raise ValueError(f'File {sprite_table} not a valid sprite table')
 
     if isinstance(sprite_table, Image.Image):
         cell_size = cell_size if cell_size is not None else glyph_size
@@ -583,14 +584,14 @@ class embedded_fonts(ImageFont.ImageFont):
             if val in self.names_index:
                 index = self.names_index[val]
             else:
-                raise ValueError('No font with name {0}'.format(val))
+                raise ValueError(f'No font with name {val}')
         elif type(val) is int:
             if val in range(len(self.names_index)):
                 index = val
             else:
-                raise ValueError('No font with index {0}'.format(val))
+                raise ValueError(f'No font with index {val}')
         else:
-            raise TypeError('Expected int or str.  Received {0}'.format(type(val)))
+            raise TypeError(f'Expected int or str.  Received {type(val)}')
 
         if index not in self.font_by_number:
             i = index
@@ -628,7 +629,7 @@ class embedded_fonts(ImageFont.ImageFont):
         Combine the current font with a new one
 
         :param font: The font to combine with the current font
-        :type font: luma.core.bitmap
+        :type font: :py:class:`luma.core.bitmap_font`
         :param characters: (Optional) A list of characters to move from the new font to the
             current font.  If not provided all characters from the new font will
             be transferred.

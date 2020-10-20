@@ -1,7 +1,7 @@
 luma.core
 =========
 
-.. image:: https://travis-ci.org/rm-hull/luma.core.svg?branch=master
+.. image:: https://api.travis-ci.org/rm-hull/luma.core.svg?branch=master
    :target: https://travis-ci.org/rm-hull/luma.core
 
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
@@ -10,10 +10,10 @@ luma.core
 .. image:: https://img.shields.io/maintenance/yes/2020.svg?maxAge=2592000
 
 .. image:: https://img.shields.io/pypi/pyversions/luma.core.svg
-    :target: https://pypi.python.org/pypi/luma.core
+    :target: https://pypi.org/project/luma.core
 
 .. image:: https://img.shields.io/pypi/v/luma.core.svg
-   :target: https://pypi.python.org/pypi/luma.core
+   :target: https://pypi.org/project/luma.core
 
 .. toctree::
    :maxdepth: 2

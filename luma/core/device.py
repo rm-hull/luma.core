@@ -113,7 +113,7 @@ class parallel_device(device):
             serial_interface._pulse_time if hasattr(serial_interface, '_pulse_time') \
             else 0
         self._bitmode = serial_interface._bitmode if hasattr(serial_interface, '_bitmode') else 4
-        assert self._bitmode in (4, 8), 'Bit mode {0} is invalid.  It can only be 4 or 8'.format(self._bitmode)
+        assert self._bitmode in (4, 8), f'Bit mode {self._bitmode} is invalid.  It can only be 4 or 8'
 
     def command(self, *cmd, exec_time=None, only_low_bits=False):
         """

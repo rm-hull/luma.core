@@ -28,7 +28,7 @@ class bitbang_6800(object):
     from `Adafruit <https://learn.adafruit.com/drive-a-16x2-lcd-directly-with-a-raspberry-pi/wiring>`_.
 
     :param gpio: GPIO interface (must be compatible with
-        `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_)
+        `RPi.GPIO <https://pypi.org/project/RPi.GPIO>`__)
     :param pulse_time: length of time in seconds that the enable line should be
         held high during a data or command transfer
     :type pulse_time: float
@@ -55,7 +55,7 @@ class bitbang_6800(object):
         self._PINS = self._configure(kwargs.get('PINS', list((25, 24, 23, 18))))
 
         self._datalines = len(self._PINS)
-        assert self._datalines in (4, 8), 'You\'ve provided {0} pins but a bus must contain either four or eight pins'.format(len(self._PINS))
+        assert self._datalines in (4, 8), f'You\'ve provided {len(self._PINS)} pins but a bus must contain either four or eight pins'
         self._bitmode = self._datalines  # Used by device to autoset its own bitmode
 
         self._cmd_mode = self._gpio.LOW  # Command mode = Hold low

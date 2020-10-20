@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -63,7 +63,7 @@ class spritesheet(object):
           to any other animation sequence.
     :type animations: dict
 
-    Loosely based on http://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
+    Loosely based on https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
     """
     def __init__(self, image, frames, animations):
         with open(image, 'rb') as fp:

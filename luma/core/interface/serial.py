@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-20 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -16,7 +16,9 @@ from luma.core import lib
 
 __all__ = ["i2c", "noop", "spi", "gpio_cs_spi", "bitbang", "ftdi_spi", "ftdi_i2c", "pcf8574"]
 
-#: Default amount of time to wait for a pulse to complete if the device the interface is connected to requires a pin to be 'pulsed' from low to high to low for it to accept data or a command
+#: Default amount of time to wait for a pulse to complete if the device the
+#: interface is connected to requires a pin to be 'pulsed' from low to high
+#: to low for it to accept data or a command.
 PULSE_TIME = 1e-6 * 50
 
 
@@ -26,9 +28,9 @@ class i2c(object):
     Circuit) interface to provide :py:func:`data` and :py:func:`command` methods.
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
-        `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
+        `smbus2 <https://pypi.org/project/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
-        reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
+        reason why `pysmbus <https://pypi.org/project/pysmbus>`_ must be used
         over smbus2.
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
@@ -55,7 +57,7 @@ class i2c(object):
             self._addr = int(str(address), 0)
         except ValueError:
             raise luma.core.error.DeviceAddressError(
-                'I2C device address invalid: {}'.format(address))
+                f'I2C device address invalid: {address}')
 
         try:
             self._managed = bus is None
@@ -65,11 +67,11 @@ class i2c(object):
             if e.errno == errno.ENOENT:
                 # FileNotFoundError
                 raise luma.core.error.DeviceNotFoundError(
-                    'I2C device not found: {}'.format(e.filename))
+                    f'I2C device not found: {e.filename}')
             elif e.errno in [errno.EPERM, errno.EACCES]:
                 # PermissionError
                 raise luma.core.error.DevicePermissionError(
-                    'I2C device permission denied: {}'.format(e.filename))
+                    f'I2C device permission denied: {e.filename}')
             else:  # pragma: no cover
                 raise
 
@@ -98,7 +100,7 @@ class i2c(object):
     def data(self, data):
         """
         Sends a data byte or sequence of data bytes to the I²C address.
-        If the bus is in managed mode backed by smbus2, the i2c_rdwr
+        If the bus is in managed mode backed by smbus2, the ``i2c_rdwr``
         method will be used to avoid having to send in chunks.
         For SMBus devices the maximum allowed in one transaction is
         32 bytes, so if data is larger than this, it is sent in chunks.
@@ -148,7 +150,7 @@ class bitbang(object):
     a lot slower than the default SPI interface. Don't use this class directly
     unless there is a good reason!
 
-    :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
+    :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.org/project/RPi.GPIO>`__).
         For slaves that don't need reset or D/C functionality, supply a
         :py:class:`noop` implementation instead.
     :param transfer_size: Max bytes to transfer in one go. Some implementations
@@ -258,8 +260,8 @@ class spi(bitbang):
     (Serial Peripheral Interface) bus to provide :py:func:`data` and
     :py:func:`command` methods.
 
-    :param spi: SPI implementation (must be compatible with `spidev <https://pypi.python.org/pypi/spidev/>`_)
-    :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.python.org/pypi/RPi.GPIO>`_).
+    :param spi: SPI implementation (must be compatible with `spidev <https://pypi.org/project/spidev>`_)
+    :param gpio: GPIO interface (must be compatible with `RPi.GPIO <https://pypi.org/project/RPi.GPIO>`__).
         For slaves that don't need reset or D/C functionality, supply a
         :py:class:`noop` implementation instead.
     :param port: SPI port, usually 0 (default) or 1.
@@ -303,7 +305,10 @@ class spi(bitbang):
                 self._spi.mode = spi_mode
             if "cs_high" in kwargs:
                 import warnings
-                warnings.warn("SPI cs_high is no longer supported in kernel 5.4.51 and beyond, so setting parameter cs_high is now ignored!", RuntimeWarning)
+                warnings.warn(
+                    "SPI cs_high is no longer supported in kernel 5.4.51 and beyond, so setting parameter cs_high is now ignored!",
+                    RuntimeWarning
+                )
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 raise luma.core.error.DeviceNotFoundError('SPI device not found')
@@ -446,7 +451,7 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, 
     :py:func:`command` methods.
 
     :param device: A URI describing the location of the FTDI device. If ``None`` is
-        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_
+        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.org/project/pyftdi>`_
         for further details of the naming scheme used.
     :type device: string
     :param bus_speed_hz: SPI bus speed, defaults to 12MHz.
@@ -497,7 +502,7 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
     :py:func:`command` methods.
 
     :param device: A URI describing the location of the FTDI device. If ``None`` is
-        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.python.org/pypi/pyftdi>`_
+        supplied (default), ``ftdi://::/1`` is used. See `pyftdi <https://pypi.org/project/pyftdi>`_
         for further details of the naming scheme used.
     :type device: string
     :param address: I²C address, default: ``0x3C``.
@@ -512,7 +517,7 @@ def ftdi_i2c(device='ftdi://::/1', address=0x3C):
         addr = int(str(address), 0)
     except ValueError:
         raise luma.core.error.DeviceAddressError(
-            'I2C device address invalid: {}'.format(address))
+            f'I2C device address invalid: {address}')
 
     controller = I2cController()
     controller.configure(device)
@@ -531,9 +536,9 @@ class pcf8574(i2c):
     for a device using a pcf8574 backpack.
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
-        `smbus2 <https://pypi.python.org/pypi/smbus2>`_ is used.
+        `smbus2 <https://pypi.org/project/smbus2>`_ is used.
         Typically this is overridden in tests, or if there is a specific
-        reason why `pysmbus <https://pypi.python.org/pypi/pysmbus>`_ must be used
+        reason why `pysmbus <https://pypi.org/project/pysmbus>`_ must be used
         over smbus2.
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
@@ -629,7 +634,7 @@ class pcf8574(i2c):
 
         self._PINS = kwargs.get('PINS', list((4, 5, 6, 7)))
         self._datalines = len(self._PINS)
-        assert self._datalines == 4, 'You\'ve provided {0} data pins but the PCF8574 only supports four'.format(len(self._PINS))
+        assert self._datalines == 4, f'You\'ve provided {len(self._PINS)} data pins but the PCF8574 only supports four'
 
         self._rs = self._mask(kwargs.get("RS", self._RS))
         self._cmd = 0xFF if kwargs.get("COMMAND", self._CMD).lower() == 'high' else 0x00
@@ -689,13 +694,13 @@ class pcf8574(i2c):
 
     def _mask(self, pin):
         """
-        Return a mask that contains a 1 in the pin position
+        Return a mask that contains a 1 in the pin position.
         """
         return 1 << pin
 
     def _compute_pins(self, value):
         """
-        Set bits in value according to the assigned pin positions on the PCF8574
+        Set bits in value according to the assigned pin positions on the PCF8574.
         """
         retv = 0
         for i in range(self._datalines):

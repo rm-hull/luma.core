@@ -234,7 +234,7 @@ def test_load_sprite_table_exceptions_1():
     with pytest.raises(FileNotFoundError) as ex:
         filename = 'badfile'
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
-    assert str(ex.value) == '[Errno 2] No such file or directory: \'{0}\''.format(filename)
+    assert str(ex.value) == f'[Errno 2] No such file or directory: \'{filename}\''
 
 
 def test_load_sprite_table_exceptions_2():
@@ -246,7 +246,7 @@ def test_load_sprite_table_exceptions_2():
     with pytest.raises(ValueError) as ex:
         filename = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
-    assert str(ex.value) == 'File {0} not a valid sprite table'.format(filename)
+    assert str(ex.value) == f'File {filename} not a valid sprite table'
 
     with pytest.raises(ValueError) as ex:
         bitmap_font.load_sprite_table(1, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
@@ -336,7 +336,7 @@ def test_combine(load_all_embedded):
     with pytest.raises(ValueError) as ex:
         c = '\u0000'
         bmfs[0].combine(bmfs[1], c)
-    assert str(ex.value) == '{0} is not a valid character within the source font'.format(c)
+    assert str(ex.value) == f'{c} is not a valid character within the source font'
 
 
 def test_embedded_font(load_all_embedded):
@@ -378,15 +378,15 @@ def test_embedded_font_exceptions():
 
     with pytest.raises(ValueError) as ex:
         ebf.current = 2
-    assert str(ex.value) == 'No font with index {0}'.format(2)
+    assert str(ex.value) == 'No font with index 2'
 
     with pytest.raises(ValueError) as ex:
         ebf.current = 'BAD'
-    assert str(ex.value) == 'No font with name {0}'.format('BAD')
+    assert str(ex.value) == 'No font with name BAD'
 
     with pytest.raises(TypeError) as ex:
         ebf.current = []
-    assert str(ex.value) == 'Expected int or str.  Received {0}'.format(type([]))
+    assert str(ex.value) == f'Expected int or str.  Received {type([])}'
 
 
 def test_metrics(load_all_embedded):
@@ -444,4 +444,4 @@ def test_glyph_index(load_all_embedded):
         img = Image.new('1', (5, 8), 0)
         drw = ImageDraw.Draw(img)
         drw.text((0, 0), chr(i), font=bmfs[0], fill='white')
-        assert bmfs[0].glyph_index[img.tobytes()] == i, '{0} does not match its glyph_index value'.format(i)
+        assert bmfs[0].glyph_index[img.tobytes()] == i, f'{i} does not match its glyph_index value'
