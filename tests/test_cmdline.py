@@ -15,8 +15,8 @@ from luma.core import cmdline, error
 from luma.core.interface.serial import __all__ as serial_iface_types
 from luma.core.interface.parallel import __all__ as parallel_iface_types
 
-from helpers import (get_reference_file, i2c_error,
-    rpi_gpio_missing, spidev_missing)
+from helpers import (get_reference_file, i2c_error, rpi_gpio_missing,
+    spidev_missing, skip_unsupported_platform)
 
 
 test_config_file = get_reference_file('config-test.txt')
@@ -167,7 +167,7 @@ def test_make_interface_spi():
         pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip(f'{type(e).__name__} ({str(e)})')
+        skip_unsupported_platform(e)
 
 
 def test_make_interface_spi_alt_gpio():
@@ -188,7 +188,7 @@ def test_make_interface_spi_alt_gpio():
             pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
-            pytest.skip(f'{type(e).__name__} ({str(e)})')
+            skip_unsupported_platform(e)
 
 
 def test_make_interface_bitbang():
@@ -203,7 +203,7 @@ def test_make_interface_bitbang():
         pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip(f'{type(e).__name__} ({str(e)})')
+        skip_unsupported_platform(e)
 
 
 def test_make_interface_pcf8574():
@@ -238,7 +238,7 @@ def test_make_interface_bitbang_6800():
         pytest.skip(rpi_gpio_missing)
     except error.UnsupportedPlatform as e:
         # non-rpi platform, e.g. ubuntu 64-bit
-        pytest.skip(f'{type(e).__name__} ({str(e)})')
+        skip_unsupported_platform(e)
 
 
 def test_make_interface_bitbang_6800_alt_gpio():
@@ -259,7 +259,7 @@ def test_make_interface_bitbang_6800_alt_gpio():
             pytest.skip(spidev_missing)
         except error.DeviceNotFoundError as e:
             # non-rpi platform, e.g. ubuntu 64-bit
-            pytest.skip(f'{type(e).__name__} ({str(e)})')
+            skip_unsupported_platform(e)
 
 
 def test_create_device():
@@ -297,7 +297,7 @@ def test_create_device_oled():
             pytest.skip(rpi_gpio_missing)
         except error.UnsupportedPlatform as e:
             # non-rpi platform
-            pytest.skip(f'{type(e).__name__} ({str(e)})')
+            skip_unsupported_platform(e)
 
 
 def test_create_device_lcd():

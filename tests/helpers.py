@@ -89,3 +89,7 @@ def fib(n):
     for _ in range(n):
         yield a
         a, b = b, a + b
+
+
+def skip_unsupported_platform(err):
+    pytest.skip(f'{type(err).__name__} ({str(err)})')
