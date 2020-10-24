@@ -4,6 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| **2.0.0**  | * BREAKING CHANGE: Improved framebuffer performance                 | TBC        |
++------------+---------------------------------------------------------------------+------------+
 | **1.17.3** | * Drop support for Python 3.5, only 3.6 or newer is supported now   | 2020/10/24 |
 |            | * Add missing cmdline interfaces: "noop" & "gpio_cs_spi"            |            |
 |            | * Legacy proportional font wrapper raises user-friendly error       |            |

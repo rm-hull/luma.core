@@ -6,15 +6,17 @@
 Different implementation strategies for framebuffering
 """
 
-from PIL import Image, ImageChops
+import math
+from PIL import ImageChops
 
 
 class diff_to_previous(object):
     """
     Compare the current frame to the previous frame and tries to calculate the
-    differences: this will either be ``None`` for a perfect match or some
-    bounding box describing the areas that are different, up to the size of the
-    entire image.
+    differences: this will either yield nothing for a perfect match or else
+    the iterator will yield one or more tuples comprising of the image part that
+    changed along with the bounding box that describes the areas that are different,
+    up to the size of the entire image.
 
     The image data for the difference is then be passed to a device for
     rendering just those small changes. This can be very quick for small screen
@@ -25,57 +27,62 @@ class diff_to_previous(object):
     :param device: The target device, used to determine the initial 'previous'
         image.
     :type device: luma.core.device.device
+    :param num_segments: The number of segments to partition the image into. This
+        generally must be a square number (1, 4, 9, 16, ...) and must be able to
+        segment the image entirely in both width and height. i.e setting to 9 will
+        subdivide the image into a 3x3 grid when comparing to the previous image.
+    :type num_segments: int
     """
-    def __init__(self, device):
-        self.image = Image.new(device.mode, device.size, "white")
-        self.bounding_box = None
 
-    def redraw_required(self, image):
+    def __init__(self, device, num_segments=4):
+        n = int(math.sqrt(num_segments))
+        assert num_segments >= 1 and num_segments == n ** 2
+        segment_width = device.size[0] / n
+        segment_height = device.size[1] / n
+        assert segment_width.is_integer()
+        assert segment_height.is_integer()
+        self.segment_width = int(segment_width)
+        self.segment_height = int(segment_height)
+        self.device = device
+        self.prev_image = None
+
+    def redraw(self, image):
         """
-        Calculates the difference from the previous image, return a boolean
-        indicating whether a redraw is required. A side effect is that
-        ``bounding_box`` and ``image`` attributes are updated accordingly, as is
-        priming :py:func:`getdata`.
+        Calculates the difference from the previous image, returning a sequence of
+        image sections and bounding boxes that changed since the previous image.
+        Note that the first render will always render the full frame.
 
         :param image: The image to render.
         :type image: PIL.Image.Image
-        :returns: ``True`` or ``False``
-        :rtype: bool
+        :returns: Yields a sequence of images and the bounding box for each segment difference
+        :rtype: Generator[Tuple[PIL.Image.Image, Tuple[int, int, int, int]]]
         """
-        self.bounding_box = ImageChops.difference(self.image, image).getbbox()
-        if self.bounding_box is not None:
-            self.image = image.copy()
-            return True
+        changes = 0
+
+        # Force a full redraw on the first frame
+        if self.prev_image is None:
+            changes += 1
+            yield (image, image.getbbox())
+
         else:
-            return False
+            for x in range(0, self.device.width, self.segment_width):
+                for y in range(0, self.device.height, self.segment_height):
+                    bounding_box = (x, y, x + self.segment_width, y + self.segment_height)
+                    prev_segment = self.prev_image.crop(bounding_box)
+                    curr_segment = image.crop(bounding_box)
+                    segment_bounding_box = ImageChops.difference(prev_segment, curr_segment).getbbox()
+                    if segment_bounding_box is not None:
+                        changes += 1
+                        segment_bounding_box_from_origin = (
+                            x + segment_bounding_box[0],
+                            y + segment_bounding_box[1],
+                            x + segment_bounding_box[2],
+                            y + segment_bounding_box[3]
+                        )
+                        yield (curr_segment.crop(segment_bounding_box), segment_bounding_box_from_origin)
 
-    def inflate_bbox(self):
-        """
-        Realign the left and right edges of the bounding box such that they are
-        inflated to align modulo 4.
-
-        This method is optional, and used mainly to accommodate devices with
-        COM/SEG GDDRAM structures that store pixels in 4-bit nibbles.
-        """
-        left, top, right, bottom = self.bounding_box
-        self.bounding_box = (
-            left & 0xFFFC,
-            top,
-            right if right % 4 == 0 else (right & 0xFFFC) + 0x04,
-            bottom)
-
-        return self.bounding_box
-
-    def getdata(self):
-        """
-        A sequence of pixel data relating to the changes that occurred
-        since the last time :py:func:`redraw_required` was last called.
-
-        :returns: A sequence of pixels or ``None``.
-        :rtype: iterable
-        """
-        if self.bounding_box:
-            return self.image.crop(self.bounding_box).getdata()
+        if changes > 0:
+            self.prev_image = image.copy()
 
 
 class full_frame(object):
@@ -89,33 +96,18 @@ class full_frame(object):
     :param device: The target device, used to determine the bounding box.
     :type device: luma.core.device.device
     """
-    def __init__(self, device):
-        self.bounding_box = (0, 0, device.width, device.height)
 
-    def redraw_required(self, image):
+    def __init__(self, **kwargs):
+        pass
+
+    def redraw(self, image):
         """
         Caches the image ready for getting the sequence of pixel data with
         :py:func:`getdata`. This method always returns affirmatively.
 
         :param image: The image to render.
         :type image: PIL.Image.Image
-        :returns: ``True`` always.
+        :returns: Yields a single typle of sequence of images and the bounding box for that segment
+        :rtype: Generator[Tuple[PIL.Image.Image, Tuple[int, int, int, int]]]
         """
-        self.image = image
-        return True
-
-    def inflate_bbox(self):
-        """
-        Just return the original bounding box without any inflation.
-        """
-        return self.bounding_box
-
-    def getdata(self):
-        """
-        A sequence of pixels representing the full image supplied when the
-        :py:func:`redraw_required` method was last called.
-
-        :returns: A sequence of pixels.
-        :rtype: iterable
-        """
-        return self.image.getdata()
+        yield (image, image.getbbox())
