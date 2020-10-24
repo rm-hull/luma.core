@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| *TBC*      | * Drop support for Python 3.5, only 3.6 or newer is supported now   |            |
+| **1.17.3** | * Drop support for Python 3.5, only 3.6 or newer is supported now   | 2020/10/24 |
 |            | * Add missing cmdline interfaces: "noop" & "gpio_cs_spi"            |            |
 |            | * Legacy proportional font wrapper raises user-friendly error       |            |
 |            |   message when character is not in the font table                   |            |
