@@ -10,7 +10,6 @@ class capabilities(object):
     This class should be 'mixed-in' to any :py:class:`luma.core.device.device`
     display implementation that should have "device-like" capabilities.
     """
-
     def capabilities(self, width, height, rotate, mode="1"):
         """
         Assigns attributes such as ``width``, ``height``, ``size`` and
