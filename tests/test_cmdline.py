@@ -34,6 +34,8 @@ class test_spi_opts(object):
     gpio_reset_release_time = 0
 
     interface = 'spi'
+    framebuffer = 'diff_to_previous'
+    num_segments = 25
 
 
 def test_get_interface_types():

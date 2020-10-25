@@ -7,6 +7,7 @@ import inspect
 import argparse
 import importlib
 from collections import OrderedDict
+
 from deprecated import deprecated
 
 
@@ -232,14 +233,17 @@ def create_device(args, display_types=None):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         interface = getattr(make_interface(args), args.interface)
-        device = Device(serial_interface=interface(), **vars(args))
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments)
+        params = dict(vars(args), framebuffer=framebuffer)
+        device = Device(serial_interface=interface(), **params)
 
     elif args.display in display_types.get('lcd', []):
         import luma.lcd.device
         Device = getattr(luma.lcd.device, args.display)
         interface = getattr(make_interface(args), args.interface)()
         backlight_params = dict(gpio=interface._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
-        params = dict(vars(args), **backlight_params)
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments)
+        params = dict(vars(args), framebuffer=framebuffer, **backlight_params)
         device = Device(serial_interface=interface, **params)
         try:
             import luma.lcd.aux
