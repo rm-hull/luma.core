@@ -36,6 +36,7 @@ def test_diff_to_previous():
     assert len(redraws) == 1
     assert redraws[0][0] == im1
     assert redraws[0][1] == im1.getbbox()
+    assert redraws[0][1] is not None
 
     # Redraw of same image should return empty changeset
     redraws = list(framebuffer.redraw(im1))

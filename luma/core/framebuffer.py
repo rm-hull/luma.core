@@ -62,7 +62,7 @@ class diff_to_previous(object):
         # Force a full redraw on the first frame
         if self.prev_image is None:
             changes += 1
-            yield (image, image.getbbox())
+            yield image, (0, 0, image.size[0], image.size[1])
 
         else:
             for x in range(0, self.device.width, self.segment_width):
@@ -79,7 +79,7 @@ class diff_to_previous(object):
                             x + segment_bounding_box[2],
                             y + segment_bounding_box[3]
                         )
-                        yield (curr_segment.crop(segment_bounding_box), segment_bounding_box_from_origin)
+                        yield curr_segment.crop(segment_bounding_box), segment_bounding_box_from_origin
 
         if changes > 0:
             self.prev_image = image.copy()
@@ -110,4 +110,4 @@ class full_frame(object):
         :returns: Yields a single typle of sequence of images and the bounding box for that segment
         :rtype: Generator[Tuple[PIL.Image.Image, Tuple[int, int, int, int]]]
         """
-        yield (image, image.getbbox())
+        yield image, (0, 0, image.size[0], image.size[1])
