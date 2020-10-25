@@ -183,7 +183,7 @@ class framerate_regulator(object):
         self.last_time = None
 
     def __enter__(self):
-        self.enter_time = time.monotonic()
+        self.enter_time = time.perf_counter()
         if not self.start_time:
             self.start_time = self.enter_time
             self.last_time = self.enter_time
@@ -198,15 +198,15 @@ class framerate_regulator(object):
         it simply exits without blocking.
         """
         self.called += 1
-        self.total_transit_time += time.monotonic() - self.enter_time
+        self.total_transit_time += time.perf_counter() - self.enter_time
         if self.max_sleep_time >= 0:
-            elapsed = time.monotonic() - self.last_time
+            elapsed = time.perf_counter() - self.last_time
             sleep_for = self.max_sleep_time - elapsed
 
             if sleep_for > 0:
                 time.sleep(sleep_for)
 
-        self.last_time = time.monotonic()
+        self.last_time = time.perf_counter()
 
     def effective_FPS(self):
         """
@@ -219,7 +219,7 @@ class framerate_regulator(object):
         """
         if self.start_time is None:
             self.start_time = 0
-        elapsed = time.monotonic() - self.start_time
+        elapsed = time.perf_counter() - self.start_time
         return self.called / elapsed
 
     def average_transit_time(self):

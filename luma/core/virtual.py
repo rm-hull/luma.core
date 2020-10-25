@@ -199,11 +199,11 @@ class snapshot(hotspot):
         """
         Only requests a redraw after ``interval`` seconds have elapsed.
         """
-        return time.monotonic() - self.last_updated > self.interval
+        return time.perf_counter() - self.last_updated > self.interval
 
     def paste_into(self, image, xy):
         super(snapshot, self).paste_into(image, xy)
-        self.last_updated = time.monotonic()
+        self.last_updated = time.perf_counter()
 
 
 class terminal(object):
