@@ -7,7 +7,7 @@
 Tests for the :py:class:`luma.core.sprite_system.framerate_regulator` class.
 """
 
-import time
+from time import perf_counter_ns
 from luma.core.sprite_system import framerate_regulator
 
 
@@ -16,10 +16,10 @@ def test_init_default():
     assert regulator.start_time is None
     assert regulator.last_time is None
     assert regulator.called == 0
-    before = time.perf_counter()
+    before = perf_counter_ns()
     with regulator:
         pass
-    after = time.perf_counter()
+    after = perf_counter_ns()
 
     assert regulator.max_sleep_time == 1 / 16.67
     assert before <= regulator.start_time <= after
@@ -28,10 +28,10 @@ def test_init_default():
 
 def test_init_unlimited():
     regulator = framerate_regulator(fps=0)
-    before = time.perf_counter()
+    before = perf_counter_ns()
     with regulator:
         pass
-    after = time.perf_counter()
+    after = perf_counter_ns()
 
     assert regulator.max_sleep_time == -1
     assert before <= regulator.start_time <= after
@@ -40,10 +40,10 @@ def test_init_unlimited():
 
 def test_init_30fps():
     regulator = framerate_regulator(fps=30)
-    before = time.perf_counter()
+    before = perf_counter_ns()
     with regulator:
         pass
-    after = time.perf_counter()
+    after = perf_counter_ns()
 
     assert regulator.max_sleep_time == 1 / 30.00
     assert before <= regulator.start_time <= after
@@ -52,11 +52,11 @@ def test_init_30fps():
 
 def test_sleep():
     regulator = framerate_regulator(fps=100.00)
-    before = time.perf_counter()
+    before = perf_counter_ns()
     for _ in range(200):
         with regulator:
             pass
-    after = time.perf_counter()
+    after = perf_counter_ns()
 
     assert regulator.called == 200
     assert after - before >= 2.0
