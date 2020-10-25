@@ -4,7 +4,6 @@
 # See LICENSE.rst for details.
 
 from PIL import Image, ImageDraw
-from luma.core.device import dummy
 from luma.core.framebuffer import full_frame, diff_to_previous
 
 

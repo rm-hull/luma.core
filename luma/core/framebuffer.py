@@ -55,7 +55,7 @@ class diff_to_previous(object):
         segment_height = int(image_height / self.__n)
         assert segment_width * self.__n == image_width, "Total segment width does not cover full image width"
         assert segment_height * self.__n == image_height, "Total segment height does not cover full image height"
-        
+
         changes = 0
 
         # Force a full redraw on the first frame
