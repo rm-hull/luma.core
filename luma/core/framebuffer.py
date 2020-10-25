@@ -34,16 +34,9 @@ class diff_to_previous(object):
     :type num_segments: int
     """
 
-    def __init__(self, device, num_segments=4):
-        n = int(math.sqrt(num_segments))
-        assert num_segments >= 1 and num_segments == n ** 2
-        segment_width = device.size[0] / n
-        segment_height = device.size[1] / n
-        assert segment_width.is_integer()
-        assert segment_height.is_integer()
-        self.segment_width = int(segment_width)
-        self.segment_height = int(segment_height)
-        self.device = device
+    def __init__(self, num_segments=4):
+        self.__n = int(math.sqrt(num_segments))
+        assert num_segments >= 1 and num_segments == self.__n ** 2
         self.prev_image = None
 
     def redraw(self, image):
@@ -57,17 +50,23 @@ class diff_to_previous(object):
         :returns: Yields a sequence of images and the bounding box for each segment difference
         :rtype: Generator[Tuple[PIL.Image.Image, Tuple[int, int, int, int]]]
         """
+        image_width, image_height = image.size
+        segment_width = int(image_width / self.__n)
+        segment_height = int(image_height / self.__n)
+        assert segment_width * self.__n == image_width, "Total segment width does not cover full image width"
+        assert segment_height * self.__n == image_height, "Total segment height does not cover full image height"
+        
         changes = 0
 
         # Force a full redraw on the first frame
         if self.prev_image is None:
             changes += 1
-            yield image, (0, 0, image.size[0], image.size[1])
+            yield image, (0, 0, image_width, image_height)
 
         else:
-            for x in range(0, self.device.width, self.segment_width):
-                for y in range(0, self.device.height, self.segment_height):
-                    bounding_box = (x, y, x + self.segment_width, y + self.segment_height)
+            for x in range(0, image_width, segment_width):
+                for y in range(0, image_height, segment_height):
+                    bounding_box = (x, y, x + segment_width, y + segment_height)
                     prev_segment = self.prev_image.crop(bounding_box)
                     curr_segment = image.crop(bounding_box)
                     segment_bounding_box = ImageChops.difference(prev_segment, curr_segment).getbbox()

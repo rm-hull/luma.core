@@ -17,8 +17,6 @@ draw = ImageDraw.Draw(im2)
 draw.line((0, 0) + (39, 39), fill="white")
 draw.line((0, 39) + (39, 0), fill="white")
 
-device = dummy(width=40, height=40, mode="1")
-
 
 def test_full_frame():
     framebuffer = full_frame()
@@ -29,7 +27,7 @@ def test_full_frame():
 
 
 def test_diff_to_previous():
-    framebuffer = diff_to_previous(device, num_segments=4)
+    framebuffer = diff_to_previous(num_segments=4)
     redraws = list(framebuffer.redraw(im1))
 
     # First redraw should be the full image
