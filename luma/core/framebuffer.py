@@ -106,9 +106,6 @@ class full_frame(object):
     :type device: luma.core.device.device
     """
 
-    def __init__(self, **kwargs):
-        pass
-
     def redraw(self, image):
         """
         Caches the image ready for getting the sequence of pixel data with
