@@ -7,7 +7,7 @@ Different implementation strategies for framebuffering
 """
 
 import math
-from PIL import ImageChops
+from PIL import ImageChops, ImageDraw
 
 
 class diff_to_previous(object):
@@ -34,7 +34,8 @@ class diff_to_previous(object):
     :type num_segments: int
     """
 
-    def __init__(self, num_segments=4):
+    def __init__(self, num_segments=4, debug=False):
+        self.__debug = debug
         self.__n = int(math.sqrt(num_segments))
         assert num_segments >= 1 and num_segments == self.__n ** 2
         self.prev_image = None
@@ -78,7 +79,16 @@ class diff_to_previous(object):
                             x + segment_bounding_box[2],
                             y + segment_bounding_box[3]
                         )
-                        yield curr_segment.crop(segment_bounding_box), segment_bounding_box_from_origin
+
+                        image_delta = curr_segment.crop(segment_bounding_box)
+
+                        if self.__debug:
+                            w, h = image_delta.size
+                            draw = ImageDraw.Draw(image_delta)
+                            draw.rectangle((0, 0, w - 1, h - 1), outline="red")
+                            del draw
+
+                        yield image_delta, segment_bounding_box_from_origin
 
         if changes > 0:
             self.prev_image = image.copy()

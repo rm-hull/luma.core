@@ -36,6 +36,7 @@ class test_spi_opts(object):
     interface = 'spi'
     framebuffer = 'diff_to_previous'
     num_segments = 25
+    debug = False
 
 
 def test_get_interface_types():

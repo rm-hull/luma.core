@@ -233,7 +233,7 @@ def create_device(args, display_types=None):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         interface = getattr(make_interface(args), args.interface)
-        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments)
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments, debug=args.debug)
         params = dict(vars(args), framebuffer=framebuffer)
         device = Device(serial_interface=interface(), **params)
 
@@ -242,7 +242,7 @@ def create_device(args, display_types=None):
         Device = getattr(luma.lcd.device, args.display)
         interface = getattr(make_interface(args), args.interface)()
         backlight_params = dict(gpio=interface._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
-        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments)
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments, debug=args.debug)
         params = dict(vars(args), framebuffer=framebuffer, **backlight_params)
         device = Device(serial_interface=interface, **params)
         try:
@@ -326,9 +326,10 @@ def create_parser(description):
     misc_group.add_argument('--bgr', dest='bgr', action='store_true', help='Set if LCD pixels laid out in BGR (ST7735 displays only).')
     misc_group.add_argument('--inverse', dest='inverse', action='store_true', help='Set if LCD has swapped black and white (ST7735 displays only).')
     misc_group.set_defaults(bgr=False)
-    misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only)')
-    misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only)')
+    misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only).')
+    misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only).')
     misc_group.add_argument('--backlight-active', type=str, default='low', help='Set to \"low\" if LCD backlight is active low, else \"high\" otherwise (PCD8544, ST7735 displays only). Allowed values are: low, high', choices=["low", "high"], metavar='VALUE')
+    misc_group.add_argument('--debug', dest='debug', action='store_true', help='Set to enable debugging.')
 
     if len(display_types['emulator']) > 0:
         transformer_choices = get_transformer_choices()
