@@ -65,8 +65,8 @@ class diff_to_previous(object):
             yield image, (0, 0, image_width, image_height)
 
         else:
-            for x in range(0, image_width, segment_width):
-                for y in range(0, image_height, segment_height):
+            for y in range(0, image_height, segment_height):
+                for x in range(0, image_width, segment_width):
                     bounding_box = (x, y, x + segment_width, y + segment_height)
                     prev_segment = self.prev_image.crop(bounding_box)
                     curr_segment = image.crop(bounding_box)
