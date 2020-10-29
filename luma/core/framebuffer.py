@@ -62,7 +62,7 @@ class diff_to_previous(object):
         # Force a full redraw on the first frame
         if self.prev_image is None:
             changes += 1
-            yield image, (0, 0, image_width, image_height)
+            yield image, (0, 0) + image.size
 
         else:
             for y in range(0, image_height, segment_height):
@@ -116,4 +116,4 @@ class full_frame(object):
         :returns: Yields a single typle of sequence of images and the bounding box for that segment
         :rtype: Generator[Tuple[PIL.Image.Image, Tuple[int, int, int, int]]]
         """
-        yield image, (0, 0, image.size[0], image.size[1])
+        yield image, (0, 0) + image.size
