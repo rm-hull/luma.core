@@ -7,6 +7,7 @@ import inspect
 import argparse
 import importlib
 from collections import OrderedDict
+
 from deprecated import deprecated
 
 
@@ -232,14 +233,17 @@ def create_device(args, display_types=None):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         interface = getattr(make_interface(args), args.interface)
-        device = Device(serial_interface=interface(), **vars(args))
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments, debug=args.debug)
+        params = dict(vars(args), framebuffer=framebuffer)
+        device = Device(serial_interface=interface(), **params)
 
     elif args.display in display_types.get('lcd', []):
         import luma.lcd.device
         Device = getattr(luma.lcd.device, args.display)
         interface = getattr(make_interface(args), args.interface)()
         backlight_params = dict(gpio=interface._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
-        params = dict(vars(args), **backlight_params)
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments, debug=args.debug)
+        params = dict(vars(args), framebuffer=framebuffer, **backlight_params)
         device = Device(serial_interface=interface, **params)
         try:
             import luma.lcd.aux
@@ -317,13 +321,15 @@ def create_parser(description):
     misc_group = parser.add_argument_group('Misc')
     misc_group.add_argument('--block-orientation', type=int, default=0, help=f'Fix 90° phase error (MAX7219 LED matrix only). Allowed values are: {block_orientation_choices_repr}', choices=block_orientation_choices, metavar='ORIENTATION')
     misc_group.add_argument('--mode', type=str, default='RGB', help=f'Colour mode (SSD1322, SSD1325 and emulator only). Allowed values are: {color_choices_repr}', choices=color_choices, metavar='MODE')
-    misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help=f'Framebuffer implementation (SSD1331, SSD1322, ST7735 displays only). Allowed values are: {framebuffer_choices_repr}', choices=framebuffer_choices, metavar='FRAMEBUFFER')
+    misc_group.add_argument('--framebuffer', type=str, default=framebuffer_choices[0], help=f'Framebuffer implementation (SSD1331, SSD1322, ST7735, ILI9341 displays only). Allowed values are: {framebuffer_choices_repr}', choices=framebuffer_choices, metavar='FRAMEBUFFER')
+    misc_group.add_argument('--num-segments', type=int, default=4, help='Sets the number of segments to when using the diff-to-previous framebuffer implementation.')
     misc_group.add_argument('--bgr', dest='bgr', action='store_true', help='Set if LCD pixels laid out in BGR (ST7735 displays only).')
     misc_group.add_argument('--inverse', dest='inverse', action='store_true', help='Set if LCD has swapped black and white (ST7735 displays only).')
     misc_group.set_defaults(bgr=False)
-    misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only)')
-    misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only)')
+    misc_group.add_argument('--h-offset', type=int, default=0, help='Horizontal offset (in pixels) of screen to display memory (ST7735 displays only).')
+    misc_group.add_argument('--v-offset', type=int, default=0, help='Vertical offset (in pixels) of screen to display memory (ST7735 displays only).')
     misc_group.add_argument('--backlight-active', type=str, default='low', help='Set to \"low\" if LCD backlight is active low, else \"high\" otherwise (PCD8544, ST7735 displays only). Allowed values are: low, high', choices=["low", "high"], metavar='VALUE')
+    misc_group.add_argument('--debug', dest='debug', action='store_true', help='Set to enable debugging.')
 
     if len(display_types['emulator']) > 0:
         transformer_choices = get_transformer_choices()
