@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.0.0**  | * Improved framebuffer performance (breaking change)                | TBC        |
+| **2.0.0**  | * Improved diff_to_previous framebuffer performance                 | TBC        |
 |            | * Allow a wider range of SPI bus speeds                             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.17.3** | * Drop support for Python 3.5, only 3.6 or newer is supported now   | 2020/10/24 |
