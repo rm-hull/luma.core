@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 from PIL import ImageChops, ImageFont
+from unittest.mock import mock_open
 
 
 rpi_gpio_missing = f'RPi.GPIO is not supported on this platform: {platform.system()}'
@@ -89,6 +90,23 @@ def fib(n):
     for _ in range(n):
         yield a
         a, b = b, a + b
+
+
+# Attribution: https://gist.github.com/adammartinez271828/137ae25d0b817da2509c1a96ba37fc56
+def multi_mock_open(*file_contents):
+    """Create a mock "open" that will mock open multiple files in sequence
+    Args:
+        *file_contents ([str]): a list of file contents to be returned by open
+    Returns:
+        (MagicMock) a mock opener that will return the contents of the first
+            file when opened the first time, the second file when opened the
+            second time, etc.
+    """
+    mock_files = [mock_open(read_data=content) for content in file_contents]
+    mock_opener = mock_files[-1]
+    mock_opener.side_effect = [mock_file.return_value for mock_file in mock_files]
+
+    return mock_opener
 
 
 def skip_unsupported_platform(err):

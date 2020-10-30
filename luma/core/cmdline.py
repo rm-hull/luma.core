@@ -34,7 +34,7 @@ def get_supported_libraries():
 
     :rtype: list
     """
-    return ['oled', 'lcd', 'led_matrix', 'emulator']
+    return ['core', 'oled', 'lcd', 'led_matrix', 'emulator']
 
 
 def get_library_for_display_type(display_type):
@@ -126,6 +126,7 @@ class make_interface(object):
     """
     Serial factory.
     """
+
     def __init__(self, opts, gpio=None):
         self.opts = opts
         self.gpio = gpio
@@ -229,7 +230,12 @@ def create_device(args, display_types=None):
     if display_types is None:
         display_types = get_display_types()
 
-    if args.display in display_types.get('oled', []):
+    if args.display in display_types.get('core', []):
+        import luma.core.device
+        Device = getattr(luma.core.device, args.display)
+        device = Device(device=args.framebuffer_device, **vars(args))
+
+    elif args.display in display_types.get('oled', []):
         import luma.oled.device
         Device = getattr(luma.oled.device, args.display)
         interface = getattr(make_interface(args), args.interface)
@@ -309,14 +315,18 @@ def create_parser(description):
     ftdi_group = parser.add_argument_group('FTDI')
     ftdi_group.add_argument('--ftdi-device', type=str, default='ftdi://::/1', help='FTDI device')
 
+    linux_framebuffer_group = parser.add_argument_group('Linux framebuffer')
+    linux_framebuffer_group.add_argument('--framebuffer-device', type=str, default='/dev/fd0', help='Linux framebuffer device')
+
     gpio_group = parser.add_argument_group('GPIO')
-    gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI devices only)')
-    gpio_group.add_argument('--gpio-mode', type=str, default=None, help='Alternative pin mapping mode (SPI devices only)')
-    gpio_group.add_argument('--gpio-data-command', type=int, default=24, help='GPIO pin for D/C RESET (SPI devices only)')
-    gpio_group.add_argument('--gpio-reset', type=int, default=25, help='GPIO pin for RESET (SPI devices only)')
+    gpio_group.add_argument('--gpio', type=str, default=None, help='Alternative RPi.GPIO compatible implementation (SPI interface only)')
+    gpio_group.add_argument('--gpio-mode', type=str, default=None, help='Alternative pin mapping mode (SPI interface only)')
+    gpio_group.add_argument('--gpio-data-command', type=int, default=24, help='GPIO pin for D/C RESET (SPI interface only)')
+    gpio_group.add_argument('--gpio-chip-select', type=int, default=24, help='GPIO pin for Chip select (GPIO_CS_SPI interface only)')
+    gpio_group.add_argument('--gpio-reset', type=int, default=25, help='GPIO pin for RESET (SPI interface only)')
     gpio_group.add_argument('--gpio-backlight', type=int, default=18, help='GPIO pin for backlight (PCD8544, ST7735 devices only)')
-    gpio_group.add_argument('--gpio-reset-hold-time', type=float, default=0, help='Duration to hold reset line active on startup (seconds) (SPI devices only)')
-    gpio_group.add_argument('--gpio-reset-release-time', type=float, default=0, help='Duration to pause for after reset line was made active on startup (seconds) (SPI devices only)')
+    gpio_group.add_argument('--gpio-reset-hold-time', type=float, default=0, help='Duration to hold reset line active on startup (seconds) (SPI interface only)')
+    gpio_group.add_argument('--gpio-reset-release-time', type=float, default=0, help='Duration to pause for after reset line was made active on startup (seconds) (SPI interface only)')
 
     misc_group = parser.add_argument_group('Misc')
     misc_group.add_argument('--block-orientation', type=int, default=0, help=f'Fix 90° phase error (MAX7219 LED matrix only). Allowed values are: {block_orientation_choices_repr}', choices=block_orientation_choices, metavar='ORIENTATION')

@@ -2,6 +2,7 @@
 # Copyright (c) 2017-20 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+import os
 import atexit
 from time import sleep
 
@@ -9,6 +10,8 @@ from luma.core import mixin
 from luma.core.util import bytes_to_nibbles
 import luma.core.const
 from luma.core.interface.serial import i2c, noop
+
+__all__ = ["fb"]
 
 
 class device(mixin.capabilities):
@@ -21,6 +24,7 @@ class device(mixin.capabilities):
         :func:`display` method, or preferably with the
         :class:`luma.core.render.canvas` context manager.
     """
+
     def __init__(self, const=None, serial_interface=None):
         self._const = const or luma.core.const.common
         self._serial_interface = serial_interface or i2c()
@@ -71,7 +75,7 @@ class device(mixin.capabilities):
         :param level: Desired contrast level in the range of 0-255.
         :type level: int
         """
-        assert(0 <= level <= 255)
+        assert 0 <= level <= 255
         self.command(self._const.SETCONTRAST, level)
 
     def cleanup(self):
@@ -155,6 +159,7 @@ class dummy(device):
     other than retain a copy of the displayed image. It is mostly useful for
     testing. Supports 24-bit color depth.
     """
+
     def __init__(self, width=128, height=64, rotate=0, mode="RGB", **kwargs):
         super(dummy, self).__init__(serial_interface=noop())
         self.capabilities(width, height, rotate, mode)
@@ -168,6 +173,90 @@ class dummy(device):
         :param image: Image to display.
         :type image: PIL.Image.Image
         """
-        assert(image.size == self.size)
+        assert image.size == self.size
 
         self.image = self.preprocess(image).copy()
+
+
+class fb(device):
+    """
+    Pseudo-device that acts like a physical display, except that it renders
+    to a Linux framebuffer device at /dev/fbN (where N=0, 1, ...). This is specifically
+    targetted to allow the luma classes to be used on higher-resolution displays that
+    leverage kernel-based display drivers.
+
+    .. note:
+        Currently only supports 16-bit and 24-bit RGB color depths.
+
+    :param device: the Linux framebuffer device (e.g. `/dev/fb0`). If no device
+        is given, the device is determined from the `FRAMEBUFFER` environmental
+        variable instead. See https://www.kernel.org/doc/html/latest/fb/framebuffer.html
+        for more details.
+
+    .. versionadded:: 2.0.0
+    """
+
+    def __init__(self, device=None, **kwargs):
+        super(fb, self).__init__(serial_interface=noop())
+        self.id = self.__get_display_id(device)
+        (width, height) = self.__config("virtual_size")
+        self.bits_per_pixel = next(self.__config("bits_per_pixel"))
+        image_converters = {
+            16: self.__toRGB565,
+            24: self.__toRGB,
+        }
+        assert self.bits_per_pixel in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
+        self.__image_converter = image_converters[self.bits_per_pixel]
+
+        self.capabilities(width, height, rotate=0, mode="RGB")
+
+    def __get_display_id(self, device):
+        """
+        Extract the display-id from the device which is usually referred in
+        the form `/dev/fbN` where N is numeric. If no device is given, defer
+        to the FRAMEBUFFER environmental variable.
+
+        See https://www.kernel.org/doc/html/latest/fb/framebuffer.html for more details.
+        """
+        if device is None:
+            device = os.environ.get("FRAMEBUFFER", "/dev/fb0")
+
+        if device.startswith("/dev/fb"):
+            return int(device[7:])
+
+        raise luma.core.error.DeviceNotFoundError(
+            "Invalid/unsupported framebuffer: {}".format(device)
+        )
+
+    def __config(self, section):
+        path = "/sys/class/graphics/fb{0}/{1}".format(self.id, section)
+        with open(path, "r") as fp:
+            for value in fp.read().strip().split(","):
+                if value:
+                    yield int(value)
+
+    def __toRGB565(self, image):
+        for r, g, b in image.getdata():
+            yield g << 3 & 0xE0 | b >> 3
+            yield r & 0xF8 | g >> 5
+
+    def __toRGB(self, image):
+        return image.tobytes()
+
+    def display(self, image):
+        """
+        Takes a :py:mod:`PIL.Image` and converts it for consumption on the
+        given /dev/fbX framebuffer device.
+
+        :param image: Image to display.
+        :type image: PIL.Image.Image
+        """
+        assert image.mode == self.mode
+        assert image.size == self.size
+
+        image = self.preprocess(image)
+        path = "/dev/fb{}".format(self.id)
+        data = bytes(self.__image_converter(image))
+
+        with open(path, "wb") as fp:
+            fp.write(data)
