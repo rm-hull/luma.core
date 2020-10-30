@@ -2,4 +2,4 @@
 # Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-__version__ = '1.17.3'
+__version__ = '2.0.0'
