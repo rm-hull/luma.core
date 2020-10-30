@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014-18 Richard Hull and contributors
+# Copyright (c) 2014-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
 Different implementation strategies for framebuffering
 """
 
-import math
+from math import sqrt
 from PIL import ImageChops, ImageDraw
 
 
@@ -24,19 +24,20 @@ class diff_to_previous(object):
     applied. The :py:class:`luma.core.sprite_system.framerate_regulator` may be
     used to counteract this behavior however.
 
-    :param device: The target device, used to determine the initial 'previous'
-        image.
-    :type device: luma.core.device.device
     :param num_segments: The number of segments to partition the image into. This
         generally must be a square number (1, 4, 9, 16, ...) and must be able to
         segment the image entirely in both width and height. i.e setting to 9 will
         subdivide the image into a 3x3 grid when comparing to the previous image.
     :type num_segments: int
+    :param debug: When set, draws a red box around each changed image segment to
+        show the area that changed. This is obviously destructive for displaying
+        the actual image, but intends to show where the tracked changes are.
+    :type debug: boolean
     """
 
     def __init__(self, num_segments=4, debug=False):
         self.__debug = debug
-        self.__n = int(math.sqrt(num_segments))
+        self.__n = int(sqrt(num_segments))
         assert num_segments >= 1 and num_segments == self.__n ** 2
         self.prev_image = None
 
@@ -44,7 +45,9 @@ class diff_to_previous(object):
         """
         Calculates the difference from the previous image, returning a sequence of
         image sections and bounding boxes that changed since the previous image.
-        Note that the first render will always render the full frame.
+
+        .. note::
+            the first redraw will always render the full frame.
 
         :param image: The image to render.
         :type image: PIL.Image.Image
@@ -101,19 +104,15 @@ class full_frame(object):
     pixels to update on every render, but it has a more consistent render time.
     Not all display drivers may be able to use the differencing framebuffer, so
     this is provided as a drop-in replacement.
-
-    :param device: The target device, used to determine the bounding box.
-    :type device: luma.core.device.device
     """
 
     def redraw(self, image):
         """
-        Caches the image ready for getting the sequence of pixel data with
-        :py:func:`getdata`. This method always returns affirmatively.
+        Yields the full image for every redraw.
 
         :param image: The image to render.
         :type image: PIL.Image.Image
-        :returns: Yields a single typle of sequence of images and the bounding box for that segment
+        :returns: Yields a single tuple of an image and the bounding box for that image
         :rtype: Generator[Tuple[PIL.Image.Image, Tuple[int, int, int, int]]]
         """
         yield image, (0, 0) + image.size
