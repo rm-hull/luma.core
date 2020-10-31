@@ -225,11 +225,11 @@ class linux_framebuffer(device):
             return int(device[7:])
 
         raise luma.core.error.DeviceNotFoundError(
-            "Invalid/unsupported framebuffer: {}".format(device)
+            f"Invalid/unsupported framebuffer: {device}"
         )
 
     def __config(self, section):
-        path = "/sys/class/graphics/fb{0}/{1}".format(self.id, section)
+        path = f"/sys/class/graphics/fb{self.id}/{section}"
         with open(path, "r") as fp:
             for value in fp.read().strip().split(","):
                 if value:
@@ -255,7 +255,7 @@ class linux_framebuffer(device):
         assert image.size == self.size
 
         image = self.preprocess(image)
-        path = "/dev/fb{}".format(self.id)
+        path = f"/dev/fb{self.id}"
         data = bytes(self.__image_converter(image))
 
         with open(path, "wb") as fp:
