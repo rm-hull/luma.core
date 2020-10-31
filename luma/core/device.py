@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-20 Richard Hull and contributors
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import os
@@ -11,7 +11,7 @@ from luma.core.util import bytes_to_nibbles
 import luma.core.const
 from luma.core.interface.serial import i2c, noop
 
-__all__ = ["fb"]
+__all__ = ["linux_framebuffer"]
 
 
 class device(mixin.capabilities):
@@ -178,7 +178,7 @@ class dummy(device):
         self.image = self.preprocess(image).copy()
 
 
-class fb(device):
+class linux_framebuffer(device):
     """
     Pseudo-device that acts like a physical display, except that it renders
     to a Linux framebuffer device at /dev/fbN (where N=0, 1, ...). This is specifically
@@ -197,7 +197,7 @@ class fb(device):
     """
 
     def __init__(self, device=None, **kwargs):
-        super(fb, self).__init__(serial_interface=noop())
+        super(linux_framebuffer, self).__init__(serial_interface=noop())
         self.id = self.__get_display_id(device)
         (width, height) = self.__config("virtual_size")
         self.bits_per_pixel = next(self.__config("bits_per_pixel"))
