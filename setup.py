@@ -32,7 +32,8 @@ pytest_runner = ['pytest-runner'] if needs_pytest else []
 test_deps = [
     "pytest",
     "pytest-cov",
-    "pytest-timeout"
+    "pytest-timeout",
+    "pytest-watch"
 ]
 
 install_deps = [

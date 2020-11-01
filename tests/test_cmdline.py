@@ -37,6 +37,7 @@ class test_spi_opts(object):
     framebuffer = 'diff_to_previous'
     num_segments = 25
     debug = False
+    framebuffer_device = None
 
 
 def test_get_interface_types():
@@ -371,6 +372,28 @@ def test_create_device_emulator():
             'luma': module_mock,
             'luma.emulator': module_mock,
             'luma.emulator.device': module_mock
+        }):
+        device = cmdline.create_device(args, display_types=display_types)
+        assert device == display_name
+
+
+def test_create_device_core():
+    """
+    :py:func:`luma.core.cmdline.create_device` supports code devices.
+    """
+    display_name = 'coredevice1234'
+    display_types = {'core': [display_name]}
+
+    class args(test_spi_opts):
+        display = display_name
+
+    module_mock = Mock()
+    module_mock.core.device.coredevice1234.return_value = display_name
+    with patch.dict('sys.modules', **{
+            # mock luma.core package
+            'luma': module_mock,
+            'luma.core': module_mock,
+            'luma.core.device': module_mock
         }):
         device = cmdline.create_device(args, display_types=display_types)
         assert device == display_name
