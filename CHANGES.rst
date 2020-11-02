@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.0.0**  | * Improved diff_to_previous framebuffer performance                 | TBC        |
+| **2.0.0**  | * Improved diff_to_previous framebuffer performance                 | 2020/11/02 |
 |            | * Add Linux framebuffer pseudo-device                               |            |
 |            | * Allow a wider range of SPI bus speeds                             |            |
 +------------+---------------------------------------------------------------------+------------+
