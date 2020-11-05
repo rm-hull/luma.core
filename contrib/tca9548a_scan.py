@@ -16,11 +16,23 @@ TCA_ADDR = 0x70
 
 
 def mux_select(bus, tca_port):
+    """
+    Selects the bus.
+
+    Args:
+        bus: (todo): write your description
+        tca_port: (int): write your description
+    """
     assert(0 <= tca_port <= 7)
     bus.write_byte(TCA_ADDR, 1 << tca_port)
 
 
 def scan():
+    """
+    Scan the bus.
+
+    Args:
+    """
     port = 1   # Change to port 0 for orig Raspberry Pi, Orange Pi, etc
     bus = smbus2.SMBus(port)
 

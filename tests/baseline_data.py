@@ -5,6 +5,13 @@
 
 
 def primitives(device, draw):
+    """
+    Draws a polygon.
+
+    Args:
+        device: (str): write your description
+        draw: (todo): write your description
+    """
     padding = 2
     shape_width = 20
     top = padding

@@ -13,6 +13,11 @@ from luma.core import ansi_color
 
 
 def test_parse_str_no_escape():
+    """
+    Escape a string in a string.
+
+    Args:
+    """
     gen = ansi_color.parse_str("hello world")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
@@ -31,6 +36,11 @@ def test_parse_str_no_escape():
 
 
 def test_parse_str_valid_ansi_colors():
+    """
+    Parse colors in colors.
+
+    Args:
+    """
     gen = ansi_color.parse_str("hello \033[31mworld\33[0m")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
@@ -51,6 +61,11 @@ def test_parse_str_valid_ansi_colors():
 
 
 def test_parse_str_valid_ansi_colors_extended_codeset():
+    """
+    Generate colorset colors.
+
+    Args:
+    """
     gen = ansi_color.parse_str(u"á \033[31mFußgänger Текст на\033[0m")
     assert next(gen) == ["putch", u"á"]
     assert next(gen) == ["putch", " "]
@@ -80,6 +95,11 @@ def test_parse_str_valid_ansi_colors_extended_codeset():
 
 
 def test_parse_str_multiple_ansi_colors():
+    """
+    Parse colors in colors.
+
+    Args:
+    """
     gen = ansi_color.parse_str("hello \033[32;46mworld\33[7;0m")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
@@ -102,6 +122,11 @@ def test_parse_str_multiple_ansi_colors():
 
 
 def test_parse_str_unknown_ansi_colors_ignored():
+    """
+    Parse ansi color colors in the string.
+
+    Args:
+    """
     gen = ansi_color.parse_str("hello \033[27mworld")
     assert next(gen) == ["putch", "h"]
     assert next(gen) == ["putch", "e"]
@@ -120,5 +145,10 @@ def test_parse_str_unknown_ansi_colors_ignored():
 
 
 def test_strip_ansi_codes():
+    """
+    Removes the escape codes in the escape codes.
+
+    Args:
+    """
     gen = ansi_color.strip_ansi_codes("hello \033[27mworld")
     assert gen == "hello world"

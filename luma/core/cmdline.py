@@ -128,18 +128,44 @@ class make_interface(object):
     """
 
     def __init__(self, opts, gpio=None):
+        """
+        Initialize the gpio connection.
+
+        Args:
+            self: (todo): write your description
+            opts: (todo): write your description
+            gpio: (todo): write your description
+        """
         self.opts = opts
         self.gpio = gpio
 
     def noop(self):
+        """
+        Return an op.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import noop
         return noop()
 
     def i2c(self):
+        """
+        Create an i2c i2c. i2c.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import i2c
         return i2c(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
     def bitbang(self):
+        """
+        The bitbang
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import bitbang
         GPIO = self.__init_alternative_GPIO()
         return bitbang(transfer_size=self.opts.spi_transfer_size,
@@ -148,6 +174,12 @@ class make_interface(object):
                        gpio=self.gpio or GPIO)
 
     def spi(self):
+        """
+        Initialize the spi device.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import spi
         GPIO = self.__init_alternative_GPIO()
         return spi(port=self.opts.spi_port,
@@ -161,6 +193,12 @@ class make_interface(object):
                    gpio=self.gpio or GPIO)
 
     def gpio_cs_spi(self):
+        """
+        Make a gpio_spi device_speed
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import gpio_cs_spi
         GPIO = self.__init_alternative_GPIO()
         return gpio_cs_spi(port=self.opts.spi_port,
@@ -176,6 +214,12 @@ class make_interface(object):
                            gpio=self.gpio or GPIO)
 
     def ftdi_spi(self):
+        """
+        Returns the raw speed.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import ftdi_spi
         return ftdi_spi(device=self.opts.ftdi_device,
                         bus_speed_hz=self.opts.spi_bus_speed,
@@ -183,19 +227,43 @@ class make_interface(object):
                         gpio_RST=self.opts.gpio_reset)
 
     def ftdi_i2c(self):
+        """
+        Return an i2c i2c instruction.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import ftdi_i2c
         return ftdi_i2c(address=self.opts.i2c_address)
 
     def pcf8574(self):
+        """
+        Returns a pcf8 pcf pcf instance.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.serial import pcf8574
         return pcf8574(port=self.opts.i2c_port, address=self.opts.i2c_address)
 
     def bitbang_6800(self):
+        """
+        Bitbang - bitbang.
+
+        Args:
+            self: (todo): write your description
+        """
         from luma.core.interface.parallel import bitbang_6800
         GPIO = self.__init_alternative_GPIO()
         return bitbang_6800(gpio=self.gpio or GPIO)
 
     def __init_alternative_GPIO(self):
+        """
+        Initialize an l { l { l { l { l { l { l { l { l { l { l { l { l { l
+
+        Args:
+            self: (todo): write your description
+        """
         if hasattr(self.opts, 'gpio') and self.opts.gpio is not None:
             GPIO = importlib.import_module(self.opts.gpio)
 

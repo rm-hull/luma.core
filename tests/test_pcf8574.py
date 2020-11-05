@@ -23,10 +23,21 @@ DATA = 0x01
 
 
 def setup_function(function):
+    """
+    Reset the decorated function.
+
+    Args:
+        function: (todo): write your description
+    """
     smbus.reset_mock()
 
 
 def test_command():
+    """
+    Sends a command.
+
+    Args:
+    """
     cmds = [3, 1, 4]
     serial = pcf8574(bus=smbus, address=0x27)
     serial.command(*cmds)
@@ -41,6 +52,11 @@ def test_command():
 
 
 def test_i2c_command_device_not_found_error():
+    """
+    Send an i2c command.
+
+    Args:
+    """
     errorbus = Mock(unsafe=True)
     address = 0x27
     cmds = [3, 1, 4]
@@ -63,6 +79,11 @@ def test_i2c_command_device_not_found_error():
 
 
 def test_i2c_data():
+    """
+    Test for i2c test data.
+
+    Args:
+    """
     data = list((5, 4, 3, 2, 1))
     serial = pcf8574(bus=smbus, address=0x21)
     serial.data(data)
@@ -77,6 +98,11 @@ def test_i2c_data():
 
 
 def test_cleanup():
+    """
+    Clean up the serial number of the serial connection.
+
+    Args:
+    """
     serial = pcf8574(bus=smbus, address=0x9F)
     serial._managed = True
     serial.cleanup()

@@ -16,6 +16,12 @@ import luma.core.error
 
 @patch('pyftdi.i2c.I2cController')
 def test_init(mock_controller):
+    """
+    Perform the mock controller.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     instance = Mock()
     instance.get_port = Mock()
     mock_controller.side_effect = [instance]
@@ -28,6 +34,12 @@ def test_init(mock_controller):
 
 @patch('pyftdi.i2c.I2cController')
 def test_command(mock_controller):
+    """
+    Send a command.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     cmds = [3, 1, 4, 2]
     port = Mock()
     instance = Mock()
@@ -41,6 +53,12 @@ def test_command(mock_controller):
 
 @patch('pyftdi.i2c.I2cController')
 def test_data(mock_controller):
+    """
+    Returns a usb controller.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     data = list(fib(100))
     port = Mock()
     instance = Mock()
@@ -54,6 +72,12 @@ def test_data(mock_controller):
 
 @patch('pyftdi.i2c.I2cController')
 def test_cleanup(mock_controller):
+    """
+    Cleanup a serial port.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     port = Mock()
     instance = Mock()
     instance.get_port = Mock(return_value=port)
@@ -66,6 +90,12 @@ def test_cleanup(mock_controller):
 
 @patch('pyftdi.i2c.I2cController')
 def test_init_device_address_error(mock_controller):
+    """
+    Determine the usb device.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     address = 'foo'
     with pytest.raises(luma.core.error.DeviceAddressError) as ex:
         ftdi_i2c(device='ftdi://dummy', address=address)

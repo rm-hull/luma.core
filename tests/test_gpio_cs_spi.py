@@ -21,6 +21,12 @@ gpio = Mock(unsafe=True)
 
 
 def setup_function(function):
+    """
+    Reset the function.
+
+    Args:
+        function: (todo): write your description
+    """
     spidev.reset_mock()
     gpio.reset_mock()
     gpio.BCM = 1
@@ -32,6 +38,17 @@ def setup_function(function):
 
 
 def verify_gpio_cs_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25, cs=23):
+    """
+    Verify the checks on - agent.
+
+    Args:
+        port: (int): write your description
+        device: (todo): write your description
+        bus_speed_hz: (todo): write your description
+        dc: (todo): write your description
+        rst: (todo): write your description
+        cs: (todo): write your description
+    """
     spidev.open.assert_called_once_with(port, device)
     assert spidev.max_speed_hz == bus_speed_hz
     gpio.setmode.assert_not_called()
@@ -39,6 +56,11 @@ def verify_gpio_cs_spi_init(port, device, bus_speed_hz=8000000, dc=24, rst=25, c
 
 
 def test_init():
+    """
+    Initialize a device.
+
+    Args:
+    """
     port = 5
     device = 2
     bus_speed = 16000000
@@ -56,11 +78,21 @@ def test_init():
 
 
 def test_init_invalid_bus_speed():
+    """
+    Initialize the speed speed.
+
+    Args:
+    """
     with pytest.raises(AssertionError):
         gpio_cs_spi(gpio=gpio, spi=spidev, port=5, device=2, bus_speed_hz=942312, gpio_CS=23)
 
 
 def test_command():
+    """
+    !
+
+    Args:
+    """
     cmds = [3, 1, 4, 2]
     serial = gpio_cs_spi(gpio=gpio, spi=spidev, port=9, device=1, gpio_CS=23)
     serial.command(*cmds)
@@ -70,6 +102,11 @@ def test_command():
 
 
 def test_data():
+    """
+    Test if the data.
+
+    Args:
+    """
     data = list(fib(100))
     serial = gpio_cs_spi(gpio=gpio, spi=spidev, port=9, device=1, gpio_CS=23)
     serial.data(data)
@@ -79,6 +116,11 @@ def test_data():
 
 
 def test_cleanup():
+    """
+    Clean up a clean state
+
+    Args:
+    """
     serial = gpio_cs_spi(gpio=gpio, spi=spidev, port=9, device=1, gpio_CS=23)
     serial._managed = True
     serial.cleanup()
@@ -88,6 +130,11 @@ def test_cleanup():
 
 
 def test_init_device_not_found():
+    """
+    Initialize a new usb device.
+
+    Args:
+    """
     spidev = get_spidev()
     port = 1234
     with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
@@ -96,6 +143,11 @@ def test_init_device_not_found():
 
 
 def test_unsupported_gpio_platform():
+    """
+    Determine whether the platform platform.
+
+    Args:
+    """
     try:
         gpio_cs_spi(spi=spidev, port=9, device=1, gpio_CS=23)
     except luma.core.error.UnsupportedPlatform as ex:

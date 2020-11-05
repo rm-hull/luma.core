@@ -18,6 +18,11 @@ draw.line((0, 39) + (39, 0), fill="white")
 
 
 def test_full_frame():
+    """
+    Test if the full frame
+
+    Args:
+    """
     framebuffer = full_frame()
     redraws = list(framebuffer.redraw(im1))
     assert len(redraws) == 1
@@ -26,6 +31,11 @@ def test_full_frame():
 
 
 def test_diff_to_previous():
+    """
+    Reduce the difference between two images.
+
+    Args:
+    """
     framebuffer = diff_to_previous(num_segments=4)
     redraws = list(framebuffer.redraw(im1))
 
@@ -61,6 +71,11 @@ def test_diff_to_previous():
 
 
 def test_diff_to_previous_debug():
+    """
+    Determines the difference between two images.
+
+    Args:
+    """
     framebuffer = diff_to_previous(num_segments=4, debug=True)
     redraws = list(framebuffer.redraw(im1))
 

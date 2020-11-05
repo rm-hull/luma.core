@@ -12,10 +12,21 @@ class test_bell(object):
     called = 0
 
     def ding(self, *args):
+        """
+        Set the current position.
+
+        Args:
+            self: (todo): write your description
+        """
         self.called += 1
 
 
 def test_length():
+    """
+    Calculate the length of the test.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(bytearray("hello", "utf-8"), bell.ding)
     assert len(buf) == 5
@@ -23,6 +34,11 @@ def test_length():
 
 
 def test_iteration():
+    """
+    Iterate an iteration of an iteration.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(bytearray("hello", "utf-8"), bell.ding)
     assert list(iter(buf)) == [ord(ch) for ch in "hello"]
@@ -30,6 +46,11 @@ def test_iteration():
 
 
 def test_getattribute():
+    """
+    Get an attribute of an attribute.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(bytearray("hello", "utf-8"), bell.ding)
     assert list(iter(buf.decode("utf-8"))) == list("hello")
@@ -37,6 +58,11 @@ def test_getattribute():
 
 
 def test_getitem():
+    """
+    Return the test test.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(mutable_string("hello"), bell.ding)
     assert buf[2] == "l"
@@ -44,6 +70,11 @@ def test_getitem():
 
 
 def test_setitem():
+    """
+    Sets the test setitem.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(mutable_string("hello"), bell.ding)
     buf[0] = "y"
@@ -52,6 +83,11 @@ def test_setitem():
 
 
 def test_setslice():
+    """
+    Determine the test sets.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(mutable_string("hello"), bell.ding)
     buf[1:4] = "ipp"
@@ -60,6 +96,11 @@ def test_setslice():
 
 
 def test_delitem():
+    """
+    Delete a test test.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(mutable_string("hello"), bell.ding)
     del buf[4]
@@ -68,6 +109,11 @@ def test_delitem():
 
 
 def test_getslice():
+    """
+    Set the test islice.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(mutable_string("hello"), bell.ding)
     assert buf[2:4] == "ll"
@@ -75,6 +121,11 @@ def test_getslice():
 
 
 def test_repr():
+    """
+    Print the test test.
+
+    Args:
+    """
     bell = test_bell()
     buf = observable(bytearray("hello", "utf-8"), bell.ding)
     assert repr(buf) == "bytearray(b'hello')"

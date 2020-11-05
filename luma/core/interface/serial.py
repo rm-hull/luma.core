@@ -49,6 +49,15 @@ class i2c(object):
           that it has already been opened.
     """
     def __init__(self, bus=None, port=1, address=0x3C):
+        """
+        Initialize the bus.
+
+        Args:
+            self: (todo): write your description
+            bus: (todo): write your description
+            port: (int): write your description
+            address: (str): write your description
+        """
         import smbus2
         self._cmd_mode = 0x00
         self._data_mode = 0x40
@@ -126,10 +135,24 @@ class i2c(object):
             i += block_size
 
     def _write_block(self, data):
+        """
+        Writes data block of data.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+        """
         assert len(data) <= 32
         self._bus.write_i2c_block_data(self._addr, self._data_mode, data)
 
     def _write_large_block(self, data):
+        """
+        Writes a raw byte to the spi.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+        """
         assert len(data) <= 4096
         self._bus.i2c_rdwr(self._i2c_msg_write(self._addr, [self._data_mode] + data))
 
@@ -176,6 +199,16 @@ class bitbang(object):
     :type RST: int
     """
     def __init__(self, gpio=None, transfer_size=4096, reset_hold_time=0, reset_release_time=0, **kwargs):
+        """
+        Initialize the gpio.
+
+        Args:
+            self: (todo): write your description
+            gpio: (todo): write your description
+            transfer_size: (int): write your description
+            reset_hold_time: (int): write your description
+            reset_release_time: (int): write your description
+        """
 
         self._transfer_size = transfer_size
         self._managed = gpio is None
@@ -196,6 +229,13 @@ class bitbang(object):
             sleep(reset_release_time)
 
     def _configure(self, pin):
+        """
+        Configure the gpio pin.
+
+        Args:
+            self: (todo): write your description
+            pin: (todo): write your description
+        """
         if pin is not None:
             self._gpio.setup(pin, self._gpio.OUT)
             return pin
@@ -231,6 +271,13 @@ class bitbang(object):
             i += tx_sz
 
     def _write_bytes(self, data):
+        """
+        Write a single byte to the specified by writing the data.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+        """
         gpio = self._gpio
         if self._CE:
             gpio.output(self._CE, gpio.LOW)  # Active low
@@ -294,6 +341,23 @@ class spi(bitbang):
                  bus_speed_hz=8000000, transfer_size=4096,
                  gpio_DC=24, gpio_RST=25, spi_mode=None,
                  reset_hold_time=0, reset_release_time=0, **kwargs):
+        """
+        Initialize the usb device.
+
+        Args:
+            self: (todo): write your description
+            spi: (todo): write your description
+            gpio: (todo): write your description
+            port: (int): write your description
+            device: (todo): write your description
+            bus_speed_hz: (todo): write your description
+            transfer_size: (int): write your description
+            gpio_DC: (todo): write your description
+            gpio_RST: (todo): write your description
+            spi_mode: (str): write your description
+            reset_hold_time: (int): write your description
+            reset_release_time: (int): write your description
+        """
         assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 20, 24, 28, 32, 36, 40, 44, 48, 50, 52]])
 
         bitbang.__init__(self, gpio, transfer_size, reset_hold_time, reset_release_time, DC=gpio_DC, RST=gpio_RST)
@@ -318,6 +382,13 @@ class spi(bitbang):
         self._spi.max_speed_hz = bus_speed_hz
 
     def _write_bytes(self, data):
+        """
+        Write bytes to the transport.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+        """
         self._spi.writebytes(data)
 
     def cleanup(self):
@@ -340,6 +411,12 @@ class gpio_cs_spi(spi):
     :type gpio_CS: int
     """
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the gpio instance.
+
+        Args:
+            self: (todo): write your description
+        """
         gpio_CS = kwargs.pop("gpio_CS", None)
         cs_high = kwargs.pop("cs_high", None)
         super(gpio_cs_spi, self).__init__(*args, **kwargs)
@@ -351,6 +428,12 @@ class gpio_cs_spi(spi):
             self._gpio.setup(self._gpio_CS, self._gpio.OUT, initial=self._gpio.LOW if self._cs_high else self._gpio.HIGH)
 
     def _write_bytes(self, *args, **kwargs):
+        """
+        Write the given bytes to the gpiom.
+
+        Args:
+            self: (todo): write your description
+        """
         if self._gpio_CS:
             self._gpio.output(self._gpio_CS, self._gpio.HIGH if self._cs_high else self._gpio.LOW)
 
@@ -365,16 +448,43 @@ class noop(object):
     Does nothing, used for pseudo-devices / emulators / anything really.
     """
     def __getattr__(self, attr):
+        """
+        Returns the value of an attribute
+
+        Args:
+            self: (todo): write your description
+            attr: (str): write your description
+        """
         return self.__noop
 
     def __setattr__(self, attr, val):  # pragma: no cover
+        """
+        Set the given attribute on the given object.
+
+        Args:
+            self: (todo): write your description
+            attr: (str): write your description
+            val: (float): write your description
+        """
         pass
 
     def __noop(self, *args, **kwargs):
+        """
+        Wrapper around : func : meth : ~plugins.
+
+        Args:
+            self: (todo): write your description
+        """
         pass
 
 
 def _ftdi_pin(pin):
+    """
+    Return a pin pin.
+
+    Args:
+        pin: (todo): write your description
+    """
     return 1 << pin
 
 
@@ -383,16 +493,45 @@ class __FTDI_WRAPPER_SPI:
     Adapter for FTDI to spidev. Not for direct public consumption
     """
     def __init__(self, controller, spi_port):
+        """
+        Initialize the controller.
+
+        Args:
+            self: (todo): write your description
+            controller: (todo): write your description
+            spi_port: (int): write your description
+        """
         self._controller = controller
         self._spi_port = spi_port
 
     def open(self, port, device):
+        """
+        Open a device.
+
+        Args:
+            self: (todo): write your description
+            port: (int): write your description
+            device: (todo): write your description
+        """
         pass
 
     def writebytes(self, data):
+        """
+        Write bytes to the transport.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+        """
         self._spi_port.write(data)
 
     def close(self):
+        """
+        Close the connection.
+
+        Args:
+            self: (todo): write your description
+        """
         self._controller.terminate()
 
 
@@ -404,13 +543,36 @@ class __FTDI_WRAPPER_GPIO:
     HIGH = OUT = 1
 
     def __init__(self, gpio):
+        """
+        Initialize the gpio instance.
+
+        Args:
+            self: (todo): write your description
+            gpio: (todo): write your description
+        """
         self._gpio = gpio
         self._data = 0
 
     def setup(self, pin, direction):
+        """
+        Initialize a pin.
+
+        Args:
+            self: (todo): write your description
+            pin: (todo): write your description
+            direction: (str): write your description
+        """
         pass
 
     def output(self, pin, value):
+        """
+        Set the output value for an output pin.
+
+        Args:
+            self: (todo): write your description
+            pin: (todo): write your description
+            value: (todo): write your description
+        """
         mask = _ftdi_pin(pin)
         self._data &= ~mask
         if value:
@@ -419,6 +581,12 @@ class __FTDI_WRAPPER_GPIO:
         self._gpio.write(self._data)
 
     def cleanup(self):
+        """
+        Cleanup the cache.
+
+        Args:
+            self: (todo): write your description
+        """
         pass
 
 
@@ -428,18 +596,48 @@ class __FTDI_WRAPPER_I2C:
     """
 
     def __init__(self, controller, i2c_port):
+        """
+        Initialize controller.
+
+        Args:
+            self: (todo): write your description
+            controller: (todo): write your description
+            i2c_port: (str): write your description
+        """
         self._controller = controller
         self._i2c_port = i2c_port
 
     def write_i2c_block_data(self, address, register, data):
+        """
+        Writes an i2c i2c i2c register.
+
+        Args:
+            self: (todo): write your description
+            address: (str): write your description
+            register: (str): write your description
+            data: (todo): write your description
+        """
         self._i2c_port.write_to(register, data)
 
     def i2c_rdwr(self, message):
+        """
+        Writes an i2c register.
+
+        Args:
+            self: (todo): write your description
+            message: (str): write your description
+        """
         address, data = message
         register = data[0]
         self.write_i2c_block_data(address, register, data[1:])
 
     def close(self):
+        """
+        Close the connection.
+
+        Args:
+            self: (todo): write your description
+        """
         self._controller.terminate()
 
 
@@ -627,6 +825,15 @@ class pcf8574(i2c):
     _CMD = 'low'
 
     def __init__(self, pulse_time=PULSE_TIME, backlight_enabled=True, *args, **kwargs):
+        """
+        Initialize pcf interface.
+
+        Args:
+            self: (todo): write your description
+            pulse_time: (int): write your description
+            PULSE_TIME: (int): write your description
+            backlight_enabled: (bool): write your description
+        """
         super(pcf8574, self).__init__(*args, **kwargs)
 
         self._pulse_time = pulse_time
@@ -708,6 +915,14 @@ class pcf8574(i2c):
         return retv
 
     def _write(self, data, mode):
+        """
+        Writes the specified byte.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+            mode: (str): write your description
+        """
         try:
             for value in data:
                 self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))

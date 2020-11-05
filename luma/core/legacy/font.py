@@ -38,9 +38,23 @@ class proportional(object):
     single pixel.
     """
     def __init__(self, font):
+        """
+        Initialize the font.
+
+        Args:
+            self: (todo): write your description
+            font: (todo): write your description
+        """
         self.font = font
 
     def __getitem__(self, ascii_code):
+        """
+        Return the code for the given ascii code.
+
+        Args:
+            self: (todo): write your description
+            ascii_code: (todo): write your description
+        """
         try:
             bitmap = self.font[ascii_code]
             # Return a slim version of the space character
@@ -52,6 +66,13 @@ class proportional(object):
             raise IndexError(f"Font does not have ASCII code: {ascii_code}")
 
     def _trim(self, arr):
+        """
+        Trim values from arr.
+
+        Args:
+            self: (todo): write your description
+            arr: (array): write your description
+        """
         nonzero = [idx for idx, val in enumerate(arr) if val != 0]
         if not nonzero:
             return []
@@ -71,10 +92,25 @@ class tolerant(object):
     .. versionadded:: 0.9.4
     """
     def __init__(self, font, missing="_"):
+        """
+        Initialize the font.
+
+        Args:
+            self: (todo): write your description
+            font: (todo): write your description
+            missing: (todo): write your description
+        """
         self.font = font
         self.missing_code = ord(missing)
 
     def __getitem__(self, ascii_code):
+        """
+        Return the code for the given code.
+
+        Args:
+            self: (todo): write your description
+            ascii_code: (todo): write your description
+        """
         try:
             return self.font[ascii_code]
         except IndexError:

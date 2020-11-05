@@ -13,12 +13,25 @@ class worker(Thread):
     Thread executing tasks from a given tasks queue.
     """
     def __init__(self, tasks):
+        """
+        Initialize tasks.
+
+        Args:
+            self: (todo): write your description
+            tasks: (str): write your description
+        """
         Thread.__init__(self)
         self.tasks = tasks
         self.daemon = True
         self.start()
 
     def run(self):
+        """
+        Evaluate task.
+
+        Args:
+            self: (todo): write your description
+        """
         while True:
             func, args, kargs = self.tasks.get()
             func(*args, **kargs)
@@ -30,6 +43,13 @@ class threadpool:
     Pool of threads consuming tasks from a queue.
     """
     def __init__(self, num_threads):
+        """
+        Initialize the queue.
+
+        Args:
+            self: (todo): write your description
+            num_threads: (int): write your description
+        """
         try:
             from Queue import Queue
         except ImportError:

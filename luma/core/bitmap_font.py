@@ -34,6 +34,12 @@ class bitmap_font():
     PUA_SPACE = 0xF8000
 
     def __init__(self):
+        """
+        Initialize metrics
+
+        Args:
+            self: (todo): write your description
+        """
         self.mappings = {}
         self.metrics = []
 
@@ -377,6 +383,12 @@ class bitmap_font():
         self._calculate_font_size()
 
     def _calculate_font_size(self):
+        """
+        Calculate font size
+
+        Args:
+            self: (todo): write your description
+        """
         # Calculate height and baseline of font
         ascent = descent = width = 0
 
@@ -563,6 +575,14 @@ class embedded_fonts(ImageFont.ImageFont):
     .. versionadded:: 1.16.0
     """
     def __init__(self, data, selected_font=0):
+        """
+        Initialize the font
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+            selected_font: (str): write your description
+        """
         self.data = data
         self.font_by_number = {}
         self.names_index = {}

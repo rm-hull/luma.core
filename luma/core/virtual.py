@@ -54,6 +54,17 @@ class viewport(mixin.capabilities):
     :type dither: bool
     """
     def __init__(self, device, width, height, mode=None, dither=False):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            mode: (todo): write your description
+            dither: (todo): write your description
+        """
         self.capabilities(width, height, rotate=0, mode=mode or device.mode)
         if hasattr(device, "segment_mapper"):
             self.segment_mapper = device.segment_mapper
@@ -64,6 +75,13 @@ class viewport(mixin.capabilities):
         self._dither = dither
 
     def display(self, image):
+        """
+        Takes an image and saves the image.
+
+        Args:
+            self: (todo): write your description
+            image: (array): write your description
+        """
         assert(image.mode == self.mode)
         assert(image.size == self.size)
 
@@ -71,6 +89,13 @@ class viewport(mixin.capabilities):
         self.refresh()
 
     def set_position(self, xy):
+        """
+        Set the position of the chart.
+
+        Args:
+            self: (todo): write your description
+            xy: (int): write your description
+        """
         self._position = xy
         self.refresh()
 
@@ -111,6 +136,12 @@ class viewport(mixin.capabilities):
         return range_overlap(l1, r1, l2, r2) and range_overlap(t1, b1, t2, b2)
 
     def refresh(self):
+        """
+        Refresh the image.
+
+        Args:
+            self: (todo): write your description
+        """
         should_wait = False
         for hotspot, xy in self._hotspots:
             if hotspot.should_redraw() and self.is_overlapping_viewport(hotspot, xy):
@@ -128,6 +159,12 @@ class viewport(mixin.capabilities):
         del im
 
     def _crop_box(self):
+        """
+        Return the bounding box.
+
+        Args:
+            self: (todo): write your description
+        """
         (left, top) = self._position
         right = left + self._device.width
         bottom = top + self._device.height
@@ -159,10 +196,27 @@ class hotspot(mixin.capabilities):
           your implementation is stateful.
     """
     def __init__(self, width, height, draw_fn=None):
+        """
+        Initialize the figure.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            draw_fn: (todo): write your description
+        """
         self.capabilities(width, height, rotate=0)  # TODO: set mode?
         self._fn = draw_fn
 
     def paste_into(self, image, xy):
+        """
+        Draw a new image from the image. image.
+
+        Args:
+            self: (todo): write your description
+            image: (array): write your description
+            xy: (todo): write your description
+        """
         im = Image.new(image.mode, self.size)
         draw = ImageDraw.Draw(im)
         self.update(draw)
@@ -179,6 +233,13 @@ class hotspot(mixin.capabilities):
         return True
 
     def update(self, draw):
+        """
+        Updates the area
+
+        Args:
+            self: (todo): write your description
+            draw: (array): write your description
+        """
         if self._fn:
             self._fn(draw, self.width, self.height)
 
@@ -190,6 +251,16 @@ class snapshot(hotspot):
     updates.
     """
     def __init__(self, width, height, draw_fn=None, interval=1.0):
+        """
+        Initialize window
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            draw_fn: (todo): write your description
+            interval: (int): write your description
+        """
         assert interval > 0
         super(snapshot, self).__init__(width, height, draw_fn)
         self.interval = interval
@@ -202,6 +273,14 @@ class snapshot(hotspot):
         return time.monotonic() - self.last_updated > self.interval
 
     def paste_into(self, image, xy):
+        """
+        Paste the image at the image
+
+        Args:
+            self: (todo): write your description
+            image: (array): write your description
+            xy: (todo): write your description
+        """
         super(snapshot, self).paste_into(image, xy)
         self.last_updated = time.monotonic()
 
@@ -213,6 +292,20 @@ class terminal(object):
     """
     def __init__(self, device, font=None, color="white", bgcolor="black",
                  tabstop=4, line_height=None, animate=True, word_wrap=False):
+        """
+        !
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+            font: (todo): write your description
+            color: (bool): write your description
+            bgcolor: (str): write your description
+            tabstop: (todo): write your description
+            line_height: (int): write your description
+            animate: (todo): write your description
+            word_wrap: (todo): write your description
+        """
         self._device = device
         self.font = font or ImageFont.load_default()
         self.default_fgcolor = color
@@ -444,6 +537,13 @@ class history(mixin.capabilities):
     display.
     """
     def __init__(self, device):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+        """
         self.capabilities(device.width, device.height, rotate=0,
             mode=device.mode)
         if hasattr(device, "segment_mapper"):
@@ -453,6 +553,13 @@ class history(mixin.capabilities):
         self._last_image = None
 
     def display(self, image):
+        """
+        Takes an image.
+
+        Args:
+            self: (todo): write your description
+            image: (array): write your description
+        """
         self._last_image = image.copy()
         self._device.display(image)
 
@@ -504,6 +611,15 @@ class sevensegment(object):
     :type undefined: char
     """
     def __init__(self, device, undefined="_", segment_mapper=None):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+            undefined: (str): write your description
+            segment_mapper: (todo): write your description
+        """
         self.device = device
         self.undefined = undefined
         self.segment_mapper = segment_mapper or device.segment_mapper
@@ -535,6 +651,13 @@ class sevensegment(object):
             observer=self._flush)
 
     def _flush(self, buf):
+        """
+        Flush the write buffer.
+
+        Args:
+            self: (todo): write your description
+            buf: (todo): write your description
+        """
         data = bytearray(self.segment_mapper(buf, notfound=self.undefined)
             ).ljust(self._bufsize, b'\0')
 
@@ -572,6 +695,15 @@ class character(object):
     """
 
     def __init__(self, device, font=None, undefined="_"):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+            font: (todo): write your description
+            undefined: (str): write your description
+        """
         self.device = device
         self._undefined = undefined
 
@@ -603,6 +735,13 @@ class character(object):
             observer=self._flush)
 
     def _flush(self, buf):
+        """
+        Flush the buffer.
+
+        Args:
+            self: (todo): write your description
+            buf: (todo): write your description
+        """
         # Replace any characters that are not in the font with the undefined character
         buf = ''.join([i if i == '\n' or self.font.getsize(i)[0] > 0 else self._undefined for i in buf])
 

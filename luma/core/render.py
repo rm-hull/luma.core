@@ -20,6 +20,15 @@ class canvas(object):
     background. This is useful to e.g. write text on a given background image.
     """
     def __init__(self, device, background=None, dither=False):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+            background: (array): write your description
+            dither: (todo): write your description
+        """
         self.draw = None
         if background is None:
             self.image = Image.new("RGB" if dither else device.mode, device.size)
@@ -30,10 +39,25 @@ class canvas(object):
         self.dither = dither
 
     def __enter__(self):
+        """
+        Enter the image
+
+        Args:
+            self: (todo): write your description
+        """
         self.draw = ImageDraw.Draw(self.image)
         return self.draw
 
     def __exit__(self, type, value, traceback):
+        """
+        Triggers the image.
+
+        Args:
+            self: (todo): write your description
+            type: (todo): write your description
+            value: (todo): write your description
+            traceback: (todo): write your description
+        """
         if type is None:
 
             if self.dither:

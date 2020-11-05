@@ -9,11 +9,23 @@ from setuptools import setup, find_packages
 
 
 def read_file(*parts):
+    """
+    Read a file.
+
+    Args:
+        parts: (str): write your description
+    """
     with open(os.path.join(os.path.dirname(__file__), *parts), encoding='utf-8') as r:
         return r.read()
 
 
 def find_version(*file_paths):
+    """
+    Finds the version of the given file.
+
+    Args:
+        file_paths: (str): write your description
+    """
     version_file = read_file(*file_paths)
     version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
                               version_file, re.M)

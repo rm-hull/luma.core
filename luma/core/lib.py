@@ -9,6 +9,12 @@ __all__ = ["rpi_gpio", "spidev"]
 
 
 def __spidev__(self):  # pragma: no cover
+    """
+    Return an array of spidev : spide object
+
+    Args:
+        self: (todo): write your description
+    """
     # spidev cant compile on macOS, so use a similar technique to
     # initialize (mainly so the tests run unhindered)
     import spidev
@@ -16,6 +22,12 @@ def __spidev__(self):  # pragma: no cover
 
 
 def __rpi_gpio__(self):
+    """
+    Returns the gpio rpi.
+
+    Args:
+        self: (todo): write your description
+    """
     # RPi.GPIO _really_ doesn't like being run on anything other than
     # a Raspberry Pi... this is imported here so we can swap out the
     # implementation for a mock
@@ -31,10 +43,22 @@ def __rpi_gpio__(self):
 
 
 def rpi_gpio(Class):
+    """
+    A decorator for a class.
+
+    Args:
+        Class: (todo): write your description
+    """
     setattr(Class, __rpi_gpio__.__name__, __rpi_gpio__)
     return Class
 
 
 def spidev(Class):
+    """
+    Returns a spide class.
+
+    Args:
+        Class: (todo): write your description
+    """
     setattr(Class, __spidev__.__name__, __spidev__)
     return Class

@@ -17,6 +17,16 @@ from helpers import (get_reference_image, assert_identical_image,
 
 
 def assert_text(device, term, reference_img, text, save=None):
+    """
+    Checks if a device has a reference to a reference.
+
+    Args:
+        device: (todo): write your description
+        term: (todo): write your description
+        reference_img: (str): write your description
+        text: (str): write your description
+        save: (todo): write your description
+    """
     img_path = get_reference_image(reference_img)
 
     with open(img_path, 'rb') as fp:
@@ -32,6 +42,11 @@ def assert_text(device, term, reference_img, text, save=None):
 
 
 def test_default_text():
+    """
+    Return the text.
+
+    Args:
+    """
     reference = 'quick_brown_fox.png'
     device = dummy()
     term = terminal(device)
@@ -42,6 +57,11 @@ def test_default_text():
 
 
 def test_wrapped_text():
+    """
+    Print text to print_wrapper.
+
+    Args:
+    """
     reference = 'quick_brown_fox_word_wrap.png'
     device = dummy()
     term = terminal(device, word_wrap=True, animate=False)
@@ -52,6 +72,11 @@ def test_wrapped_text():
 
 
 def test_tab_alignment():
+    """
+    Print the alignment alignment alignment alignment.
+
+    Args:
+    """
     reference = 'tab_align.png'
     device = dummy()
     term = terminal(device, animate=False)
@@ -63,6 +88,11 @@ def test_tab_alignment():
 
 
 def test_control_chars():
+    """
+    Print the control control control control devices.
+
+    Args:
+    """
     reference = 'control_chars.png'
     device = dummy()
     term = terminal(device, animate=False)
@@ -73,6 +103,11 @@ def test_control_chars():
 
 
 def test_scrolling():
+    """
+    Print the scrolling.
+
+    Args:
+    """
     reference = 'scroll_text.png'
     device = dummy()
     term = terminal(device, animate=False)
@@ -87,6 +122,11 @@ def test_scrolling():
 
 
 def test_alt_colors():
+    """
+    Prints an alternative text
+
+    Args:
+    """
     reference = 'alt_colors.png'
     device = dummy()
     term = terminal(device, color="blue", bgcolor="grey", animate=False)
@@ -97,6 +137,11 @@ def test_alt_colors():
 
 
 def test_ansi_colors():
+    """
+    Print ansi color colors.
+
+    Args:
+    """
     reference = 'ansi_colors.png'
     device = dummy()
     term = terminal(device, animate=False)
@@ -109,6 +154,11 @@ def test_ansi_colors():
 
 
 def test_ansi_colors_wrapped():
+    """
+    Print ansi color to the terminal.
+
+    Args:
+    """
     reference = 'ansi_colors_wrapped.png'
     device = dummy()
     term = terminal(device, word_wrap=True, animate=False)
@@ -121,6 +171,11 @@ def test_ansi_colors_wrapped():
 
 
 def test_ansi_colors_scroll():
+    """
+    Prints ansi color.
+
+    Args:
+    """
     reference = 'ansi_colors_scroll.png'
     device = dummy()
     term = terminal(device, word_wrap=True, animate=False)
@@ -134,6 +189,11 @@ def test_ansi_colors_scroll():
 
 
 def test_accented_charset():
+    """
+    Print the charset of a - font.
+
+    Args:
+    """
     reference = 'accented_charset.png'
     unicode_font = get_reference_font('DejaVuSans.ttf')
     device = dummy()

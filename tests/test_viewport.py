@@ -21,6 +21,13 @@ from helpers import get_reference_image, assert_identical_image
 
 
 def overlap(box1, box2):
+    """
+    Returns true if the two boxes overlap.
+
+    Args:
+        box1: (todo): write your description
+        box2: (todo): write your description
+    """
     l1, t1, r1, b1 = box1
     l2, t2, r2, b2 = box2
     return range_overlap(l1, r1, l2, r2) and range_overlap(t1, b1, t2, b2)
@@ -33,6 +40,11 @@ box4 = [192, 0, 256, 64]
 
 
 def test_range_overlap_over12():
+    """
+    Draws a overlap is overlap of a rangeport.
+
+    Args:
+    """
     viewport = [0, 0, 128, 64]
     assert overlap(viewport, box1) is True
     assert overlap(viewport, box2) is True
@@ -41,6 +53,11 @@ def test_range_overlap_over12():
 
 
 def test_range_overlap_over123():
+    """
+    Draws a overlap overlap overlap isa.
+
+    Args:
+    """
     viewport = [30, 0, 158, 64]
     assert overlap(viewport, box1) is True
     assert overlap(viewport, box2) is True
@@ -49,6 +66,11 @@ def test_range_overlap_over123():
 
 
 def test_range_overlap_over23():
+    """
+    Draws the rangeport over the specified by the rangeport.
+
+    Args:
+    """
     viewport = [64, 0, 192, 64]
     assert overlap(viewport, box1) is False
     assert overlap(viewport, box2) is True
@@ -57,6 +79,11 @@ def test_range_overlap_over23():
 
 
 def test_range_overlap_over234():
+    """
+    Test if the rangeport over the rangeport.
+
+    Args:
+    """
     viewport = [100, 0, 228, 64]
     assert overlap(viewport, box1) is False
     assert overlap(viewport, box2) is True
@@ -65,6 +92,11 @@ def test_range_overlap_over234():
 
 
 def test_range_overlap_over34():
+    """
+    Test if the rangeport over the rangeport.
+
+    Args:
+    """
     viewport = [128, 0, 256, 64]
     assert overlap(viewport, box1) is False
     assert overlap(viewport, box2) is False
@@ -73,6 +105,11 @@ def test_range_overlap_over34():
 
 
 def test_range_overlap_over4():
+    """
+    Draws a range over the rangeportport that the range.
+
+    Args:
+    """
     viewport = [192, 0, 256, 64]
     assert overlap(viewport, box1) is False
     assert overlap(viewport, box2) is False
@@ -81,6 +118,11 @@ def test_range_overlap_over4():
 
 
 def test_range_overlap_over_none():
+    """
+    Draws a overlap over all overlap.
+
+    Args:
+    """
     viewport = [256, 0, 384, 64]
     assert overlap(viewport, box1) is False
     assert overlap(viewport, box2) is False
@@ -89,9 +131,22 @@ def test_range_overlap_over_none():
 
 
 def test_snapshot_last_updated():
+    """
+    .. version of the snapshot of the last state
+
+    Args:
+    """
     interval = 0.5
 
     def draw_fn(draw, width, height):
+        """
+        Draws a function toilizes.
+
+        Args:
+            draw: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+        """
         assert height == 10
         assert width == 10
 
@@ -108,6 +163,11 @@ def test_snapshot_last_updated():
 
 
 def test_viewport_set_position():
+    """
+    Set the position of a setport in - setport
+
+    Args:
+    """
     img_path = get_reference_image('set_position.png')
 
     with open(img_path, 'rb') as p:
@@ -125,6 +185,11 @@ def test_viewport_set_position():
 
 
 def test_viewport_hotspot():
+    """
+    Test if an image has a previewport.
+
+    Args:
+    """
     img_path = get_reference_image('hotspot.png')
 
     with open(img_path, 'rb') as p:
@@ -133,6 +198,14 @@ def test_viewport_hotspot():
         virtual = viewport(device, 200, 200)
 
         def draw_fn(draw, width, height):
+            """
+            Draws a function to the given window size.
+
+            Args:
+                draw: (todo): write your description
+                width: (int): write your description
+                height: (int): write your description
+            """
             baseline_data.primitives(device, draw)
 
         widget = hotspot(device.width, device.height, draw_fn)
@@ -145,6 +218,11 @@ def test_viewport_hotspot():
 
 
 def test_viewport_dithering():
+    """
+    Draw a viewport
+
+    Args:
+    """
     img_path = get_reference_image('hotspot_dither.png')
 
     with open(img_path, 'rb') as p:
@@ -153,6 +231,14 @@ def test_viewport_dithering():
         virtual = viewport(device, 200, 200, mode='RGBA', dither=True)
 
         def draw_fn(draw, width, height):
+            """
+            Draws a rectangle on the image.
+
+            Args:
+                draw: (todo): write your description
+                width: (int): write your description
+                height: (int): write your description
+            """
             draw.rectangle((0, 0, width / 2, height / 2), fill="red")
             draw.rectangle((width / 2, 0, width, height / 2), fill="yellow")
             draw.rectangle((0, height / 2, width / 2, height), fill="blue")

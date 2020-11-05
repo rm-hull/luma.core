@@ -12,6 +12,11 @@ from luma.core.device import parallel_device
 
 
 def test_4bit():
+    """
+    Test for a serial number of usb devices.
+
+    Args:
+    """
     serial = Mock(unsafe=True)
     serial._bitmode = 4
     serial._pulse_time = 1
@@ -27,6 +32,11 @@ def test_4bit():
 
 
 def test_8bit():
+    """
+    Make a serial number of the serial number of the serial number.
+
+    Args:
+    """
     serial = Mock(unsafe=True)
     serial._bitmode = 8
     serial._pulse_time = 1

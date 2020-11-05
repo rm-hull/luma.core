@@ -18,6 +18,13 @@ class dict_wrapper(object):
     Helper class to turn dictionaries into objects.
     """
     def __init__(self, d):
+        """
+        Recursively sets of attributes.
+
+        Args:
+            self: (todo): write your description
+            d: (dict): write your description
+        """
         for a, b in d.items():
             if isinstance(b, (list, tuple)):
                 setattr(self, a, [dict_wrapper(x) if isinstance(x, dict) else x for x in b])
@@ -66,6 +73,15 @@ class spritesheet(object):
     Loosely based on https://www.createjs.com/docs/easeljs/classes/SpriteSheet.html
     """
     def __init__(self, image, frames, animations):
+        """
+        Initialize an animation.
+
+        Args:
+            self: (todo): write your description
+            image: (todo): write your description
+            frames: (todo): write your description
+            animations: (todo): write your description
+        """
         with open(image, 'rb') as fp:
             self.image = Image.open(fp)
             self.image.load()
@@ -173,6 +189,13 @@ class framerate_regulator(object):
     :type fps: float
     """
     def __init__(self, fps=16.67):
+        """
+        Initialize the timer.
+
+        Args:
+            self: (todo): write your description
+            fps: (todo): write your description
+        """
         if fps == 0:
             fps = -1
 
@@ -183,6 +206,12 @@ class framerate_regulator(object):
         self.last_time = None
 
     def __enter__(self):
+        """
+        Enter the timer
+
+        Args:
+            self: (todo): write your description
+        """
         self.enter_time = time.monotonic()
         if not self.start_time:
             self.start_time = self.enter_time

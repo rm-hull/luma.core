@@ -21,10 +21,21 @@ smbus = Mock(unsafe=True)
 
 
 def setup_function(function):
+    """
+    Reset the decorated function.
+
+    Args:
+        function: (todo): write your description
+    """
     smbus.reset_mock()
 
 
 def test_init_device_not_found():
+    """
+    Initialize the device with the device.
+
+    Args:
+    """
     port = 200
     address = 0x710
     path_name = f'/dev/i2c-{port}'
@@ -37,6 +48,11 @@ def test_init_device_not_found():
 
 
 def test_init_device_permission_error():
+    """
+    Test if the device has to see https : return :
+
+    Args:
+    """
     port = 1
     path_name = f'/dev/i2c-{port}'
     fake_open = i2c_error(path_name, errno.EACCES)
@@ -50,6 +66,11 @@ def test_init_device_permission_error():
 
 
 def test_init_device_address_error():
+    """
+    Initialize a single device.
+
+    Args:
+    """
     address = 'foo'
     with pytest.raises(luma.core.error.DeviceAddressError) as ex:
         i2c(address=address)
@@ -57,17 +78,32 @@ def test_init_device_address_error():
 
 
 def test_init_no_bus():
+    """
+    Initialize the bus.
+
+    Args:
+    """
     with patch.object(smbus2.SMBus, 'open') as mock:
         i2c(port=2, address=0x71)
     mock.assert_called_once_with(2)
 
 
 def test_init_bus_provided():
+    """
+    Initialize the bus.
+
+    Args:
+    """
     i2c(bus=smbus, address=0x71)
     smbus.open.assert_not_called()
 
 
 def test_command():
+    """
+    Send a command to the specified command.
+
+    Args:
+    """
     cmds = [3, 1, 4, 2]
     serial = i2c(bus=smbus, address=0x83)
     serial.command(*cmds)
@@ -75,6 +111,11 @@ def test_command():
 
 
 def test_i2c_command_device_not_found_error():
+    """
+    Send an i2c command.
+
+    Args:
+    """
     errorbus = Mock(unsafe=True)
     address = 0x71
     cmds = [3, 1, 4, 2]
@@ -97,6 +138,11 @@ def test_i2c_command_device_not_found_error():
 
 
 def test_i2c_data():
+    """
+    !
+
+    Args:
+    """
     data = list(fib(10))
     serial = i2c(bus=smbus, address=0x21)
     serial.data(data)
@@ -104,6 +150,11 @@ def test_i2c_data():
 
 
 def test_i2c_data_chunked():
+    """
+    Writes a serialized serialized to - bus.
+
+    Args:
+    """
     data = list(fib(100))
     serial = i2c(bus=smbus, address=0x66)
     serial.data(data)
@@ -112,6 +163,11 @@ def test_i2c_data_chunked():
 
 
 def test_cleanup():
+    """
+    Clean up the serial connection.
+
+    Args:
+    """
     serial = i2c(bus=smbus, address=0x9F)
     serial._managed = True
     serial.cleanup()

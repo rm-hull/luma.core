@@ -25,6 +25,12 @@ charset = ''.join(chr(i) for i in range(256))
                          ["CP437_FONT", "SINCLAIR_FONT", "LCD_FONT",
                           "UKR_FONT", "TINY_FONT", "SEG7_FONT"])
 def test_font(fontname):
+    """
+    Open an image to an image. png.
+
+    Args:
+        fontname: (str): write your description
+    """
     font = getattr(luma.core.legacy.font, fontname)
     w, h = textsize(charset, proportional(font))
     device = dummy(width=w, height=h, mode="1")

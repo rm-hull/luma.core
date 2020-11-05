@@ -122,6 +122,11 @@ def bm_font(request):
     bmf.save('test.bmf')
 
     def tear_down():
+        """
+        Tear down down down down down down.
+
+        Args:
+        """
         os.remove('test.bmf')
     request.addfinalizer(tear_down)
 

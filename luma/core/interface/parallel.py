@@ -45,6 +45,15 @@ class bitbang_6800(object):
     """
 
     def __init__(self, gpio=None, pulse_time=PULSE_TIME, **kwargs):
+        """
+        Initialize the gpio.
+
+        Args:
+            self: (todo): write your description
+            gpio: (todo): write your description
+            pulse_time: (int): write your description
+            PULSE_TIME: (int): write your description
+        """
         self._managed = gpio is None
         self._gpio = gpio or self.__rpi_gpio__()
         self._gpio.setwarnings(False)
@@ -62,6 +71,13 @@ class bitbang_6800(object):
         self._data_mode = self._gpio.HIGH  # Data mode = Pull high
 
     def _configure(self, pin):
+        """
+        Configure the gpio pin.
+
+        Args:
+            self: (todo): write your description
+            pin: (todo): write your description
+        """
         pins = pin if type(pin) == list else [pin] if pin else []
         for p in pins:
             self._gpio.setup(p, self._gpio.OUT)
@@ -98,6 +114,14 @@ class bitbang_6800(object):
         self._write(data, self._data_mode)
 
     def _write(self, data, mode):
+        """
+        Write the data.
+
+        Args:
+            self: (todo): write your description
+            data: (todo): write your description
+            mode: (str): write your description
+        """
         gpio = self._gpio
         gpio.output(self._RS, mode)
         gpio.output(self._E, gpio.LOW)

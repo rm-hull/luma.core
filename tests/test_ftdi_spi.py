@@ -14,6 +14,12 @@ from helpers import fib
 
 @patch('pyftdi.spi.SpiController')
 def test_init(mock_controller):
+    """
+    Initialize the usb controller.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     gpio = Mock()
     instance = Mock()
     instance.get_port = Mock()
@@ -30,6 +36,12 @@ def test_init(mock_controller):
 
 @patch('pyftdi.spi.SpiController')
 def test_command(mock_controller):
+    """
+    Make a usb command.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     cmds = [3, 1, 4, 2]
     gpio = Mock()
     port = Mock()
@@ -46,6 +58,12 @@ def test_command(mock_controller):
 
 @patch('pyftdi.spi.SpiController')
 def test_data(mock_controller):
+    """
+    Test if the usb controller.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     data = list(fib(100))
     gpio = Mock()
     port = Mock()
@@ -62,6 +80,12 @@ def test_data(mock_controller):
 
 @patch('pyftdi.spi.SpiController')
 def test_cleanup(mock_controller):
+    """
+    Cleanup the usb controller.
+
+    Args:
+        mock_controller: (todo): write your description
+    """
     gpio = Mock()
     port = Mock()
     instance = Mock()

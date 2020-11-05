@@ -21,12 +21,22 @@ BITS_PER_PIXEL = "24"
 
 
 def test_display_id_as_dev_fb_number():
+    """
+    Display the usb device as a usb.
+
+    Args:
+    """
     with patch("builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL)):
         device = linux_framebuffer("/dev/fb9")
         assert device.id == 9
 
 
 def test_display_id_from_environ():
+    """
+    Test if environ is running.
+
+    Args:
+    """
     os.environ["FRAMEBUFFER"] = "/dev/fb16"
     with patch("builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL)):
         device = linux_framebuffer()
@@ -34,12 +44,22 @@ def test_display_id_from_environ():
 
 
 def test_unknown_display_id():
+    """
+    Test if the usb device is running.
+
+    Args:
+    """
     with patch("builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL)):
         with pytest.raises(luma.core.error.DeviceNotFoundError):
             linux_framebuffer("invalid fb")
 
 
 def test_read_screen_resolution():
+    """
+    !
+
+    Args:
+    """
     with patch(
         "builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL)
     ) as fake_open:
@@ -50,6 +70,11 @@ def test_read_screen_resolution():
 
 
 def test_read_bits_per_pixel():
+    """
+    Return the number of the servo bits of the same asfake.
+
+    Args:
+    """
     with patch(
         "builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL)
     ) as fake_open:
@@ -61,6 +86,11 @@ def test_read_bits_per_pixel():
 
 
 def test_display_16bpp():
+    """
+    Display a hexadeadeadecimal address information.
+
+    Args:
+    """
     with open(get_reference_file("fb_16bpp.raw"), "rb") as fp:
         reference = fp.read()
 
@@ -77,6 +107,11 @@ def test_display_16bpp():
 
 
 def test_display_24bpp():
+    """
+    Display the pid isbppbpp.
+
+    Args:
+    """
     with open(get_reference_file("fb_24bpp.raw"), "rb") as fp:
         reference = fp.read()
 
@@ -93,6 +128,11 @@ def test_display_24bpp():
 
 
 def test_unsupported_bit_depth():
+    """
+    Test the depth - bit depth - bit depth of the bit.
+
+    Args:
+    """
 
     with patch("builtins.open", multi_mock_open(SCREEN_RES, "32", None)):
         with pytest.raises(AssertionError) as ex:

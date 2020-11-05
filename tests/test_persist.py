@@ -10,6 +10,11 @@ from luma.core.device import dummy
 
 
 def test_persist():
+    """
+    Persist the device.
+
+    Args:
+    """
     dev = dummy()
     assert dev.persist is False
     with patch.object(dev, 'hide') as mock:

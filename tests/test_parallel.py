@@ -20,6 +20,12 @@ gpio = Mock(unsafe=True)
 
 
 def setup_function(function):
+    """
+    Set the function. gp.
+
+    Args:
+        function: (todo): write your description
+    """
     gpio.reset_mock()
     gpio.HIGH = 200
     gpio.LOW = 100
@@ -32,6 +38,11 @@ def setup_function(function):
 
 
 def test_data():
+    """
+    Sends the data to the usb device.
+
+    Args:
+    """
     eight_to_four = lambda data: [f(x) for x in data for f in (lambda x: x >> 4, lambda x: 0x0F & x)]
 
     data = (0x41, 0x42, 0x43)  # ABC
@@ -61,6 +72,11 @@ def test_data():
 
 
 def test_wrong_number_of_pins():
+    """
+    Test if the number of a positive integer.
+
+    Args:
+    """
     try:
         bitbang_6800(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23])
     except AssertionError as ex:
@@ -68,6 +84,11 @@ def test_wrong_number_of_pins():
 
 
 def test_cleanup():
+    """
+    Cleans up the serialization.
+
+    Args:
+    """
     serial = bitbang_6800(gpio=gpio)
     serial._managed = True
     serial.cleanup()
@@ -75,6 +96,11 @@ def test_cleanup():
 
 
 def test_unsupported_gpio_platform():
+    """
+    Determine the platform supports platform.
+
+    Args:
+    """
     try:
         bitbang_6800()
     except luma.core.error.UnsupportedPlatform as ex:

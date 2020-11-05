@@ -10,45 +10,118 @@ if sys.version_info.major == 3:
 class mutable_string(object):
 
     def __init__(self, value):
+        """
+        Initialize the value.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         assert isinstance(value, str) or isinstance(value, unicode)
         self.target = value
 
     def __getattr__(self, attr):
+        """
+        Returns the value of an attribute
+
+        Args:
+            self: (todo): write your description
+            attr: (str): write your description
+        """
         return self.target.__getattribute__(attr)
 
     def __getitem__(self, key):
+        """
+        Return the value of key.
+
+        Args:
+            self: (todo): write your description
+            key: (str): write your description
+        """
         return self.target[key]
 
     def __setitem__(self, key, value):
+        """
+        Sets the value of a list.
+
+        Args:
+            self: (todo): write your description
+            key: (str): write your description
+            value: (str): write your description
+        """
         assert isinstance(value, str) or isinstance(value, unicode)
         tmp = list(self.target)
         tmp[key] = value
         self.target = ("" if isinstance(self.target, str) else u"").join(tmp)
 
     def __delitem__(self, key):
+        """
+        Remove an item from the list.
+
+        Args:
+            self: (todo): write your description
+            key: (str): write your description
+        """
         tmp = list(self.target)
         del tmp[key]
         self.target = "".join(tmp)
 
     def __len__(self):
+        """
+        Returns the length of the iterator.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.target)
 
     def __iter__(self):
+        """
+        Returns an iterator over the iterator.
+
+        Args:
+            self: (todo): write your description
+        """
         return iter(self.target)
 
     def __str__(self):
+        """
+        Return the string representation of this target.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.target
 
     def __repr__(self):
+        """
+        Return a repr representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return repr(self.target)
 
     def __eq__(self, other):
+        """
+        Returns true if other objects are equal.
+
+        Args:
+            self: (todo): write your description
+            other: (todo): write your description
+        """
         if isinstance(self.target, unicode):
             return self.target == unicode(other)
         else:
             return self.target == str(other)
 
     def __hash__(self):
+        """
+        Returns the hash of the target.
+
+        Args:
+            self: (todo): write your description
+        """
         return hash(self.target)
 
 
@@ -59,34 +132,95 @@ class observable(object):
     name methods are passed through parameters unhindered.
     """
     def __init__(self, target, observer):
+        """
+        Initialize an observer.
+
+        Args:
+            self: (todo): write your description
+            target: (todo): write your description
+            observer: (todo): write your description
+        """
         self.target = target
         self.observer = observer
         self.observer(self.target)
 
     def __getattr__(self, attr):
+        """
+        Returns the value of an attribute
+
+        Args:
+            self: (todo): write your description
+            attr: (str): write your description
+        """
         return self.target.__getattribute__(attr)
 
     def __getitem__(self, key):
+        """
+        Return the value of the key.
+
+        Args:
+            self: (todo): write your description
+            key: (str): write your description
+        """
         return self.target.__getitem__(key)
 
     def __setitem__(self, key, value):
+        """
+        Set an item to key.
+
+        Args:
+            self: (todo): write your description
+            key: (str): write your description
+            value: (str): write your description
+        """
         self.target.__setitem__(key, value)
         self.observer(self.target)
 
     def __delitem__(self, key):
+        """
+        Removes an item from the cache.
+
+        Args:
+            self: (todo): write your description
+            key: (str): write your description
+        """
         self.target.__delitem__(key)
         self.observer(self.target)
 
     def __len__(self):
+        """
+        The number of the number of the iterator.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.target.__len__()
 
     def __iter__(self):
+        """
+        Return an iterator over the iterator.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.target.__iter__()
 
     def __str__(self):
+        """
+        Returns the string representation of this target.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.target.__str__()
 
     def __repr__(self):
+        """
+        Return the repr of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.target.__repr__()
 
 

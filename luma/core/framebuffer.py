@@ -36,6 +36,14 @@ class diff_to_previous(object):
     """
 
     def __init__(self, num_segments=4, debug=False):
+        """
+        Initialize the segment.
+
+        Args:
+            self: (todo): write your description
+            num_segments: (int): write your description
+            debug: (bool): write your description
+        """
         self.__debug = debug
         self.__n = int(sqrt(num_segments))
         assert num_segments >= 1 and num_segments == self.__n ** 2

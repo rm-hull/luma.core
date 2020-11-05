@@ -17,6 +17,11 @@ test_config_file = get_reference_file('config-test.txt')
 
 
 def test_mutablestring():
+    """
+    Test for mutablestring.
+
+    Args:
+    """
     f = util.mutable_string('bar')
     f[1] = '2'
     assert f == 'b2r'
@@ -25,6 +30,11 @@ def test_mutablestring():
 
 
 def test_mutablestring_unicode():
+    """
+    Test if a unicode string is unicode.
+
+    Args:
+    """
     f = util.mutable_string(u'bazül')
     f[4] = 'L'
     assert f == u'baz\xfcL'

@@ -12,6 +12,11 @@ from luma.core.sprite_system import framerate_regulator
 
 
 def test_init_default():
+    """
+    Initialize the default test.
+
+    Args:
+    """
     regulator = framerate_regulator()
     assert regulator.start_time is None
     assert regulator.last_time is None
@@ -27,6 +32,11 @@ def test_init_default():
 
 
 def test_init_unlimited():
+    """
+    Initialize the unlimited.
+
+    Args:
+    """
     regulator = framerate_regulator(fps=0)
     before = time.monotonic()
     with regulator:
@@ -39,6 +49,11 @@ def test_init_unlimited():
 
 
 def test_init_30fps():
+    """
+    Initialize the kegonic instance.
+
+    Args:
+    """
     regulator = framerate_regulator(fps=30)
     before = time.monotonic()
     with regulator:
@@ -51,6 +66,11 @@ def test_init_30fps():
 
 
 def test_sleep():
+    """
+    Perform a given amount of the current thread.
+
+    Args:
+    """
     regulator = framerate_regulator(fps=100.00)
     before = time.monotonic()
     for _ in range(200):
@@ -63,11 +83,21 @@ def test_sleep():
 
 
 def test_effective_FPS():
+    """
+    Test if the effective mass
+
+    Args:
+    """
     regulator = framerate_regulator(fps=30)
     assert regulator.effective_FPS() == 0
 
 
 def test_average_transit_time():
+    """
+    Test if the average time of the current instance.
+
+    Args:
+    """
     regulator = framerate_regulator(fps=30)
     with regulator:
         pass

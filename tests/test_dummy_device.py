@@ -17,6 +17,11 @@ from helpers import get_reference_image, assert_identical_image
 
 
 def test_capture_noops():
+    """
+    Test if capture capture capture.
+
+    Args:
+    """
     device = dummy()
     # All these should have no effect
     device.hide()
@@ -28,6 +33,11 @@ def test_capture_noops():
 
 
 def test_portrait():
+    """
+    Test if the image should be displayed.
+
+    Args:
+    """
     img_path = get_reference_image('portrait.png')
 
     with open(img_path, 'rb') as p:
@@ -43,6 +53,11 @@ def test_portrait():
 
 
 def test_dither():
+    """
+    Test if an image.
+
+    Args:
+    """
     img_path = get_reference_image('dither.png')
 
     with open(img_path, 'rb') as p:

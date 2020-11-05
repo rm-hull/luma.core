@@ -59,6 +59,11 @@ def get_reference_pillow_font(fname):
 
 
 def get_spidev():
+    """
+    Return the spidev_missing.
+
+    Args:
+    """
     try:
         import spidev
         return spidev
@@ -76,16 +81,36 @@ def assert_identical_image(reference, target, img_path):
 
 
 def i2c_error(path_name, err_no):
+    """
+    I2cerror object and raise an error.
+
+    Args:
+        path_name: (str): write your description
+        err_no: (todo): write your description
+    """
     expected_error = OSError()
     expected_error.errno = err_no
     expected_error.filename = path_name
 
     def fake_open(a, b):
+        """
+        Open a b.
+
+        Args:
+            a: (todo): write your description
+            b: (todo): write your description
+        """
         raise expected_error
     return fake_open
 
 
 def fib(n):
+    """
+    Yields nib3 ) of a list b.
+
+    Args:
+        n: (int): write your description
+    """
     a, b = 0, 1
     for _ in range(n):
         yield a
@@ -110,4 +135,10 @@ def multi_mock_open(*file_contents):
 
 
 def skip_unsupported_platform(err):
+    """
+    Skip unsupported platform.
+
+    Args:
+        err: (todo): write your description
+    """
     pytest.skip(f'{type(err).__name__} ({str(err)})')

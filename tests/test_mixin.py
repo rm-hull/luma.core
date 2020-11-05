@@ -10,6 +10,11 @@ from luma.core.mixin import capabilities
 
 
 def test_display_not_implemented():
+    """
+    Displays the test.
+
+    Args:
+    """
     cap = capabilities()
     with pytest.raises(NotImplementedError):
         cap.display('foo')

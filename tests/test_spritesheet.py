@@ -41,6 +41,11 @@ data = {
 
 
 def test_init():
+    """
+    Initialize the sheet.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     # Reframed by 2px
     assert sheet.width == 640
@@ -53,11 +58,21 @@ def test_init():
 
 
 def test_len():
+    """
+    Test if a sheet length of the length
+
+    Args:
+    """
     sheet = spritesheet(**data)
     assert len(sheet) == sheet.frames.count
 
 
 def test_caching():
+    """
+    Test if a sheet is a sheet exists.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     assert sheet.cache == {}
     frame = sheet[17]
@@ -66,6 +81,11 @@ def test_caching():
 
 
 def test_get():
+    """
+    Convert the image to image.
+
+    Args:
+    """
     w = 64
     h = 67
     sheet = spritesheet(**data)
@@ -75,12 +95,22 @@ def test_get():
 
 
 def test_get_string():
+    """
+    * get_get the string from the * test *
+
+    Args:
+    """
     sheet = spritesheet(**data)
     with pytest.raises(TypeError):
         sheet['banana']
 
 
 def test_get_outofrange():
+    """
+    Return the range of the given sheet
+
+    Args:
+    """
     sheet = spritesheet(**data)
     with pytest.raises(IndexError):
         sheet[-2]
@@ -89,12 +119,22 @@ def test_get_outofrange():
 
 
 def test_animate_unknown_seq():
+    """
+    Test if a test sequence.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     with pytest.raises(AttributeError):
         list(sheet.animate("unknown"))
 
 
 def test_animate_finite_seq():
+    """
+    Test if the frame is an image.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     frames = list(sheet.animate("run-left"))
     assert len(frames) == 10
@@ -104,6 +144,11 @@ def test_animate_finite_seq():
 
 
 def test_animate_slow_seq():
+    """
+    Test if the frame is a png image.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     frames = list(sheet.animate("run-slow"))
     assert len(frames) == 20
@@ -113,6 +158,11 @@ def test_animate_slow_seq():
 
 
 def test_animate_infinite_seq():
+    """
+    Evaluates the motors.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     runner = sheet.animate("run-right")
     frames = []
@@ -127,6 +177,11 @@ def test_animate_infinite_seq():
 
 
 def test_animate_subroutine():
+    """
+    This function ising subroutine can be run loop.
+
+    Args:
+    """
     sheet = spritesheet(**data)
     frames = list(sheet.animate("composite"))
 

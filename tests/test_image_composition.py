@@ -17,11 +17,21 @@ from luma.core.image_composition import ComposableImage, ImageComposition
 
 
 def test_composable_image_none():
+    """
+    Test if the image is none.
+
+    Args:
+    """
     with pytest.raises(AssertionError):
         ComposableImage(None)
 
 
 def test_composable_image_image():
+    """
+    Test if an image is a png image.
+
+    Args:
+    """
     ci = ComposableImage(Image.new("RGB", (1, 1)))
     with pytest.raises(AssertionError):
         ci.image((0, 0))
@@ -34,6 +44,11 @@ def test_composable_image_image():
 
 
 def test_composable_image_ctor():
+    """
+    Test if an image is an image tomodirable image.
+
+    Args:
+    """
     pos = (78, 12)
     offs = (90, 12)
     img_size = (123, 234)
@@ -49,6 +64,11 @@ def test_composable_image_ctor():
 
 
 def test_composable_image_crop_same():
+    """
+    Takes a crop crop of the image.
+
+    Args:
+    """
     img_size = (128, 64)
     crop_size = img_size
     img = Image.new("RGB", img_size)
@@ -58,6 +78,11 @@ def test_composable_image_crop_same():
 
 
 def test_composable_image_crop_size_smaller_than_image_size():
+    """
+    Takes a crop crop crop crop crop crop the image.
+
+    Args:
+    """
     img_size = (128, 64)
     crop_size = (10, 10)
     img = Image.new("RGB", img_size)
@@ -67,6 +92,11 @@ def test_composable_image_crop_size_smaller_than_image_size():
 
 
 def test_composable_image_crop_size_greater_than_image_size():
+    """
+    Takes an image and crop the image crop.
+
+    Args:
+    """
     img_size = (128, 64)
     crop_size = (1000, 1000)
     img = Image.new("RGB", img_size)
@@ -76,6 +106,11 @@ def test_composable_image_crop_size_greater_than_image_size():
 
 
 def test_composable_image_crop_offset():
+    """
+    Takes a crop crop of an image.
+
+    Args:
+    """
     img_size = (128, 64)
     crop_size = (10, 10)
     img = Image.new("RGB", img_size)
@@ -85,23 +120,43 @@ def test_composable_image_crop_offset():
 
 
 def test_image_composition_ctor():
+    """
+    Test if the image is a png image.
+
+    Args:
+    """
     ic = ImageComposition(dummy())
     assert isinstance(ic(), PIL.Image.Image)
 
 
 def test_image_add_image_none():
+    """
+    Add a test to the image.
+
+    Args:
+    """
     ic = ImageComposition(dummy())
     with pytest.raises(AssertionError):
         ic.add_image(None)
 
 
 def test_image_remove_image_none():
+    """
+    Removes the test test.
+
+    Args:
+    """
     ic = ImageComposition(dummy())
     with pytest.raises(AssertionError):
         ic.remove_image(None)
 
 
 def test_image_count():
+    """
+    Count the number of images in the same ascii
+
+    Args:
+    """
     ic = ImageComposition(dummy())
     img1 = ComposableImage(Image.new("RGB", (1, 1)))
     img2 = ComposableImage(Image.new("RGB", (1, 1)))
@@ -119,6 +174,11 @@ def test_image_count():
 
 
 def test_refresh_no_images():
+    """
+    Refresh all images in the png
+
+    Args:
+    """
     ic = ImageComposition(dummy())
     ic_img_before = list(ic().getdata())
     ic.refresh()
@@ -126,6 +186,11 @@ def test_refresh_no_images():
 
 
 def test_refresh():
+    """
+    Refresh an image
+
+    Args:
+    """
     ic = ImageComposition(dummy())
     ic_img_before = list(ic().getdata())
     img = Image.new("RGB", (25, 25))

@@ -18,6 +18,11 @@ from helpers import get_reference_image, assert_identical_image
 
 
 def test_canvas_background():
+    """
+    Draws a background
+
+    Args:
+    """
     img_path = get_reference_image('background.png')
     with open(get_reference_image('dither.png'), 'rb') as p1:
         with open(img_path, 'rb') as p2:
@@ -35,5 +40,10 @@ def test_canvas_background():
 
 
 def test_canvas_wrong_size():
+    """
+    Test if the image can be displayed.
+
+    Args:
+    """
     with pytest.raises(AssertionError):
         canvas(dummy(), background=Image.new('RGB', (23, 97)))

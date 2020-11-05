@@ -84,6 +84,13 @@ _DIGITS = {
 
 
 def dot_muncher(text, notfound="_"):
+    """
+    Yields the dotcher.
+
+    Args:
+        text: (str): write your description
+        notfound: (todo): write your description
+    """
     undefined = _DIGITS[notfound]
     iterator = iter(text)
     try:
@@ -108,12 +115,22 @@ def dot_muncher(text, notfound="_"):
 
 
 def test_init():
+    """
+    !
+
+    Args:
+    """
     device = dummy(width=24, height=8, mode="1")
     sevensegment(device, segment_mapper=dot_muncher)
     assert device.image == Image.new("1", (24, 8))
 
 
 def test_overflow():
+    """
+    !
+
+    Args:
+    """
     device = dummy(width=24, height=8, mode="1")
     seg = sevensegment(device, segment_mapper=dot_muncher)
     with pytest.raises(OverflowError) as ex:
@@ -122,6 +139,11 @@ def test_overflow():
 
 
 def test_setter_getter():
+    """
+    Convenience function to setter.
+
+    Args:
+    """
     img_path = get_reference_image('golden_ratio.png')
 
     with open(img_path, 'rb') as img:

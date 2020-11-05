@@ -26,10 +26,23 @@ class device(mixin.capabilities):
     """
 
     def __init__(self, const=None, serial_interface=None):
+        """
+        Initialize the interface.
+
+        Args:
+            self: (todo): write your description
+            const: (list): write your description
+            serial_interface: (int): write your description
+        """
         self._const = const or luma.core.const.common
         self._serial_interface = serial_interface or i2c()
 
         def shutdown_hook():  # pragma: no cover
+            """
+            Shutdown the hook.
+
+            Args:
+            """
             try:
                 self.cleanup()
             except:
@@ -111,6 +124,15 @@ class parallel_device(device):
     """
 
     def __init__(self, const=None, serial_interface=None, exec_time=None, **kwargs):
+        """
+        Initialize a serial interface.
+
+        Args:
+            self: (todo): write your description
+            const: (list): write your description
+            serial_interface: (int): write your description
+            exec_time: (int): write your description
+        """
         super(parallel_device, self).__init__(const, serial_interface)
 
         self._exec_time = exec_time if exec_time is not None else \
@@ -161,6 +183,16 @@ class dummy(device):
     """
 
     def __init__(self, width=128, height=64, rotate=0, mode="RGB", **kwargs):
+        """
+        Initialize the interface.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            rotate: (int): write your description
+            mode: (todo): write your description
+        """
         super(dummy, self).__init__(serial_interface=noop())
         self.capabilities(width, height, rotate, mode)
         self.image = None
@@ -197,6 +229,13 @@ class linux_framebuffer(device):
     """
 
     def __init__(self, device=None, **kwargs):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            device: (todo): write your description
+        """
         super(linux_framebuffer, self).__init__(serial_interface=noop())
         self.id = self.__get_display_id(device)
         (width, height) = self.__config("virtual_size")
@@ -229,6 +268,13 @@ class linux_framebuffer(device):
         )
 
     def __config(self, section):
+        """
+        Yield config value.
+
+        Args:
+            self: (todo): write your description
+            section: (str): write your description
+        """
         path = f"/sys/class/graphics/fb{self.id}/{section}"
         with open(path, "r") as fp:
             for value in fp.read().strip().split(","):
@@ -236,11 +282,25 @@ class linux_framebuffer(device):
                     yield int(value)
 
     def __toRGB565(self, image):
+        """
+        Convert an rgb image to rgb.
+
+        Args:
+            self: (todo): write your description
+            image: (todo): write your description
+        """
         for r, g, b in image.getdata():
             yield g << 3 & 0xE0 | b >> 3
             yield r & 0xF8 | g >> 5
 
     def __toRGB(self, image):
+        """
+        Convert an image to an rgb.
+
+        Args:
+            self: (todo): write your description
+            image: (todo): write your description
+        """
         return image.tobytes()
 
     def display(self, image):

@@ -14,6 +14,11 @@ import baseline_data
 
 
 def test_restore_throws_error_when_empty():
+    """
+    Restore the history of a given histogram.
+
+    Args:
+    """
     device = dummy()
     hist = history(device)
     assert len(hist) == 0
@@ -22,6 +27,11 @@ def test_restore_throws_error_when_empty():
 
 
 def test_save_and_restore_reverts_image():
+    """
+    Save the image todo.
+
+    Args:
+    """
     device = dummy()
     hist = history(device)
 
@@ -44,6 +54,11 @@ def test_save_and_restore_reverts_image():
 
 
 def test_drop_and_restore():
+    """
+    Re - drop and drop the image.
+
+    Args:
+    """
     device = dummy()
     hist = history(device)
 

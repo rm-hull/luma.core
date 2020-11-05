@@ -13,6 +13,11 @@ from helpers import get_reference_file, get_reference_image, assert_identical_im
 
 
 def test_init():
+    """
+    Initialize a device.
+
+    Args:
+    """
     path = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
     fnt = ImageFont.load(path)
     device = dummy(width=80, height=16, mode="1")
@@ -21,6 +26,11 @@ def test_init():
 
 
 def test_setter_getter():
+    """
+    Test if the setter is setter
+
+    Args:
+    """
     fnt_path = get_reference_file(Path('font').joinpath('hd44780a02.pil'))
     img_path = get_reference_image('character_golden_ratio.png')
 

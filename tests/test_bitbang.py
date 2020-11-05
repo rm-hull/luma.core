@@ -20,6 +20,12 @@ gpio = Mock(unsafe=True)
 
 
 def setup_function(function):
+    """
+    Set the gpio function.
+
+    Args:
+        function: (todo): write your description
+    """
     gpio.reset_mock()
     gpio.BCM = 1
     gpio.RST = 2
@@ -30,6 +36,11 @@ def setup_function(function):
 
 
 def test_data():
+    """
+    This function to see if the data is a string.
+
+    Args:
+    """
     data = (0xFF, 0x0F, 0x00)
     serial = bitbang(gpio=gpio, SCLK=13, SDA=14, CE=15, DC=16, RST=17)
     serial.data(data)
@@ -53,6 +64,11 @@ def test_data():
 
 
 def test_cleanup():
+    """
+    Cleans up the serialization of the serialization
+
+    Args:
+    """
     serial = bitbang(gpio=gpio)
     serial._managed = True
     serial.cleanup()
@@ -60,6 +76,11 @@ def test_cleanup():
 
 
 def test_unsupported_gpio_platform():
+    """
+    Determine whether the libtestio.
+
+    Args:
+    """
     try:
         bitbang()
     except luma.core.error.UnsupportedPlatform as ex:
