@@ -106,6 +106,11 @@ class full_frame(object):
     this is provided as a drop-in replacement.
     """
 
+    def __init__(self, **kwargs):
+        """
+        Accepts any args but does nothing
+        """
+
     def redraw(self, image):
         """
         Yields the full image for every redraw.
