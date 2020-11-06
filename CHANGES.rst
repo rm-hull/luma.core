@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.0.1**  | * Fix to allow cmdline args to dynamically create a full_frame()    | TBC        |
+| **2.0.1**  | * Fix to allow cmdline args to dynamically create a full_frame()    | 2020/11/06 |
 |            |   instance                                                          |            |
 +------------+---------------------------------------------------------------------+------------+
 | **2.0.0**  | * Improved diff_to_previous framebuffer performance                 | 2020/11/02 |
