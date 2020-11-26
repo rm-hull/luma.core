@@ -34,7 +34,7 @@ def get_supported_libraries():
 
     :rtype: list
     """
-    return ['core', 'oled', 'lcd', 'led_matrix', 'emulator']
+    return ['oled', 'lcd', 'led_matrix', 'emulator', 'core']
 
 
 def get_library_for_display_type(display_type):
