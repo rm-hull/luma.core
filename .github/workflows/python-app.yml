@@ -1,4 +1,4 @@
-name: Python application
+name: luma.core
 
 on:
   push:
@@ -13,6 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-minor-version: [6, 7, 8, 9]
+    name: Python 3.${{ matrix.python-minor-version }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup pip cache
