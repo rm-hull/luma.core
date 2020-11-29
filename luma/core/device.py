@@ -271,10 +271,12 @@ class linux_framebuffer(device):
                 for image, bounding_box in self.framebuffer.redraw(image):
                     left, top, right, bottom = bounding_box
                     segment_bytes_per_row = (right - left) * bytes_per_pixel
-
+                    left_offset = left * bytes_per_pixel
                     generator = self.__image_converter(image)
-                    for row in range(top, bottom):
-                        mm.seek((left * bytes_per_pixel) + (row * image_bytes_per_row))
+                    for row_offset in range(left_offset + top * image_bytes_per_row,
+                                            left_offset + bottom * image_bytes_per_row,
+                                            image_bytes_per_row):
+                        mm.seek(row_offset)
                         mm.write(bytes(islice(generator, segment_bytes_per_row)))
 
                 mm.flush()
