@@ -245,7 +245,7 @@ class linux_framebuffer(device):
             yield r & 0xF8 | g >> 5
 
     def __toRGB(self, image):
-        return image.tobytes()
+        return iter(image.tobytes())
 
     def display(self, image):
         """
