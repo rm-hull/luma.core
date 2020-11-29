@@ -255,7 +255,7 @@ class linux_framebuffer(device):
         :param image: Image to display.
         :type image: PIL.Image.Image
         :param framebuffer: Framebuffering strategy, currently instances of
-        ``diff_to_previous`` or ``full_frame`` are only supported.
+            ``diff_to_previous`` or ``full_frame`` are only supported.
         """
         assert image.mode == self.mode
         assert image.size == self.size
