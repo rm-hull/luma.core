@@ -261,10 +261,10 @@ class linux_framebuffer(device):
         image = self.preprocess(image)
         path = f"/dev/fb{self.id}"
 
-        bytes_per_pixel = self.bits_per_pixel / 8
+        bytes_per_pixel = self.bits_per_pixel // 8
         image_bytes_per_row = self.width * bytes_per_pixel
 
-        with open(path, "wb") as fp:
+        with open(path, "w+b") as fp:
             with mmap.mmap(fp.fileno(), self.width * self.height * bytes_per_pixel,
                            flags=mmap.MAP_SHARED, access=mmap.PROT_WRITE) as mm:
 
