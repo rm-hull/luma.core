@@ -9,8 +9,8 @@ luma.core **|**
 luma.core
 =========
 
-.. image:: https://api.travis-ci.org/rm-hull/luma.core.svg?branch=master
-   :target: https://travis-ci.org/rm-hull/luma.core
+.. image:: https://github.com/rm-hull/luma.core/workflows/luma.core/badge.svg?branch=master
+   :target: https://github.com/rm-hull/luma.core/actions?workflow=luma.core
 
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
    :target: https://coveralls.io/github/rm-hull/luma.core?branch=master
