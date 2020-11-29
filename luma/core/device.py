@@ -10,6 +10,7 @@ from itertools import islice
 
 from luma.core import mixin
 from luma.core.util import bytes_to_nibbles
+from luma.core.framebuffer import diff_to_previous
 import luma.core.const
 from luma.core.interface.serial import i2c, noop
 
@@ -198,7 +199,7 @@ class linux_framebuffer(device):
     .. versionadded:: 2.0.0
     """
 
-    def __init__(self, device=None, **kwargs):
+    def __init__(self, device=None, framebuffer=None, **kwargs):
         super(linux_framebuffer, self).__init__(serial_interface=noop())
         self.id = self.__get_display_id(device)
         (width, height) = self.__config("virtual_size")
@@ -210,6 +211,7 @@ class linux_framebuffer(device):
         assert self.bits_per_pixel in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
         self.__image_converter = image_converters[self.bits_per_pixel]
 
+        self.framebuffer = framebuffer or diff_to_previous(num_segments=16)
         self.capabilities(width, height, rotate=0, mode="RGB")
 
     def __get_display_id(self, device):
