@@ -3,8 +3,10 @@
 # See LICENSE.rst for details.
 
 import os
+import mmap
 import atexit
 from time import sleep
+from itertools import islice
 
 from luma.core import mixin
 from luma.core.util import bytes_to_nibbles
@@ -256,7 +258,21 @@ class linux_framebuffer(device):
 
         image = self.preprocess(image)
         path = f"/dev/fb{self.id}"
-        data = bytes(self.__image_converter(image))
+
+        bytes_per_pixel = self.bits_per_pixel / 3
+        image_bytes_per_row = self.width * bytes_per_pixel
 
         with open(path, "wb") as fp:
-            fp.write(data)
+            with mmap.mmap(fp.fileno(), self.width * self.height * bytes_per_pixel,
+                           flags=mmap.MAP_SHARED, access=mmap.PROT_WRITE) as mm:
+
+                for image, bounding_box in self.framebuffer.redraw(image):
+                    left, top, right, bottom = bounding_box
+                    segment_bytes_per_row = (right - left) * bytes_per_pixel
+
+                    generator = self.__image_converter(image)
+                    for row in range(top, bottom):
+                        mm.seek((left * bytes_per_pixel) + (row * image_bytes_per_row))
+                        mm.write(bytes(islice(generator, segment_bytes_per_row)))
+
+                mm.flush()
