@@ -261,7 +261,7 @@ class linux_framebuffer(device):
         image = self.preprocess(image)
         path = f"/dev/fb{self.id}"
 
-        bytes_per_pixel = self.bits_per_pixel / 3
+        bytes_per_pixel = self.bits_per_pixel / 8
         image_bytes_per_row = self.width * bytes_per_pixel
 
         with open(path, "wb") as fp:
