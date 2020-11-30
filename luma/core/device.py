@@ -216,7 +216,7 @@ class linux_framebuffer(device):
         self.capabilities(width, height, rotate=0, mode="RGB")
 
         path = f"/dev/fb{self.id}"
-        self.__fp = open(path, "wb")
+        self.__file_handle = open(path, "wb")
 
     def __get_display_id(self, device):
         """
@@ -253,7 +253,7 @@ class linux_framebuffer(device):
 
     def cleanup(self):
         super(linux_framebuffer, self).cleanup()
-        self.__fp.close()
+        self.__file_handle.close()
 
     def display(self, image):
         """
@@ -267,7 +267,7 @@ class linux_framebuffer(device):
         assert image.size == self.size
 
         image = self.preprocess(image)
-        fp = self.__fp
+        file_handle = self.__file_handle
 
         bytes_per_pixel = self.bits_per_pixel // 8
         image_bytes_per_row = self.width * bytes_per_pixel
@@ -280,7 +280,7 @@ class linux_framebuffer(device):
             for row_offset in range(left_offset + top * image_bytes_per_row,
                                     left_offset + bottom * image_bytes_per_row,
                                     image_bytes_per_row):
-                fp.seek(row_offset)
-                fp.write(bytes(islice(generator, segment_bytes_per_row)))
+                file_handle.seek(row_offset)
+                file_handle.write(bytes(islice(generator, segment_bytes_per_row)))
 
-        fp.flush()
+        file_handle.flush()
