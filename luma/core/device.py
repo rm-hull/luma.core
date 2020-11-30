@@ -194,8 +194,8 @@ class linux_framebuffer(device):
         is given, the device is determined from the `FRAMEBUFFER` environmental
         variable instead. See https://www.kernel.org/doc/html/latest/fb/framebuffer.html
         for more details.
-    :param framebuffer: Framebuffering strategy, currently instances of
-        ``diff_to_previous`` or ``full_frame`` are only supported.
+    :param framebuffer: Framebuffer rendering strategy, currently instances of
+        ``diff_to_previous`` (default, if not specified) or ``full_frame``.
 
     .. versionadded:: 2.0.0
     """
