@@ -4,6 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| **2.0.2**  | * Change order of namepaces cmdline, so SSD1306 is default          | 2020/11/26 |
++------------+---------------------------------------------------------------------+------------+
 | **2.0.1**  | * Fix to allow cmdline args to dynamically create a full_frame()    | 2020/11/06 |
 |            |   instance                                                          |            |
 +------------+---------------------------------------------------------------------+------------+
@@ -16,7 +18,7 @@ ChangeLog
 |            | * Legacy proportional font wrapper raises user-friendly error       |            |
 |            |   message when character is not in the font table                   |            |
 +------------+---------------------------------------------------------------------+------------+
-| **1.17.2** | * Remove SPI cs_high capability (causing SystemException in latest  | 2020/09/11 |
+| **1.17.2** | * Remove SPI cs_high capability (causing SystemException in latest  | 2020/10/11 |
 |            |   version of spidev on 5.4 kernel line)                             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **1.17.1** | * Add cmdline opt: "pcf8574" and "bitbang_6800" interfaces          | 2020/09/26 |
