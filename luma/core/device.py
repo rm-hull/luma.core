@@ -3,7 +3,6 @@
 # See LICENSE.rst for details.
 
 import os
-import mmap
 import atexit
 from time import sleep
 from itertools import islice
@@ -195,6 +194,8 @@ class linux_framebuffer(device):
         is given, the device is determined from the `FRAMEBUFFER` environmental
         variable instead. See https://www.kernel.org/doc/html/latest/fb/framebuffer.html
         for more details.
+    :param framebuffer: Framebuffering strategy, currently instances of
+        ``diff_to_previous`` or ``full_frame`` are only supported.
 
     .. versionadded:: 2.0.0
     """
@@ -213,6 +214,9 @@ class linux_framebuffer(device):
 
         self.framebuffer = framebuffer or diff_to_previous(num_segments=16)
         self.capabilities(width, height, rotate=0, mode="RGB")
+
+        path = f"/dev/fb{self.id}"
+        self.fp = open(path, "wb")
 
     def __get_display_id(self, device):
         """
@@ -247,6 +251,11 @@ class linux_framebuffer(device):
     def __toRGB(self, image):
         return iter(image.tobytes())
 
+
+    def cleanup(self):
+        super(linux_framebuffer, self).cleanup()
+        self.fp.close()
+
     def display(self, image):
         """
         Takes a :py:mod:`PIL.Image` and converts it for consumption on the
@@ -254,31 +263,25 @@ class linux_framebuffer(device):
 
         :param image: Image to display.
         :type image: PIL.Image.Image
-        :param framebuffer: Framebuffering strategy, currently instances of
-            ``diff_to_previous`` or ``full_frame`` are only supported.
         """
         assert image.mode == self.mode
         assert image.size == self.size
 
         image = self.preprocess(image)
-        path = f"/dev/fb{self.id}"
+        fp = self.fp
 
         bytes_per_pixel = self.bits_per_pixel // 8
         image_bytes_per_row = self.width * bytes_per_pixel
 
-        with open(path, "w+b") as fp:
-            with mmap.mmap(fp.fileno(), self.width * self.height * bytes_per_pixel,
-                           flags=mmap.MAP_SHARED, access=mmap.PROT_WRITE) as mm:
+        for image, bounding_box in self.framebuffer.redraw(image):
+            left, top, right, bottom = bounding_box
+            segment_bytes_per_row = (right - left) * bytes_per_pixel
+            left_offset = left * bytes_per_pixel
+            generator = self.__image_converter(image)
+            for row_offset in range(left_offset + top * image_bytes_per_row,
+                                    left_offset + bottom * image_bytes_per_row,
+                                    image_bytes_per_row):
+                fp.seek(row_offset)
+                fp.write(bytes(islice(generator, segment_bytes_per_row)))
 
-                for image, bounding_box in self.framebuffer.redraw(image):
-                    left, top, right, bottom = bounding_box
-                    segment_bytes_per_row = (right - left) * bytes_per_pixel
-                    left_offset = left * bytes_per_pixel
-                    generator = self.__image_converter(image)
-                    for row_offset in range(left_offset + top * image_bytes_per_row,
-                                            left_offset + bottom * image_bytes_per_row,
-                                            image_bytes_per_row):
-                        mm.seek(row_offset)
-                        mm.write(bytes(islice(generator, segment_bytes_per_row)))
-
-                mm.flush()
+        fp.flush()
