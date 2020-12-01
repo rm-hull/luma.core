@@ -15,6 +15,9 @@ luma.core
 .. image:: https://img.shields.io/pypi/v/luma.core.svg
    :target: https://pypi.org/project/luma.core
 
+.. image:: https://img.shields.io/pypi/dm/luma.core
+   :target: https://pypi.python.org/project/luma.core
+
 .. toctree::
    :maxdepth: 2
 
