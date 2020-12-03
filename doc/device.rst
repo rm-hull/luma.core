@@ -5,3 +5,4 @@
     :undoc-members:
     :show-inheritance:
     :inherited-members:
+    :ignore-module-all:
