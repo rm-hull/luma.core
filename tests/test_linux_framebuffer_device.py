@@ -118,10 +118,10 @@ def test_display_24bpp():
 
 
 def test_unsupported_bit_depth():
-    with patch("builtins.open", multi_mock_open(SCREEN_RES, "32", None)):
+    with patch("builtins.open", multi_mock_open(SCREEN_RES, "19", None)):
         with pytest.raises(AssertionError) as ex:
             linux_framebuffer("/dev/fb4")
-        assert str(ex.value) == 'Unsupported bit-depth: 32'
+        assert str(ex.value) == 'Unsupported bit-depth: 19'
 
 
 def test_cleanup():

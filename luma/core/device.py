@@ -209,12 +209,14 @@ class linux_framebuffer(device):
         (width, height) = self.__config("virtual_size")
         self.bits_per_pixel = next(self.__config("bits_per_pixel"))
         image_converters = {
-            16: self.__toRGB565,
-            24: self.__toBGR if bgr else self.__toRGB,
-            32: self.__toRGBA,
+            (16, False): self.__toRGB565,
+            (24, False): self.__toRGB,
+            (24, True): self.__toBGR,
+            (32, False): self.__toRGBA,
+            (32, True): self.__toBGRA,
         }
-        assert self.bits_per_pixel in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
-        self.__image_converter = image_converters[self.bits_per_pixel]
+        assert (self.bits_per_pixel, bgr) in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
+        self.__image_converter = image_converters[(self.bits_per_pixel, bgr)]
 
         self.framebuffer = framebuffer or diff_to_previous(num_segments=16)
         self.capabilities(width, height, rotate=0, mode="RGB")
@@ -254,11 +256,15 @@ class linux_framebuffer(device):
         return iter(image.tobytes())
 
     def __toBGR(self, image):
-        R, G, B = image.split()
-        return iter(Image.merge("RGB", (B, G, R)).tobytes())
+        r, g, b = image.split()
+        return iter(Image.merge("RGB", (b, g, r)).tobytes())
 
     def __toRGBA(self, image):
         return iter(image.convert("RGBA").tobytes())
+
+    def __toBGRA(self, image):
+        r, g, b = image.split()
+        return iter(Image.merge("RGB", (b, g, r)).convert("RGBA").tobytes())
 
     def cleanup(self):
         super(linux_framebuffer, self).cleanup()
