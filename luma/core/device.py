@@ -6,6 +6,7 @@ import os
 import atexit
 from time import sleep
 from itertools import islice
+from PIL import Image
 
 from luma.core import mixin
 from luma.core.util import bytes_to_nibbles
@@ -252,7 +253,8 @@ class linux_framebuffer(device):
         return iter(image.tobytes())
 
     def __toBGR(self, image):
-        return iter(image[:, :, [2, 1, 0]].tobytes())
+        R, G, B = image.split()
+        return iter(Image.merge("RGB", (B,G,R)).tobytes())
 
     def cleanup(self):
         super(linux_framebuffer, self).cleanup()
