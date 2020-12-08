@@ -196,27 +196,27 @@ class linux_framebuffer(device):
         for more details.
     :param framebuffer: Framebuffer rendering strategy, currently instances of
         ``diff_to_previous`` (default, if not specified) or ``full_frame``.
+    :param bgr: Set to ``True`` if device pixels are BGR order (rather than RGB). Note:
+        this is only supported on 24-bit color depth devices.
 
     .. versionadded:: 2.0.0
     """
 
-    def __init__(self, device=None, framebuffer=None, **kwargs):
+    def __init__(self, device=None, framebuffer=None, bgr=False, **kwargs):
         super(linux_framebuffer, self).__init__(serial_interface=noop())
         self.id = self.__get_display_id(device)
         (width, height) = self.__config("virtual_size")
         self.bits_per_pixel = next(self.__config("bits_per_pixel"))
         image_converters = {
             16: self.__toRGB565,
-            24: self.__toRGB,
+            24: self.__toBGR if bgr else self.__toRGB,
         }
         assert self.bits_per_pixel in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
         self.__image_converter = image_converters[self.bits_per_pixel]
 
         self.framebuffer = framebuffer or diff_to_previous(num_segments=16)
         self.capabilities(width, height, rotate=0, mode="RGB")
-
-        path = f"/dev/fb{self.id}"
-        self.__file_handle = open(path, "wb")
+        self.__file_handle = open(f"/dev/fb{self.id}", "wb")
 
     def __get_display_id(self, device):
         """
@@ -250,6 +250,9 @@ class linux_framebuffer(device):
 
     def __toRGB(self, image):
         return iter(image.tobytes())
+
+    def __toBGR(self, image):
+        return iter(image[:, :, [2, 1, 0]].tobytes())
 
     def cleanup(self):
         super(linux_framebuffer, self).cleanup()
