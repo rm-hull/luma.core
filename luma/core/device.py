@@ -254,7 +254,7 @@ class linux_framebuffer(device):
 
     def __toBGR(self, image):
         R, G, B = image.split()
-        return iter(Image.merge("RGB", (B,G,R)).tobytes())
+        return iter(Image.merge("RGB", (B, G, R)).tobytes())
 
     def cleanup(self):
         super(linux_framebuffer, self).cleanup()
