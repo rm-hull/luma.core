@@ -23,6 +23,14 @@ SCREEN_RES = f"{WIDTH},{HEIGHT}"
 BITS_PER_PIXEL = "24"
 
 
+def swap_red_and_blue(data, step):
+    arr = bytearray(data)
+    for i in range(0, len(arr), step):
+        [red, green, blue] = arr[i: i + 3]
+        arr[i: i + 3] = [blue, green, red]
+    return bytes(arr)
+
+
 def test_display_id_as_dev_fb_number():
     with patch("builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL, None)):
         device = linux_framebuffer("/dev/fb9")
@@ -63,12 +71,22 @@ def test_read_bits_per_pixel():
         )
 
 
-def test_display_16bpp():
-    with open(get_reference_file("fb_16bpp.raw"), "rb") as fp:
+@pytest.mark.parametrize("bits_per_pixel,bgr", [
+    (16, False),
+    (24, False),
+    (24, True),
+    (32, False),
+    (32, True),
+])
+def test_display(bits_per_pixel, bgr):
+    bytes_per_pixel = bits_per_pixel // 8
+    with open(get_reference_file(f"fb_{bits_per_pixel}bpp.raw"), "rb") as fp:
         reference = fp.read()
+        if bgr:
+            reference = swap_red_and_blue(reference, step=bytes_per_pixel)
 
-    with patch("builtins.open", multi_mock_open(SCREEN_RES, "16", None)) as fake_open:
-        device = linux_framebuffer("/dev/fb1", framebuffer=full_frame())
+    with patch("builtins.open", multi_mock_open(SCREEN_RES, str(bits_per_pixel), None)) as fake_open:
+        device = linux_framebuffer("/dev/fb1", framebuffer=full_frame(), bgr=bgr)
 
         fake_open.assert_has_calls([call("/dev/fb1", "wb")])
         fake_open.reset_mock()
@@ -80,39 +98,12 @@ def test_display_16bpp():
             draw.rectangle((64, 32, 128, 64), fill="white")
 
         fake_open.return_value.seek.assert_has_calls([
-            call(n * WIDTH * 2)
+            call(n * WIDTH * bytes_per_pixel)
             for n in range(HEIGHT)
         ])
         fake_open.return_value.write.assert_has_calls([
-            call(reference[n:n + (WIDTH * 2)])
-            for n in range(0, len(reference), WIDTH * 2)
-        ])
-        fake_open.return_value.flush.assert_called_once()
-
-
-def test_display_24bpp():
-    with open(get_reference_file("fb_24bpp.raw"), "rb") as fp:
-        reference = fp.read()
-
-    with patch("builtins.open", multi_mock_open(SCREEN_RES, BITS_PER_PIXEL, None)) as fake_open:
-        device = linux_framebuffer("/dev/fb1", framebuffer=full_frame())
-
-        fake_open.assert_has_calls([call("/dev/fb1", "wb")])
-        fake_open.reset_mock()
-
-        with canvas(device, dither=True) as draw:
-            draw.rectangle((0, 0, 64, 32), fill="red")
-            draw.rectangle((64, 0, 128, 32), fill="yellow")
-            draw.rectangle((0, 32, 64, 64), fill="orange")
-            draw.rectangle((64, 32, 128, 64), fill="white")
-
-        fake_open.return_value.seek.assert_has_calls([
-            call(n * WIDTH * 3)
-            for n in range(HEIGHT)
-        ])
-        fake_open.return_value.write.assert_has_calls([
-            call(reference[n:n + (WIDTH * 3)])
-            for n in range(0, len(reference), WIDTH * 3)
+            call(reference[n:n + (WIDTH * bytes_per_pixel)])
+            for n in range(0, len(reference), WIDTH * bytes_per_pixel)
         ])
         fake_open.return_value.flush.assert_called_once()
 
