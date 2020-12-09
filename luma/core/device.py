@@ -189,7 +189,7 @@ class linux_framebuffer(device):
     leverage kernel-based display drivers.
 
     .. note:
-        Currently only supports 16-bit and 24-bit RGB color depths.
+        Currently only supports 16-bit RGB, 24-bit RGB/BGR and 32-bit RGBA/BGRA color depths.
 
     :param device: the Linux framebuffer device (e.g. `/dev/fb0`). If no device
         is given, the device is determined from the `FRAMEBUFFER` environmental
@@ -198,7 +198,7 @@ class linux_framebuffer(device):
     :param framebuffer: Framebuffer rendering strategy, currently instances of
         ``diff_to_previous`` (default, if not specified) or ``full_frame``.
     :param bgr: Set to ``True`` if device pixels are BGR order (rather than RGB). Note:
-        this is only supported on 24-bit color depth devices.
+        this flag is currently supported on 24 and 32-bit color depth devices only.
 
     .. versionadded:: 2.0.0
     """
