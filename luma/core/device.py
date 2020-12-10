@@ -208,6 +208,10 @@ class linux_framebuffer(device):
         self.id = self.__get_display_id(device)
         (width, height) = self.__config("virtual_size")
         self.bits_per_pixel = next(self.__config("bits_per_pixel"))
+
+        # Lookup table of (target bit-depth, bgr) -> function, where the
+        # function takes an RGB image and converts it into a stream of
+        # bytes for the target bit-depth and RGB/BGR orientation.
         image_converters = {
             (16, False): self.__toRGB565,
             (24, False): self.__toRGB,
@@ -220,6 +224,9 @@ class linux_framebuffer(device):
 
         self.framebuffer = framebuffer or diff_to_previous(num_segments=16)
         self.capabilities(width, height, rotate=0, mode="RGB")
+
+        # This file handle is closed in self.cleanup() (usually invoked
+        # automatically via a registered `atexit` hook)
         self.__file_handle = open(f"/dev/fb{self.id}", "wb")
 
     def __get_display_id(self, device):
