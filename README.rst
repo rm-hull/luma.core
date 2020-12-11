@@ -21,6 +21,9 @@ luma.core
 .. image:: https://img.shields.io/pypi/v/luma.core.svg
    :target: https://pypi.python.org/project/luma.core
 
+.. image:: https://img.shields.io/pypi/dm/luma.core
+   :target: https://pypi.python.org/project/luma.core
+
 .. image:: https://img.shields.io/maintenance/yes/2020.svg?maxAge=2592000
 
 **luma.core** is a component library providing a `Pillow <https://pillow.readthedocs.io/>`_-compatible

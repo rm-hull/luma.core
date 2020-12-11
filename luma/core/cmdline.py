@@ -233,7 +233,9 @@ def create_device(args, display_types=None):
     if args.display in display_types.get('core', []):
         import luma.core.device
         Device = getattr(luma.core.device, args.display)
-        device = Device(device=args.framebuffer_device, **vars(args))
+        framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments, debug=args.debug)
+        params = dict(vars(args), framebuffer=framebuffer)
+        device = Device(device=args.framebuffer_device, **params)
 
     elif args.display in display_types.get('oled', []):
         import luma.oled.device
