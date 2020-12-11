@@ -6,6 +6,7 @@ import os
 import atexit
 from time import sleep
 from itertools import islice
+from PIL import Image
 
 from luma.core import mixin
 from luma.core.util import bytes_to_nibbles
@@ -188,7 +189,7 @@ class linux_framebuffer(device):
     leverage kernel-based display drivers.
 
     .. note:
-        Currently only supports 16-bit and 24-bit RGB color depths.
+        Currently only supports 16-bit RGB, 24-bit RGB/BGR and 32-bit RGBA/BGRA color depths.
 
     :param device: the Linux framebuffer device (e.g. `/dev/fb0`). If no device
         is given, the device is determined from the `FRAMEBUFFER` environmental
@@ -196,27 +197,37 @@ class linux_framebuffer(device):
         for more details.
     :param framebuffer: Framebuffer rendering strategy, currently instances of
         ``diff_to_previous`` (default, if not specified) or ``full_frame``.
+    :param bgr: Set to ``True`` if device pixels are BGR order (rather than RGB). Note:
+        this flag is currently supported on 24 and 32-bit color depth devices only.
 
     .. versionadded:: 2.0.0
     """
 
-    def __init__(self, device=None, framebuffer=None, **kwargs):
+    def __init__(self, device=None, framebuffer=None, bgr=False, **kwargs):
         super(linux_framebuffer, self).__init__(serial_interface=noop())
         self.id = self.__get_display_id(device)
         (width, height) = self.__config("virtual_size")
         self.bits_per_pixel = next(self.__config("bits_per_pixel"))
+
+        # Lookup table of (target bit-depth, bgr) -> function, where the
+        # function takes an RGB image and converts it into a stream of
+        # bytes for the target bit-depth and RGB/BGR orientation.
         image_converters = {
-            16: self.__toRGB565,
-            24: self.__toRGB,
+            (16, False): self.__toRGB565,
+            (24, False): self.__toRGB,
+            (24, True): self.__toBGR,
+            (32, False): self.__toRGBA,
+            (32, True): self.__toBGRA,
         }
-        assert self.bits_per_pixel in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
-        self.__image_converter = image_converters[self.bits_per_pixel]
+        assert (self.bits_per_pixel, bgr) in image_converters, f"Unsupported bit-depth: {self.bits_per_pixel}"
+        self.__image_converter = image_converters[(self.bits_per_pixel, bgr)]
 
         self.framebuffer = framebuffer or diff_to_previous(num_segments=16)
         self.capabilities(width, height, rotate=0, mode="RGB")
 
-        path = f"/dev/fb{self.id}"
-        self.__file_handle = open(path, "wb")
+        # This file handle is closed in self.cleanup() (usually invoked
+        # automatically via a registered `atexit` hook)
+        self.__file_handle = open(f"/dev/fb{self.id}", "wb")
 
     def __get_display_id(self, device):
         """
@@ -250,6 +261,17 @@ class linux_framebuffer(device):
 
     def __toRGB(self, image):
         return iter(image.tobytes())
+
+    def __toBGR(self, image):
+        r, g, b = image.split()
+        return iter(Image.merge("RGB", (b, g, r)).tobytes())
+
+    def __toRGBA(self, image):
+        return iter(image.convert("RGBA").tobytes())
+
+    def __toBGRA(self, image):
+        r, g, b = image.split()
+        return iter(Image.merge("RGB", (b, g, r)).convert("RGBA").tobytes())
 
     def cleanup(self):
         super(linux_framebuffer, self).cleanup()
