@@ -2,8 +2,8 @@
 # Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import time
 from textwrap import TextWrapper
+from time import sleep, perf_counter
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -199,11 +199,11 @@ class snapshot(hotspot):
         """
         Only requests a redraw after ``interval`` seconds have elapsed.
         """
-        return time.monotonic() - self.last_updated > self.interval
+        return perf_counter() - self.last_updated > self.interval
 
     def paste_into(self, image, xy):
         super(snapshot, self).paste_into(image, xy)
-        self.last_updated = time.monotonic()
+        self.last_updated = perf_counter()
 
 
 class terminal(object):
@@ -373,7 +373,7 @@ class terminal(object):
 
         self.flush()
         if self.animate:
-            time.sleep(0.2)
+            sleep(0.2)
 
     def backspace(self):
         """
