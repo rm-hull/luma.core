@@ -22,8 +22,9 @@ charset = ''.join(chr(i) for i in range(256))
 
 
 @pytest.mark.parametrize("fontname",
-                         ["CP437_FONT", "SINCLAIR_FONT", "LCD_FONT",
-                          "UKR_FONT", "TINY_FONT", "SEG7_FONT"])
+                         ["ATARI_FONT", "CP437_FONT", "SINCLAIR_FONT",
+                          "SPECCY_FONT", "LCD_FONT", "UKR_FONT", "TINY_FONT",
+                          "SEG7_FONT"])
 def test_font(fontname):
     font = getattr(luma.core.legacy.font, fontname)
     w, h = textsize(charset, proportional(font))
