@@ -25,7 +25,7 @@ Fixed-width font definitions. The following fonts are available:
 |                   | Spectrum.  Only contains characters 0x20-0x7E   |                                                                                                |
 |                   | inclusive; all others will appear as blanks.    |                                                                                                |
 +-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
-| ``SPECCY_FONT``   | Another font based on the character set from    | http://www.kreativekorp.com/software/fonts/index.shtml                                         |
+| ``SPECCY_FONT``   | Another font based on the character set from    | https://www.kreativekorp.com/software/fonts/index.shtml                                         |
 |                   | the ZXSpectrum.                                 |                                                                                                |
 +-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
 | ``TINY_FONT``     | Only contains characters 0x20-0x7E inclusive;   | https://www.dafont.com/tiny.font                                                               |
@@ -1675,7 +1675,7 @@ SEG7_FONT = [
 
 #: Bit patterns for SPECCY_FONT
 #: (another font based on the character set from the ZX Spectrum).
-#: Source: http://www.kreativekorp.com/software/fonts/index.shtml,
+#: Source: https://www.kreativekorp.com/software/fonts/index.shtml,
 #: transposed by Tiago F. Pimentel (antropoiese).
 #:
 SPECCY_FONT = [
