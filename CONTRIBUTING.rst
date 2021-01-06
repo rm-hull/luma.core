@@ -34,3 +34,4 @@ Contributors
 * Dhrone (@dhrone)
 * @jakiee3y
 * Matthew Lovell (@mattblovell)
+* Tiago F. Pimentel (@antropoiese)
