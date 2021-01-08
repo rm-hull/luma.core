@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2021 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 # luma.core documentation build configuration file, created by
@@ -95,6 +95,9 @@ language = None
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# ignore known broken links
+linkcheck_ignore = [r'http://gnu.ethz.ch/']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
