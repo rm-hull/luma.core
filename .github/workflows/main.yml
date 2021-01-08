@@ -40,17 +40,22 @@ jobs:
         env:
           TOX_ENV: qa,doc
         run: python -m tox -e $TOX_ENV
-      - name: Coveralls
-        uses: AndreMiras/coveralls-python-action@develop
-        with:
-          parallel: true
-          flag-name: Unit Test
+      - name: Upload Coverage
+        run: coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
+          COVERALLS_PARALLEL: true
 
-    coveralls_finish:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Coveralls Finished
-          uses: AndreMiras/coveralls-python-action@develop
-          with:
-            parallel-finished: true
+  coveralls:
+    name: Finish Coveralls
+    needs: build
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+    - name: Finished
+      run: |
+        pip3 install --upgrade coveralls
+        coveralls --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
