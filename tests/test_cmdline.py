@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2021 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -88,8 +88,18 @@ def test_get_library_version():
     luma_fake_lib = Mock()
     luma_fake_lib.__version__ = lib_version
 
+    # version is found
     with patch.dict('sys.modules', {'luma.' + lib_name: luma_fake_lib}):
         assert cmdline.get_library_version(lib_name) == lib_version
+
+    # no version for module without __version__ attribute
+    lib_name = 'no_version'
+    luma_without_version_lib = Mock()
+    with patch.dict('sys.modules', {'luma.' + lib_name: luma_without_version_lib}):
+        assert cmdline.get_library_version(lib_name) is None
+
+    # no version for non-existing module
+    assert cmdline.get_library_version('foo') is None
 
 
 def test_get_library_for_display_type():
@@ -142,6 +152,17 @@ def test_create_parser():
             assert args.config == test_config_file
 
 
+def test_make_interface_noop():
+    """
+    :py:func:`luma.core.cmdline.make_interface.noop` returns an ``noop` instance.
+    """
+    class opts:
+        interface = 'noop'
+
+    factory = cmdline.make_interface(opts)
+    assert 'luma.core.interface.serial.noop' in repr(factory.noop())
+
+
 def test_make_interface_i2c():
     """
     :py:func:`luma.core.cmdline.make_interface.i2c` returns an I2C instance.
@@ -166,6 +187,26 @@ def test_make_interface_spi():
     try:
         factory = cmdline.make_interface(test_spi_opts)
         assert 'luma.core.interface.serial.spi' in repr(factory.spi())
+    except ImportError:
+        # non-rpi platform, e.g. macos
+        pytest.skip(rpi_gpio_missing)
+    except error.UnsupportedPlatform as e:
+        # non-rpi platform, e.g. ubuntu 64-bit
+        skip_unsupported_platform(e)
+
+
+def test_make_interface_gpio_cs_spi():
+    """
+    :py:func:`luma.core.cmdline.make_interface.gpio_cs_spi` returns an gpio_cs_spi instance.
+    """
+    class opts(test_spi_opts):
+        interface = 'gpio_cs_spi'
+        spi_cs_high = True
+        gpio_chip_select = 4
+
+    try:
+        factory = cmdline.make_interface(opts)
+        assert 'luma.core.interface.serial.spi' in repr(factory.gpio_cs_spi())
     except ImportError:
         # non-rpi platform, e.g. macos
         pytest.skip(rpi_gpio_missing)
