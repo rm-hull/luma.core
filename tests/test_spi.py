@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2021 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -101,3 +101,12 @@ def test_unsupported_gpio_platform():
         assert str(ex) == 'GPIO access not available'
     except ImportError:
         pytest.skip(rpi_gpio_missing)
+
+
+def test_cs_high_ignored():
+    with pytest.warns(RuntimeWarning) as record:
+        spi(gpio=gpio, spi=spidev, port=9, device=1, cs_high=True)
+
+    assert len(record) == 1
+    assert record[0].message.args[0] == "SPI cs_high is no longer supported in " \
+        "kernel 5.4.51 and beyond, so setting parameter cs_high is now ignored!"

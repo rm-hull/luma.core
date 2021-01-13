@@ -97,7 +97,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # ignore known broken links
-linkcheck_ignore = [r'http://gnu.ethz.ch/']
+linkcheck_ignore = [r'http://gnu.ethz.ch/', r'http://www.avrfreaks.net/']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -150,7 +150,7 @@ html_theme = 'default'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = 'luma.oled'
+# html_title = 'luma.core'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
