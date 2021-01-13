@@ -14,8 +14,8 @@ Fixed-width font definitions. The following fonts are available:
 | ``CP437_FONT``    | See https://en.wikipedia.org/wiki/Code_page_437 | *unascribed*                                                                                   |
 |                   | for further details.                            |                                                                                                |
 +-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
-| ``LCD_FONT``      | Only contains characters 0x20-0x7F inclusive    | http://www.avrfreaks.net/forum/code-57-512-and-712-fonts?name=PNphpBB2&file=viewtopic&t=69880 |
-|                   | and Cyrillic chars 0x80-0xBF (except 'Ёё');     |                                                                                               |
+| ``LCD_FONT``      | Only contains characters 0x20-0x7F inclusive    | http://www.avrfreaks.net/forum/code-57-512-and-712-fonts?name=PNphpBB2&file=viewtopic&t=69880  |
+|                   | and Cyrillic chars 0x80-0xBF (except 'Ёё');     |                                                                                                |
 |                   | all others will appear as blanks.               |                                                                                                |
 +-------------------+-------------------------------------------------+------------------------------------------------------------------------------------------------+
 | ``SEG7_FONT``     | Only contains characters 0x41-0x5A & 0x30-0x39  | https://www.dafont.com/digital-7.font                                                          |
