@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2021 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import atexit
@@ -256,7 +256,7 @@ def create_device(args, display_types=None):
         try:
             import luma.lcd.aux
             luma.lcd.aux.backlight(**backlight_params).enable(True)
-        except ImportError:
+        except ImportError:  # pragma: no cover
             pass
 
     elif args.display in display_types.get('led_matrix', []):

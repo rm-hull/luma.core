@@ -22,6 +22,7 @@ def test_mutablestring():
     assert f == 'b2r'
     assert repr(f) == repr('b2r')
     assert len(f) == 3
+    assert hash(f) is not None
 
 
 def test_mutablestring_unicode():
