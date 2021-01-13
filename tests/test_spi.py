@@ -103,12 +103,10 @@ def test_unsupported_gpio_platform():
         pytest.skip(rpi_gpio_missing)
 
 
-def test_foo():
+def test_cs_high_ignored():
     with pytest.warns(RuntimeWarning) as record:
         spi(gpio=gpio, spi=spidev, port=9, device=1, cs_high=True)
 
-    # check that only one warning was raised
     assert len(record) == 1
-    # check that the message matches
     assert record[0].message.args[0] == "SPI cs_high is no longer supported in " \
         "kernel 5.4.51 and beyond, so setting parameter cs_high is now ignored!"
