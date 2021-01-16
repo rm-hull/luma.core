@@ -39,7 +39,7 @@ jobs:
       - name: QA
         env:
           TOX_ENV: qa,doc
-        run: python -m tox -e $TOX_ENV
+        run: python -m tox -r -e $TOX_ENV
       - name: Coveralls
         run: coveralls --service=github
         env:
