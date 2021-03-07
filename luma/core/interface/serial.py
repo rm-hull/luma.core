@@ -250,7 +250,9 @@ class bitbang(object):
         Clean up GPIO resources if managed.
         """
         if self._managed:
-            self._gpio.cleanup()
+            for pin in [self._SCLK, self._SDA, self._CE, self._DC, self._RST]:
+                if pin is not None:
+                    self._gpio.cleanup(pin)
 
 
 @lib.spidev
