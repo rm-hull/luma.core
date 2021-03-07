@@ -83,7 +83,8 @@ def test_cleanup():
     serial.cleanup()
     verify_spi_init(9, 1)
     spidev.close.assert_called_once_with()
-    gpio.cleanup.assert_called_once_with()
+    # spi sets default DC=24 and RST=25, so it needs to clean them
+    gpio.cleanup.assert_has_calls([call(24), call(25)])
 
 
 def test_init_device_not_found():

@@ -56,7 +56,14 @@ def test_cleanup():
     serial = bitbang(gpio=gpio)
     serial._managed = True
     serial.cleanup()
-    gpio.cleanup.assert_called_once_with()
+    gpio.cleanup.assert_not_called()
+
+
+def test_cleanup_custom_pins():
+    serial = bitbang(gpio=gpio, SCLK=13, SDA=14, CE=15, DC=16, RST=17)
+    serial._managed = True
+    serial.cleanup()
+    gpio.cleanup.assert_has_calls([call(pin) for pin in [13, 14, 15, 16, 17]])
 
 
 def test_unsupported_gpio_platform():

@@ -72,3 +72,4 @@ def test_cleanup(mock_controller):
     serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, gpio_CS=3, gpio_DC=5, gpio_RST=6)
     serial.cleanup()
     instance.terminate.assert_called_once_with()
+    gpio.cleanup.assert_has_calls([call(3), call(5), call(6)])
