@@ -361,6 +361,14 @@ class gpio_cs_spi(spi):
         if self._gpio_CS:
             self._gpio.output(self._gpio_CS, self._gpio.LOW if self._cs_high else self._gpio.HIGH)
 
+    def cleanup(self):
+        """
+        Close pin if it was set up.
+        """
+        if self._gpio_CS is not None:
+            self._gpio.cleanup(self._gpio_CS)
+        super(gpio_cs_spi, self).cleanup()
+
 
 class noop(object):
     """
