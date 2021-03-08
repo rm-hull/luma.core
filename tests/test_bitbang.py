@@ -13,7 +13,7 @@ import luma.core.error
 
 import pytest
 
-from helpers import rpi_gpio_missing
+from helpers import rpi_gpio_missing, assert_only_cleans_whats_setup
 
 
 gpio = Mock(unsafe=True)
@@ -56,7 +56,14 @@ def test_cleanup():
     serial = bitbang(gpio=gpio)
     serial._managed = True
     serial.cleanup()
-    gpio.cleanup.assert_called_once_with()
+    assert_only_cleans_whats_setup(gpio)
+
+
+def test_cleanup_custom_pins():
+    serial = bitbang(gpio=gpio, SCLK=13, SDA=14, CE=15, DC=16, RST=17)
+    serial._managed = True
+    serial.cleanup()
+    assert_only_cleans_whats_setup(gpio)
 
 
 def test_unsupported_gpio_platform():

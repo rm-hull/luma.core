@@ -35,3 +35,4 @@ Contributors
 * @jakiee3y
 * Matthew Lovell (@mattblovell)
 * Tiago F. Pimentel (@antropoiese)
+* Maciej Sokolowski (@matemaciek)

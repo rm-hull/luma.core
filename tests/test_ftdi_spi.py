@@ -9,7 +9,7 @@ Tests for the :py:class:`luma.core.interface.serial.ftdi_spi` class.
 
 from unittest.mock import Mock, call, patch
 from luma.core.interface.serial import ftdi_spi
-from helpers import fib
+from helpers import fib, assert_only_cleans_whats_setup
 
 
 @patch('pyftdi.spi.SpiController')
@@ -72,3 +72,4 @@ def test_cleanup(mock_controller):
     serial = ftdi_spi(device='ftdi://dummy', bus_speed_hz=16000000, gpio_CS=3, gpio_DC=5, gpio_RST=6)
     serial.cleanup()
     instance.terminate.assert_called_once_with()
+    assert_only_cleans_whats_setup(gpio)

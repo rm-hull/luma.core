@@ -111,3 +111,17 @@ def multi_mock_open(*file_contents):
 
 def skip_unsupported_platform(err):
     pytest.skip(f'{type(err).__name__} ({str(err)})')
+
+
+def _positional_args_list(mock):
+    return [call[0] for call in mock.call_args_list]
+
+
+def assert_only_cleans_whats_setup(gpio):
+    setups = _positional_args_list(gpio.setup)
+    cleanups = _positional_args_list(gpio.cleanup)
+    for cleanup in cleanups:
+        assert len(cleanup) > 0, 'calling gpio.cleanup without specifying pins cleans all pins'
+    pins_set_up = {args[0] for args in setups}
+    pins_clean = {args[0] for args in setups}
+    assert pins_clean == pins_set_up, 'set pins {} but cleaned pins {}'.format(pins_set_up, pins_clean)

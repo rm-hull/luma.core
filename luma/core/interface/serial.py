@@ -250,7 +250,7 @@ class bitbang(object):
         Clean up GPIO resources if managed.
         """
         if self._managed:
-            self._gpio.cleanup()
+            self._gpio.cleanup([pin for pin in [self._SCLK, self._SDA, self._CE, self._DC, self._RST] if pin is not None])
 
 
 @lib.spidev
@@ -359,6 +359,14 @@ class gpio_cs_spi(spi):
         if self._gpio_CS:
             self._gpio.output(self._gpio_CS, self._gpio.LOW if self._cs_high else self._gpio.HIGH)
 
+    def cleanup(self):
+        """
+        Close pin if it was set up.
+        """
+        if self._gpio_CS is not None:
+            self._gpio.cleanup(self._gpio_CS)
+        super(gpio_cs_spi, self).cleanup()
+
 
 class noop(object):
     """
@@ -418,7 +426,7 @@ class __FTDI_WRAPPER_GPIO:
 
         self._gpio.write(self._data)
 
-    def cleanup(self):
+    def cleanup(self, pin):
         pass
 
 
