@@ -13,7 +13,7 @@ from unittest.mock import Mock, call
 from luma.core.interface.serial import spi
 import luma.core.error
 
-from helpers import get_spidev, rpi_gpio_missing, fib
+from helpers import get_spidev, rpi_gpio_missing, fib, assert_only_cleans_whats_setup
 
 
 spidev = Mock(unsafe=True)
@@ -83,8 +83,7 @@ def test_cleanup():
     serial.cleanup()
     verify_spi_init(9, 1)
     spidev.close.assert_called_once_with()
-    # spi sets default DC=24 and RST=25, so it needs to clean them
-    gpio.cleanup.assert_has_calls([call(24), call(25)])
+    assert_only_cleans_whats_setup(gpio)
 
 
 def test_init_device_not_found():

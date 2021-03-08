@@ -113,4 +113,4 @@ class bitbang_6800(object):
         Clean up GPIO resources if managed.
         """
         if self._managed:
-            self._gpio.cleanup()
+            self._gpio.cleanup([self._RS, self._E, *self._PINS])
