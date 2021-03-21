@@ -234,7 +234,7 @@ def test_load_sprite_table_exceptions_1():
     with pytest.raises(FileNotFoundError) as ex:
         filename = 'badfile'
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
-    assert str(ex.value) == f'[Errno 2] No such file or directory: \'{filename}\''
+    assert ex.value.filename == filename
 
 
 def test_load_sprite_table_exceptions_2():
