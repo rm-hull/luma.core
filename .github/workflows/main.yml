@@ -37,6 +37,7 @@ jobs:
           TOX_ENV: py3${{ matrix.python-minor-version }}
         run: |
           python_env=echo "$TOX_ENV" | sed -e s/-dev$//
+          echo $python_env
           python -m tox -e ${python_env}
       - name: QA
         env:
