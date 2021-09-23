@@ -36,3 +36,4 @@ Contributors
 * Matthew Lovell (@mattblovell)
 * Tiago F. Pimentel (@antropoiese)
 * Maciej Sokolowski (@matemaciek)
+* Jason Kingsbury (@relvacode)

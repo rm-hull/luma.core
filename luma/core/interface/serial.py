@@ -49,7 +49,6 @@ class i2c(object):
           that it has already been opened.
     """
     def __init__(self, bus=None, port=1, address=0x3C):
-        import smbus2
         self._cmd_mode = 0x00
         self._data_mode = 0x40
 
@@ -60,9 +59,16 @@ class i2c(object):
                 f'I2C device address invalid: {address}')
 
         try:
-            self._managed = bus is None
-            self._i2c_msg_write = smbus2.i2c_msg.write if bus is None else None
-            self._bus = bus or smbus2.SMBus(port)
+            if bus is None:
+                import smbus2
+
+                self._managed = True
+                self._i2c_msg_write = smbus2.i2c_msg.write
+                self._bus = smbus2.SMBus(port)
+            else:
+                self._managed = False
+                self._i2c_msg_write = None
+                self._bus = bus
         except (IOError, OSError) as e:
             if e.errno == errno.ENOENT:
                 # FileNotFoundError
