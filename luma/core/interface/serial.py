@@ -14,7 +14,7 @@ import luma.core.error
 from luma.core import lib
 
 
-__all__ = ["i2c", "noop", "spi", "gpio_cs_spi", "bitbang", "ftdi_spi", "ftdi_i2c", "pcf8574"]
+__all__ = ["i2c", "noop", "spi", "gpio_cs_spi", "bitbang", "ftdi_spi", "ftdi_i2c", "pcf8574", "pca9555"]
 
 #: Default amount of time to wait for a pulse to complete if the device the
 #: interface is connected to requires a pin to be 'pulsed' from low to high
@@ -715,6 +715,198 @@ class pcf8574(i2c):
     def _compute_pins(self, value):
         """
         Set bits in value according to the assigned pin positions on the PCF8574.
+        """
+        retv = 0
+        for i in range(self._datalines):
+            retv |= ((value >> i) & 0x01) << self._PINS[i]
+        return retv
+
+    def _write(self, data, mode):
+        try:
+            for value in data:
+                self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))
+                self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value) | self._enable)
+                sleep(self._pulse_time)
+                self._bus.write_byte(self._addr, self._backlight_enabled | mode | self._compute_pins(value))
+        except (IOError, OSError) as e:
+            if e.errno in [errno.EREMOTEIO, errno.EIO]:
+                # I/O error
+                raise luma.core.error.DeviceNotFoundError(
+                    'I2C device not found on address: 0x{0:02X}'.format(self._addr))
+            else:  # pragma: no cover
+                raise
+                
+class pca9555(i2c):
+    """
+    I²C interface to provide :py:func:`data` and :py:func:`command` methods
+    for a device using a pca95554 backpack.
+
+    :param bus: A *smbus* implementation, if ``None`` is supplied (default),
+        `smbus2 <https://pypi.org/project/smbus2>`_ is used.
+        Typically this is overridden in tests, or if there is a specific
+        reason why `pysmbus <https://pypi.org/project/pysmbus>`_ must be used
+        over smbus2.
+    :type bus:
+    :param port: I²C port number, usually 0 or 1 (default).
+    :type port: int
+    :param address: I²C address, default: ``0x3C``.
+    :type address: int
+    :param pulse_time: length of time in seconds that the enable line should be
+        held high during a data or command transfer (default: 50μs)
+    :type pulse_time: float
+    :param backlight_enabled: Determines whether to activate the display's backlight
+    :type backlight_enabled: bool
+    :param RS: where register/select is connected to the backpack (default: 0)
+    :type RS: int
+    :param E: where enable pin is connected to the backpack (default: 2)
+    :type E: int
+    :param PINS: The pca95554 pins that form the data bus in LSD to MSD order
+    :type PINS: list[int]
+    :param BACKLIGHT: Pin number of the pca95554 (counting from zero) that the
+        backlight is controlled from (default: 3)
+    :type BACKLIGHT: int
+    :param COMMAND: determines whether RS high sets device to expect a command
+        byte or a data byte.  Must be either ``high`` (default) or ``low``
+    :type COMMAND: str
+
+    :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
+    :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
+    :raises luma.core.error.DevicePermissionError: Permission to access I2C device
+        denied.
+
+    .. note::
+       1. Only one of ``bus`` OR ``port`` arguments should be supplied;
+          if both are, then ``bus`` takes precedence.
+       2. If ``bus`` is provided, there is an implicit expectation
+          that it has already been opened.
+       3. Default wiring:
+
+       * RS - Register Select
+       * E - Enable
+       * RW - Read/Write (note: unused by this driver)
+       * D4-D7 - The upper data pins
+
+       ========= === === === === === === === =========
+       Device     RS  RW   E  D4  D5  D6  D7 BACKLIGHT
+       Display     4   5   6  11  12  13  14
+       Backpack   P0  P1  P2  P4  P5  P6  P7        P3
+       ========= === === === === === === === =========
+
+       If your pca9555 is wired up differently to this you will need to provide
+       the correct values for the RS, E, COMMAND, BACKLIGHT parameters.
+       RS, E and BACKLIGHT are set to the pin numbers of the backpack pins
+       they are connect to from P0-P7.
+
+       COMMAND is set to 'high' if the Register Select (RS) pin needs to be high
+       to inform the device that a command byte is being sent or 'low' if RS low
+       is used for commands.
+
+       PINS is a list of the pin positions that match where the devices data
+       pins have been connected on the backpack (P0-P7).  For many devices this
+       will be d4->P4, d5->P5, d6->P6, and d7->P7 ([4, 5, 6, 7]) which is the
+       default.
+
+       Example:
+
+       If your data lines D4-D7 are connected to the pca95554s pins P0-P3 with
+       the RS pin connected to P4, the enable pin to P5, the backlight pin
+       connected to P7, and the RS value to indicate command is low, your
+       initialization would look something like:
+
+       ``pca9555(port=1, address=0x27, PINS=[0, 1, 2, 3], RS=4, E=5,
+       COMMAND='low', BACKLIGHT=7)``
+
+       Explanation:
+       PINS are set to ``[0, 1, 2, 3]`` which assigns P0 to D4, P1 to D5, P2 to D6,
+       and P3 to D7.  RS is set to 4 to associate with P4. Similarly E is set
+       to 5 to associate E with P5.  BACKLIGHT set to 7 connects it to pin P7
+       of the backpack.  COMMAND is set to ``low`` so that RS will be set to low
+       when a command is sent and high when data is sent.
+
+    .. versionadded:: 1.15.0
+    """
+
+    _BACKLIGHT = 17
+    _ENABLE = 16
+    _RS = 13
+    _OFFSET = 4
+    _CMD = 'low'
+
+    def __init__(self, pulse_time=PULSE_TIME, backlight_enabled=True, *args, **kwargs):
+        super(pca95554, self).__init__(*args, **kwargs)
+
+        self._pulse_time = pulse_time
+        self._bitmode = 4  # pca95554 can only be used to transfer 4 bits at a time
+
+        self._PINS = kwargs.get('PINS', list((6, 7, 8, 10)))
+        self._datalines = len(self._PINS)
+        assert self._datalines == 4, f'You\'ve provided {len(self._PINS)} data pins but the pca95554 only supports four'
+
+        self._rs = self._mask(kwargs.get("RS", self._RS))
+        self._cmd = 0xFF if kwargs.get("COMMAND", self._CMD).lower() == 'high' else 0x00
+        self._data = 0x00 if self._cmd else 0xFF
+        self._cmd_mode = self._rs & self._cmd
+        self._data_mode = self._rs & self._data
+        self._enable = self._mask(kwargs.get("ENABLE", self._ENABLE))
+        self._backlight_enabled = self._mask(kwargs.get("BACKLIGHT", self._BACKLIGHT)) if backlight_enabled else 0x00
+
+    def command(self, *cmd):
+        """
+        Sends a command or sequence of commands through to the I²C address
+        - maximum allowed is 32 bytes in one go.
+
+        :param cmd: A spread of commands in high_bits, low_bits order.
+        :type cmd: int
+        :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
+
+        IMPORTANT: the pca9555 only supports four bit transfers.  It is the
+        devices responsibility to break each byte sent into a high bit
+        and a low bit transfer.
+
+        Example:
+            To set an HD44780s cursor to the beginning of the first line requires
+            sending 0b10000000 (0x80).  This is 0b1000 (0x08) at the high side of
+            the byte and 0b0000 (0x00) on the low side of the byte.
+
+            For example, to send this using the pca9555 interface::
+
+              d = pca9555(bus=1, address=0x27)
+              d.command([0x08, 0x00])
+        """
+        self._write(list(cmd), self._cmd_mode)
+
+    def data(self, data):
+        """
+        Sends a data byte or sequence of data bytes to the I²C address.
+
+        :param data: A data sequence.
+        :type data: list, bytearray
+
+        IMPORTANT: the pca9555 only supports four bit transfers.  It is the
+        devices responsibility to break each byte sent into a high bit
+        and a low bit transfer.
+
+        Example:
+            To send an ascii 'A' (0x41) to the display you need to send binary
+            01000001.  This is 0100 (0x40) at the high side of the byte
+            and 0001 (0x01) on the low side of the byte.
+
+            For example, to send this using the pca9555 interface::
+
+              d = pca9555(bus=1, address=0x27)
+              d.command([0x04, 0x01])
+        """
+        self._write(data, self._data_mode)
+
+    def _mask(self, pin):
+        """
+        Return a mask that contains a 1 in the pin position.
+        """
+        return 1 << pin
+
+    def _compute_pins(self, value):
+        """
+        Set bits in value according to the assigned pin positions on the pca9555.
         """
         retv = 0
         for i in range(self._datalines):
