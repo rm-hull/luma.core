@@ -24,7 +24,7 @@ luma.core
 .. image:: https://img.shields.io/pypi/dm/luma.core
    :target: https://pypi.python.org/project/luma.core
 
-.. image:: https://img.shields.io/maintenance/yes/2021.svg?maxAge=2592000
+.. image:: https://img.shields.io/maintenance/yes/2022.svg?maxAge=2592000
 
 **luma.core** is a component library providing a `Pillow <https://pillow.readthedocs.io/>`_-compatible
 drawing canvas for Python 3, and other functionality to support drawing primitives and
@@ -79,7 +79,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017-2021 Richard Hull and contributors
+Copyright (c) 2017-2022 Richard Hull and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

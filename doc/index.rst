@@ -7,7 +7,7 @@ luma.core
 .. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
    :target: https://coveralls.io/github/rm-hull/luma.core?branch=master
 
-.. image:: https://img.shields.io/maintenance/yes/2021.svg?maxAge=2592000
+.. image:: https://img.shields.io/maintenance/yes/2022.svg?maxAge=2592000
 
 .. image:: https://img.shields.io/pypi/pyversions/luma.core.svg
     :target: https://pypi.org/project/luma.core
