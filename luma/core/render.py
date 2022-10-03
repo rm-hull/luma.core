@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 from PIL import Image, ImageDraw
@@ -24,7 +24,7 @@ class canvas(object):
         if background is None:
             self.image = Image.new("RGB" if dither else device.mode, device.size)
         else:
-            assert(background.size == device.size)
+            assert background.size == device.size
             self.image = background.copy()
         self.device = device
         self.dither = dither
