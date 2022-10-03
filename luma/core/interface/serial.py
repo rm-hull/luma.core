@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2021 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -90,7 +90,7 @@ class i2c(object):
         :type cmd: int
         :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
         """
-        assert(len(cmd) <= 32)
+        assert len(cmd) <= 32
 
         try:
             self._bus.write_i2c_block_data(self._addr, self._cmd_mode,
@@ -300,7 +300,7 @@ class spi(bitbang):
                  bus_speed_hz=8000000, transfer_size=4096,
                  gpio_DC=24, gpio_RST=25, spi_mode=None,
                  reset_hold_time=0, reset_release_time=0, **kwargs):
-        assert(bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 20, 24, 28, 32, 36, 40, 44, 48, 50, 52]])
+        assert bus_speed_hz in [mhz * 1000000 for mhz in [0.5, 1, 2, 4, 8, 16, 20, 24, 28, 32, 36, 40, 44, 48, 50, 52]]
 
         bitbang.__init__(self, gpio, transfer_size, reset_hold_time, reset_release_time, DC=gpio_DC, RST=gpio_RST)
 

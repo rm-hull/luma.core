@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -77,8 +77,8 @@ class spritesheet(object):
         self.image = self.image.crop((regX, regY, self.image.width - regX, self.image.height - regY))
         self.width, self.height = self.image.size
 
-        assert(self.width % self.frames.width == 0)
-        assert(self.height % self.frames.height == 0)
+        assert self.width % self.frames.width == 0
+        assert self.height % self.frames.height == 0
 
         self.frames.size = (self.frames.width, self.frames.height)
         if not hasattr(self.frames, 'count'):

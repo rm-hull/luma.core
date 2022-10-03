@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 from textwrap import TextWrapper
@@ -64,8 +64,8 @@ class viewport(mixin.capabilities):
         self._dither = dither
 
     def display(self, image):
-        assert(image.mode == self.mode)
-        assert(image.size == self.size)
+        assert image.mode == self.mode
+        assert image.size == self.size
 
         self._backing_image.paste(image)
         self.refresh()
@@ -81,8 +81,8 @@ class viewport(mixin.capabilities):
         raised.
         """
         (x, y) = xy
-        assert(0 <= x <= self.width - hotspot.width)
-        assert(0 <= y <= self.height - hotspot.height)
+        assert 0 <= x <= self.width - hotspot.width
+        assert 0 <= y <= self.height - hotspot.height
 
         # TODO: should it check to see whether hotspots overlap each other?
         # Is sensible to _allow_ them to overlap?
@@ -132,8 +132,8 @@ class viewport(mixin.capabilities):
         right = left + self._device.width
         bottom = top + self._device.height
 
-        assert(0 <= left <= right <= self.width)
-        assert(0 <= top <= bottom <= self.height)
+        assert 0 <= left <= right <= self.width
+        assert 0 <= top <= bottom <= self.height
 
         return (left, top, right, bottom)
 
@@ -473,7 +473,7 @@ class history(mixin.capabilities):
         :param drop:
         :type drop: int
         """
-        assert(drop >= 0)
+        assert drop >= 0
         while drop > 0:
             self._savepoints.pop()
             drop -= 1

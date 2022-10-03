@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -30,7 +30,7 @@ class ComposableImage(object):
             from which it should be drawn.
         :type offset: tuple
         """
-        assert(image)
+        assert image
         self._image = image
         self._position = position
         self._offset = offset
@@ -104,8 +104,8 @@ class ComposableImage(object):
             by ``size``.
         :rtype: PIL.Image.Image
         """
-        assert(size[0])
-        assert(size[1])
+        assert size[0]
+        assert size[1]
         return self._image.crop(box=self._crop_box(size))
 
     def _crop_box(self, size):
@@ -147,7 +147,7 @@ class ImageComposition(object):
         :param image: The image to add.
         :type image: PIL.Image.Image
         """
-        assert(image)
+        assert image
         self.composed_images.append(image)
 
     def remove_image(self, image):
@@ -157,7 +157,7 @@ class ImageComposition(object):
         :param image: The image to be removed.
         :type image: PIL.Image.Image
         """
-        assert(image)
+        assert image
         self.composed_images.remove(image)
 
     def __call__(self):

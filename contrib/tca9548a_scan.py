@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -16,7 +16,7 @@ TCA_ADDR = 0x70
 
 
 def mux_select(bus, tca_port):
-    assert(0 <= tca_port <= 7)
+    assert 0 <= tca_port <= 7
     bus.write_byte(TCA_ADDR, 1 << tca_port)
 
 
