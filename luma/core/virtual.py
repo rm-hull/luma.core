@@ -2,15 +2,15 @@
 # Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+from time import sleep
 from textwrap import TextWrapper
-from time import sleep, perf_counter
 
 from PIL import Image, ImageDraw, ImageFont
 
 from luma.core import mixin, ansi_color
 from luma.core.threadpool import threadpool
 from luma.core.render import canvas
-from luma.core.util import mutable_string, observable
+from luma.core.util import mutable_string, observable, perf_counter
 
 
 pool = threadpool(4)

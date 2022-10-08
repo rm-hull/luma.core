@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014-2020 Richard Hull and contributors
+# Copyright (c) 2014-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
 Tests for the :py:class:`luma.core.sprite_system.framerate_regulator` class.
 """
 
-from time import perf_counter
+from luma.core.util import perf_counter
 from luma.core.sprite_system import framerate_regulator
 
 

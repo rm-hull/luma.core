@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-20 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import sys
+from time import perf_counter_ns
+
+
 if sys.version_info.major == 3:
     unicode = str
 
@@ -148,3 +151,16 @@ def bytes_to_nibbles(data):
     .. versionadded:: 1.16.0
     """
     return [f(x) for x in data for f in (lambda x: x >> 4, lambda x: 0x0F & x)]
+
+
+def perf_counter():
+    """
+    :py:func:`time.perf_counter_ns` in seconds
+
+    :return: the value (in fractional seconds) of a performance counter
+    :rtype: float
+ 
+    .. versionadded:: 2.4.0
+    """
+    return perf_counter_ns() / 1e9
+ 
