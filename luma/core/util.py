@@ -159,8 +159,7 @@ def perf_counter():
 
     :return: the value (in fractional seconds) of a performance counter
     :rtype: float
- 
+
     .. versionadded:: 2.4.0
     """
     return perf_counter_ns() / 1e9
- 
