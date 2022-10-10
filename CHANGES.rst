@@ -5,8 +5,10 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | **2.4.0**  | * Drop support for Python 3.6                                       | TBD        |
+|            | * Add support for variable-width GPIO ports on FT23xx chips         |            |
 |            | * Use time.perf_counter_ns() to avoid loss of precision             |            |
 |            | * Remove cmdline.make_serial (deprecated since 1.17.1)              |            |
+|            | * Pillow 9.2.0 or newer is required now                             |            |
 +------------+---------------------------------------------------------------------+------------+
 | **2.3.2**  | * Only import smbus2 if no bus is provided                          | 2021/09/25 |
 +------------+---------------------------------------------------------------------+------------+
