@@ -223,8 +223,7 @@ class terminal(object):
 
         self._cw, self._ch = (0, 0)
         for i in range(32, 128):
-            left, top, right, bottom = self.font.getbbox(chr(i))
-            w, h = right - left, bottom - top
+            left, top, w, h = self.font.getbbox(chr(i))
             self._cw = max(w, self._cw)
             self._ch = max(h, self._ch)
 
@@ -325,8 +324,7 @@ class terminal(object):
             self.tab()
 
         else:
-            left, top, right, bottom = self.font.getbbox(char)
-            w = right - left
+            left, top, w, h = self.font.getbbox(char)
             if self._cx + w >= self._device.width:
                 self.newline()
 
@@ -606,7 +604,7 @@ class character(object):
 
     def _flush(self, buf):
         # Replace any characters that are not in the font with the undefined character
-        buf = ''.join([i if i == '\n' or self.font.getsize(i)[0] > 0 else self._undefined for i in buf])
+        buf = ''.join([i if i == '\n' or self.font.getlength(i) > 0 else self._undefined for i in buf])
 
         # Draw text onto display's image using the provided font
         with canvas(self.device) as draw:
