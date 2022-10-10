@@ -325,7 +325,8 @@ class terminal(object):
             self.tab()
 
         else:
-            w = self.font.getsize(char)[0]
+            left, top, right, bottom = self.font.getbbox(char)
+            w = right - left
             if self._cx + w >= self._device.width:
                 self.newline()
 
