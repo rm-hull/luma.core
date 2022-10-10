@@ -15,6 +15,7 @@ from helpers import fib, assert_only_cleans_whats_setup
 @patch('pyftdi.spi.SpiController')
 def test_init(mock_controller):
     gpio = Mock()
+    gpio.width = 8
     instance = Mock()
     instance.get_port = Mock()
     instance.get_gpio = Mock(return_value=gpio)
@@ -32,6 +33,7 @@ def test_init(mock_controller):
 def test_command(mock_controller):
     cmds = [3, 1, 4, 2]
     gpio = Mock()
+    gpio.width = 8
     port = Mock()
     instance = Mock()
     instance.get_port = Mock(return_value=port)
@@ -48,6 +50,7 @@ def test_command(mock_controller):
 def test_data(mock_controller):
     data = list(fib(100))
     gpio = Mock()
+    gpio.width = 8
     port = Mock()
     instance = Mock()
     instance.get_port = Mock(return_value=port)
@@ -63,6 +66,7 @@ def test_data(mock_controller):
 @patch('pyftdi.spi.SpiController')
 def test_cleanup(mock_controller):
     gpio = Mock()
+    gpio.width = 8
     port = Mock()
     instance = Mock()
     instance.get_port = Mock(return_value=port)

@@ -496,7 +496,7 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, 
 
     # RESET and DC configured as outputs
     pins = _ftdi_pin(gpio_RST) | _ftdi_pin(gpio_DC)
-    gpio.set_direction(pins, pins & 0xFF)
+    gpio.set_direction(pins, pins & ((1 << gpio.width) - 1))
 
     serial = spi(
         __FTDI_WRAPPER_SPI(controller, slave),
