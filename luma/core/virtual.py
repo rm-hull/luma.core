@@ -223,7 +223,8 @@ class terminal(object):
 
         self._cw, self._ch = (0, 0)
         for i in range(32, 128):
-            w, h = self.font.getsize(chr(i))
+            left, top, right, bottom = self.font.getbbox(chr(i))
+            w, h = right - left, bottom - top
             self._cw = max(w, self._cw)
             self._ch = max(h, self._ch)
 
