@@ -5,6 +5,7 @@ ChangeLog
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
 | **2.4.0**  | * Drop support for Python 3.6                                       | TBD        |
+|            | * Switch to implicit namespace package configuration                |            |
 |            | * Add support for variable-width GPIO ports on FT23xx chips         |            |
 |            | * Use time.perf_counter_ns() to avoid loss of precision             |            |
 |            | * Remove cmdline.make_serial (deprecated since 1.17.1)              |            |
