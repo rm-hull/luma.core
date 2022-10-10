@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -124,4 +124,4 @@ def assert_only_cleans_whats_setup(gpio):
         assert len(cleanup) > 0, 'calling gpio.cleanup without specifying pins cleans all pins'
     pins_set_up = {args[0] for args in setups}
     pins_clean = {args[0] for args in setups}
-    assert pins_clean == pins_set_up, 'set pins {} but cleaned pins {}'.format(pins_set_up, pins_clean)
+    assert pins_clean == pins_set_up, f"set pins {pins_set_up} but cleaned pins {pins_clean}"
