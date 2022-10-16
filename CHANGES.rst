@@ -4,7 +4,7 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.4.0**  | * Drop support for Python 3.6                                       | TBD        |
+| **2.4.0**  | * Drop support for Python 3.6                                       | 2022/10/16 |
 |            | * Switch to implicit namespace package configuration                |            |
 |            | * Add support for variable-width GPIO ports on FT23xx chips         |            |
 |            | * Use time.perf_counter_ns() to avoid loss of precision             |            |
