@@ -2,15 +2,15 @@
 # Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
+from time import sleep
 from textwrap import TextWrapper
-from time import sleep, perf_counter
 
 from PIL import Image, ImageDraw, ImageFont
 
 from luma.core import mixin, ansi_color
 from luma.core.threadpool import threadpool
 from luma.core.render import canvas
-from luma.core.util import mutable_string, observable
+from luma.core.util import mutable_string, observable, perf_counter
 
 
 pool = threadpool(4)
@@ -223,7 +223,7 @@ class terminal(object):
 
         self._cw, self._ch = (0, 0)
         for i in range(32, 128):
-            w, h = self.font.getsize(chr(i))
+            left, top, w, h = self.font.getbbox(chr(i))
             self._cw = max(w, self._cw)
             self._ch = max(h, self._ch)
 
@@ -324,7 +324,7 @@ class terminal(object):
             self.tab()
 
         else:
-            w = self.font.getsize(char)[0]
+            left, top, w, h = self.font.getbbox(char)
             if self._cx + w >= self._device.width:
                 self.newline()
 
@@ -604,7 +604,7 @@ class character(object):
 
     def _flush(self, buf):
         # Replace any characters that are not in the font with the undefined character
-        buf = ''.join([i if i == '\n' or self.font.getsize(i)[0] > 0 else self._undefined for i in buf])
+        buf = ''.join([i if i == '\n' or self.font.getlength(i) > 0 else self._undefined for i in buf])
 
         # Draw text onto display's image using the provided font
         with canvas(self.device) as draw:

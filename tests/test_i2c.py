@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -89,8 +89,7 @@ def test_i2c_command_device_not_found_error():
             with pytest.raises(luma.core.error.DeviceNotFoundError) as ex:
                 serial.command(*cmds)
 
-            assert str(ex.value) == 'I2C device not found on address: 0x{0:02X}'.format(
-                address)
+            assert str(ex.value) == f'I2C device not found on address: 0x{address:02X}'
     except AttributeError as e:
         # osx
         pytest.skip(str(e))

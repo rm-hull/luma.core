@@ -9,8 +9,10 @@ Simplified sprite animation framework.
           as such until such time as this notice disappears.
 """
 
-from time import sleep, perf_counter
+from time import sleep
 from PIL import Image
+
+from luma.core.util import perf_counter
 
 
 class dict_wrapper(object):
