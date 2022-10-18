@@ -125,7 +125,6 @@ class viewport(mixin.capabilities):
             im = im.convert(self._device.mode)
 
         self._device.display(im)
-        del im
 
     def _crop_box(self):
         (left, top) = self._position
@@ -168,7 +167,6 @@ class hotspot(mixin.capabilities):
         self.update(draw)
         image.paste(im, xy)
         del draw
-        del im
 
     def should_redraw(self):
         """
