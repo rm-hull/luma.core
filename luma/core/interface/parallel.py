@@ -91,8 +91,8 @@ class bitbang_6800(object):
         value will be sent.
 
         This means that the device needs to send high and low bits separately
-        if the device is operating using a 4-bit bus (e.g. to send a 0x32 in
-        4 bit mode the device would use ``data([0x03, 0x02])``).
+        if the device is operating using a 4-bit bus; to send a ``0x32`` in
+        4-bit mode the device would use: ``command(0x03, 0x02)``
 
         :param data: A data sequence.
         :type data: list, bytearray
