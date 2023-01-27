@@ -52,7 +52,7 @@ class bitbang_6800(object):
 
         self._RS = self._configure(kwargs.get("RS", 22))
         self._E = self._configure(kwargs.get("E", 17))
-        self._PINS = self._configure(kwargs.get('PINS', list((25, 24, 23, 18))))
+        self._PINS = self._configure(kwargs.get('PINS', [25, 24, 23, 18]))
 
         self._datalines = len(self._PINS)
         assert self._datalines in (4, 8), f'You\'ve provided {len(self._PINS)} pins but a bus must contain either four or eight pins'
