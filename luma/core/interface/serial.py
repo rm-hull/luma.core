@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -28,10 +28,7 @@ class i2c(object):
     Circuit) interface to provide :py:func:`data` and :py:func:`command` methods.
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
-        `smbus2 <https://pypi.org/project/smbus2>`_ is used.
-        Typically this is overridden in tests, or if there is a specific
-        reason why `pysmbus <https://pypi.org/project/pysmbus>`_ must be used
-        over smbus2.
+        `smbus2 <https://pypi.org/project/smbus2>`_ is used
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
@@ -164,11 +161,11 @@ class bitbang(object):
         4096 (default).
     :type transfer_size: int
     :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
-        a duration of 100ms or more to fully reset the display (default:0)
+        a duration of 100ms or more to fully reset the display (default: 0)
     :type reset_hold_time: float
     :param reset_release_time: The number of seconds to delay afer reset. Some devices may require
         a duration of 150ms or more after reset was triggered before the device can accept the
-        initialization sequence (default:0)
+        initialization sequence (default: 0)
     :type reset_release_time: float
     :param SCLK: The GPIO pin to connect the SPI clock to.
     :type SCLK: int
@@ -287,11 +284,11 @@ class spi(bitbang):
     :param spi_mode: SPI mode as two bit pattern of clock polarity and phase [CPOL|CPHA], 0-3 (default:None)
     :type spi_mode: int
     :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
-        a duration of 100ms or more to fully reset the display (default:0)
+        a duration of 100ms or more to fully reset the display (default: 0)
     :type reset_hold_time: float
     :param reset_release_time: The number of seconds to delay afer reset. Some devices may require
         a duration of 150ms or more after reset was triggered before the device can accept the
-        initialization sequence (default:0)
+        initialization sequence (default: 0)
     :type reset_release_time: float
     :raises luma.core.error.DeviceNotFoundError: SPI device could not be found.
     :raises luma.core.error.UnsupportedPlatform: GPIO access not available.
@@ -336,13 +333,11 @@ class spi(bitbang):
 
 class gpio_cs_spi(spi):
     """
-    Wraps the `spi` class to allow the Chip Select to be used with any GPIO pin.
+    Allows the Chip Select to be used with any GPIO pin.
+
     The gpio pin to use is defined during instantiation with the keyword argument `gpio_CS`.
 
-    Behaviour is otherwise the same, refer to the documentation on the `spi` class
-    for information on other parameters and raised exceptions.
-
-    :param gpio_CS: The GPIO pin to connect chip select (CS / CE) to (defaults to None).
+    :param gpio_CS: The GPIO pin to connect chip select (CS / CE) to (defaults to ``None``).
     :type gpio_CS: int
     """
     def __init__(self, *args, **kwargs):
@@ -477,11 +472,11 @@ def ftdi_spi(device='ftdi://::/1', bus_speed_hz=12000000, gpio_CS=3, gpio_DC=5, 
     :param gpio_RST: The ADx pin to connect reset (RES / RST) to (defaults to 6).
     :type gpio_RST: int
         :param reset_hold_time: The number of seconds to hold reset active. Some devices may require
-        a duration of 100ms or more to fully reset the display (default:0)
+        a duration of 100ms or more to fully reset the display (default: 0)
     :type reset_hold_time: float
     :param reset_release_time: The number of seconds to delay afer reset. Some devices may require
         a duration of 150ms or more after reset was triggered before the device can accept the
-        initialization sequence (default:0)
+        initialization sequence (default: 0)
     :type reset_release_time: float
 
     .. versionadded:: 1.9.0
@@ -551,9 +546,6 @@ class pcf8574(i2c):
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
         `smbus2 <https://pypi.org/project/smbus2>`_ is used.
-        Typically this is overridden in tests, or if there is a specific
-        reason why `pysmbus <https://pypi.org/project/pysmbus>`_ must be used
-        over smbus2.
     :type bus:
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
