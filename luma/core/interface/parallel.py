@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Richard Hull and contributors
+# Copyright (c) 2020-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -12,11 +12,11 @@ from luma.core import lib
 
 __all__ = ["bitbang_6800"]
 
-'''
+"""
 Default amount of time to wait for a pulse to complete if the device the
 interface is connected to requires a pin to be 'pulsed' from low to high to
 low for it to accept data or a command
-'''
+"""
 PULSE_TIME = 1e-6 * 50
 
 
@@ -33,12 +33,12 @@ class bitbang_6800(object):
         held high during a data or command transfer
     :type pulse_time: float
     :param RS: The GPIO pin register select (RS) line (low for command, high
-        for data)
+        for data). Default: 22
     :type RS: int
-    :param E: The GPIO pin to connect the enable (E) line to.
+    :param E: The GPIO pin to connect the enable (E) line to. Default: 17
     :type E: int
     :param PINS: The GPIO pins that form the data bus (a list of 4 or 8 pins
-        depending upon implementation ordered from LSD to MSD)
+        depending upon implementation ordered from LSD to MSD). Default: ``[25, 24, 23, 18]``
     :type PINS: list[int]
 
     .. versionadded:: 1.16.2
@@ -69,13 +69,14 @@ class bitbang_6800(object):
 
     def command(self, *cmd):
         """
-        Sends a command or sequence of commands through the bus
-        If the bus is in four bit mode, only the lowest 4 bits of the data
+        Sends a command or sequence of commands through the bus.
+
+        If the bus is in 4-bit mode, only the lowest 4 bits of the data
         value will be sent.
 
         This means that the device needs to send high and low bits separately
-        if the device is operating using a 4 bit bus (e.g. to send a 0x32 in
-        4 bit mode the device would use ``command(0x03, 0x02)``).
+        if the device is operating using a 4-bit bus; to send a ``0x32`` in
+        4-bit mode the device would use: ``command(0x03, 0x02)``
 
         :param cmd: A spread of commands.
         :type cmd: int
@@ -85,11 +86,12 @@ class bitbang_6800(object):
     def data(self, data):
         """
         Sends a data byte or sequence of data bytes through to the bus.
-        If the bus is in four bit mode, only the lowest 4 bits of the data
+
+        If the bus is in 4-bit mode, only the lowest 4 bits of the data
         value will be sent.
 
         This means that the device needs to send high and low bits separately
-        if the device is operating using a 4 bit bus (e.g. to send a 0x32 in
+        if the device is operating using a 4-bit bus (e.g. to send a 0x32 in
         4 bit mode the device would use ``data([0x03, 0x02])``).
 
         :param data: A data sequence.
@@ -110,7 +112,7 @@ class bitbang_6800(object):
 
     def cleanup(self):
         """
-        Clean up GPIO resources if managed.
+        Clean up GPIO resources.
         """
         if self._managed:
             self._gpio.cleanup([self._RS, self._E, *self._PINS])
