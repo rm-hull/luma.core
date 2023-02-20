@@ -24,8 +24,6 @@ luma.core
 .. image:: https://img.shields.io/pypi/dm/luma.core
    :target: https://pypi.python.org/project/luma.core
 
-.. image:: https://img.shields.io/maintenance/yes/2022.svg?maxAge=2592000
-
 **luma.core** is a component library providing a `Pillow <https://pillow.readthedocs.io/>`_-compatible
 drawing canvas for Python 3, and other functionality to support drawing primitives and
 text-rendering capabilities for small displays on the Raspberry Pi and other
