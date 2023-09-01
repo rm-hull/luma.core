@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Richard Hull and contributors
+# Copyright (c) 2020-2023 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 from pathlib import Path
@@ -519,7 +519,7 @@ def load_sprite_table(sprite_table, index, xwidth, glyph_size, cell_size=None, m
     """
     f = bitmap_font()
     need_to_close = False
-    if type(sprite_table) == str:
+    if type(sprite_table) is str:
         try:
             sprite_table = Image.open(sprite_table)
             need_to_close = True

@@ -62,7 +62,7 @@ class bitbang_6800(object):
         self._data_mode = self._gpio.HIGH  # Data mode = Pull high
 
     def _configure(self, pin):
-        pins = pin if type(pin) == list else [pin] if pin else []
+        pins = pin if type(pin) is list else [pin] if pin else []
         for p in pins:
             self._gpio.setup(p, self._gpio.OUT)
         return pin
