@@ -13,7 +13,7 @@ from luma.core.device import dummy
 from luma.core.virtual import terminal
 
 from helpers import (get_reference_image, assert_identical_image,
-    get_reference_font)
+    get_reference_font, test_font)
 
 
 def assert_text(device, term, reference_img, text, save=None):
@@ -34,7 +34,7 @@ def assert_text(device, term, reference_img, text, save=None):
 def test_default_text():
     reference = 'quick_brown_fox.png'
     device = dummy()
-    term = terminal(device)
+    term = terminal(device, font=test_font)
 
     assert_text(device, term, reference, [
         "The quick brown fox jumps over the lazy dog"
@@ -44,7 +44,7 @@ def test_default_text():
 def test_wrapped_text():
     reference = 'quick_brown_fox_word_wrap.png'
     device = dummy()
-    term = terminal(device, word_wrap=True, animate=False)
+    term = terminal(device, font=test_font, word_wrap=True, animate=False)
 
     assert_text(device, term, reference, [
         "The quick brown fox jumps over the lazy dog"
@@ -54,7 +54,7 @@ def test_wrapped_text():
 def test_tab_alignment():
     reference = 'tab_align.png'
     device = dummy()
-    term = terminal(device, animate=False)
+    term = terminal(device, font=test_font, animate=False)
 
     assert_text(device, term, reference, [
         "1\t32\t999",
@@ -65,7 +65,7 @@ def test_tab_alignment():
 def test_control_chars():
     reference = 'control_chars.png'
     device = dummy()
-    term = terminal(device, animate=False)
+    term = terminal(device, font=test_font, animate=False)
 
     assert_text(device, term, reference, [
         'foo\rbar\bspam\teggs\n\nham and cheese on rye'
@@ -75,7 +75,7 @@ def test_control_chars():
 def test_scrolling():
     reference = 'scroll_text.png'
     device = dummy()
-    term = terminal(device, animate=False)
+    term = terminal(device, font=test_font, animate=False)
 
     assert_text(device, term, reference, [
         "it oozed over the blackness, and heard Harris's sleepy voice asking "
@@ -89,7 +89,7 @@ def test_scrolling():
 def test_alt_colors():
     reference = 'alt_colors.png'
     device = dummy()
-    term = terminal(device, color="blue", bgcolor="grey", animate=False)
+    term = terminal(device, font=test_font, color="blue", bgcolor="grey", animate=False)
 
     assert_text(device, term, reference, [
         "blue on grey"
@@ -99,7 +99,7 @@ def test_alt_colors():
 def test_ansi_colors():
     reference = 'ansi_colors.png'
     device = dummy()
-    term = terminal(device, animate=False)
+    term = terminal(device, font=test_font, animate=False)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors here!",
@@ -111,7 +111,7 @@ def test_ansi_colors():
 def test_ansi_colors_wrapped():
     reference = 'ansi_colors_wrapped.png'
     device = dummy()
-    term = terminal(device, word_wrap=True, animate=False)
+    term = terminal(device, font=test_font, word_wrap=True, animate=False)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors\t\033[32mwrap\033[0m\t?",
@@ -123,7 +123,7 @@ def test_ansi_colors_wrapped():
 def test_ansi_colors_scroll():
     reference = 'ansi_colors_scroll.png'
     device = dummy()
-    term = terminal(device, word_wrap=True, animate=False)
+    term = terminal(device, font=test_font, word_wrap=True, animate=False)
 
     assert_text(device, term, reference, [
         "hello \033[31mworld\033[0m ansi colors\t\033[32mwrap\033[0m\t?",

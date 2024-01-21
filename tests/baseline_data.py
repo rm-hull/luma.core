@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
+
+from helpers import test_font
 
 
 def primitives(device, draw):
@@ -20,5 +22,5 @@ def primitives(device, draw):
     draw.line((x, bottom, x + shape_width, top), fill="yellow")
     draw.line((x, top, x + shape_width, bottom), fill="yellow")
     x += shape_width + padding
-    draw.text((x, top), 'Hello', fill="cyan")
-    draw.text((x, top + 20), 'World!', fill="purple")
+    draw.text((x, top), 'Hello', font=test_font, fill="cyan")
+    draw.text((x, top + 20), 'World!', font=test_font, fill="purple")
