@@ -14,7 +14,7 @@ from PIL import Image
 from luma.core.device import dummy
 from luma.core.render import canvas
 
-from helpers import get_reference_image, assert_identical_image
+from helpers import get_reference_image, assert_identical_image, test_font
 
 
 def test_canvas_background():
@@ -28,8 +28,8 @@ def test_canvas_background():
             with canvas(device, background=bgnd) as draw:
                 draw.rectangle((20, 15, device.width - 20, device.height - 15),
                                fill='black', outline='white')
-                draw.text((36, 22), 'Background', fill='white')
-                draw.text((52, 32), 'Test', fill='white')
+                draw.text((36, 22), 'Background', fill='white', font=test_font)
+                draw.text((52, 32), 'Test', fill='white', font=test_font)
 
             assert_identical_image(reference, device.image, img_path)
 
