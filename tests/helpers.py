@@ -76,7 +76,7 @@ def assert_identical_image(reference, target, img_path):
     :type img_path: str
     """
     bbox = ImageChops.difference(reference, target).getbbox()
-    target.save(img_path)
+    #target.save(img_path)
     assert bbox is None, f'{img_path} is not identical to generated image'
 
 
