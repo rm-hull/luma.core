@@ -24,6 +24,7 @@ test_config_file = get_reference_file('config-test.txt')
 
 class test_spi_opts(object):
     spi_port = 0
+    spi_mode = 0
     spi_device = 0
     spi_bus_speed = 8000000
     spi_transfer_size = 4096
