@@ -152,6 +152,7 @@ class make_interface(object):
                    device=self.opts.spi_device,
                    bus_speed_hz=self.opts.spi_bus_speed,
                    transfer_size=self.opts.spi_transfer_size,
+                   spi_mode=self.opts.spi_mode,
                    reset_hold_time=self.opts.gpio_reset_hold_time,
                    reset_release_time=self.opts.gpio_reset_release_time,
                    gpio_DC=self.opts.gpio_data_command,
@@ -166,6 +167,7 @@ class make_interface(object):
                            bus_speed_hz=self.opts.spi_bus_speed,
                            cs_high=self.opts.spi_cs_high,
                            transfer_size=self.opts.spi_transfer_size,
+                           spi_mode=self.opts.spi_mode,
                            reset_hold_time=self.opts.gpio_reset_hold_time,
                            reset_release_time=self.opts.gpio_reset_release_time,
                            gpio_DC=self.opts.gpio_data_command,
@@ -305,6 +307,7 @@ def create_parser(description):
     spi_group.add_argument('--spi-device', type=int, default=0, help='SPI device')
     spi_group.add_argument('--spi-bus-speed', type=int, default=8000000, help='SPI max bus speed (Hz)')
     spi_group.add_argument('--spi-transfer-size', type=int, default=4096, help='SPI bus max transfer unit (bytes)')
+    spi_group.add_argument('--spi-mode', type=int, default=None, help='SPI mode (0-3)')
     spi_group.add_argument('--spi-cs-high', type=bool, default=False, help='SPI chip select is high (gpio_cs_spi driver only)')
 
     ftdi_group = parser.add_argument_group('FTDI')
