@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import atexit
 import inspect
 import argparse
 import importlib
-from collections import OrderedDict
 
 
 def get_choices(module_name):
@@ -86,9 +85,9 @@ def get_display_types():
     Get ordered dict containing available display types from available luma
     sub-projects.
 
-    :rtype: collections.OrderedDict
+    :rtype: dict
     """
-    display_types = OrderedDict()
+    display_types = dict()
     for namespace in get_supported_libraries():
         display_types[namespace] = get_choices(f'luma.{namespace}.device')
 
