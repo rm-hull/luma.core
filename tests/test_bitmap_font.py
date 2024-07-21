@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Richard Hull and contributors
+# Copyright (c) 2020-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -234,7 +234,7 @@ def test_load_sprite_table_exceptions_1():
     with pytest.raises(FileNotFoundError) as ex:
         filename = 'badfile'
         bitmap_font.load_sprite_table(filename, range(16, 256), 5, (5, 8), (5, 8), FONTDATA['mappings'][1])
-    assert ex.value.filename == filename
+    assert Path(ex.value.filename).stem == filename
 
 
 def test_load_sprite_table_exceptions_2():
