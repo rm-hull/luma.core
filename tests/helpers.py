@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -76,7 +76,7 @@ def assert_identical_image(reference, target, img_path):
     :type img_path: str
     """
     bbox = ImageChops.difference(reference, target).getbbox()
-    #target.save(img_path)
+    # target.save(img_path)
     assert bbox is None, f'{img_path} is not identical to generated image'
 
 
