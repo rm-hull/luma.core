@@ -37,6 +37,7 @@ jobs:
         run: sudo apt-get install swig python3-setuptools python3-dev
       - name: Install lg library
         run: |
+          cd $RUNNER_TEMP
           wget http://abyz.me.uk/lg/lg.zip
           unzip lg.zip
           cd lg
