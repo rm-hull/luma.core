@@ -33,6 +33,15 @@ jobs:
         run: python -c "import sys; print(sys.version)"
       - name: Install Python packages
         run: pip install --upgrade setuptools pip wheel tox coveralls
+      - name: Install system dependencies
+        run: sudo apt-get install swig python3-setuptools python3-dev
+      - name: Install lg library
+        run: |
+          wget http://abyz.me.uk/lg/lg.zip
+          unzip lg.zip
+          cd lg
+          make
+          sudo make install
       - name: Run tests
         env:
           TOX_ENV: py3${{ matrix.python-minor-version }}
