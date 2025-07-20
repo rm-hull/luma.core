@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2021 Richard Hull and contributors
+# Copyright (c) 2017-2024 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -191,7 +191,7 @@ def test_make_interface_spi():
     except ImportError:
         # non-rpi platform, e.g. macos
         pytest.skip(rpi_gpio_missing)
-    except error.UnsupportedPlatform as e:
+    except (error.UnsupportedPlatform, error.DeviceNotFoundError) as e:
         # non-rpi platform, e.g. ubuntu 64-bit
         skip_unsupported_platform(e)
 
@@ -211,7 +211,7 @@ def test_make_interface_gpio_cs_spi():
     except ImportError:
         # non-rpi platform, e.g. macos
         pytest.skip(rpi_gpio_missing)
-    except error.UnsupportedPlatform as e:
+    except (error.UnsupportedPlatform, error.DeviceNotFoundError) as e:
         # non-rpi platform, e.g. ubuntu 64-bit
         skip_unsupported_platform(e)
 
@@ -341,7 +341,7 @@ def test_create_device_oled():
             assert device == display_name
         except ImportError:
             pytest.skip(rpi_gpio_missing)
-        except error.UnsupportedPlatform as e:
+        except (error.UnsupportedPlatform, error.DeviceNotFoundError) as e:
             # non-rpi platform
             skip_unsupported_platform(e)
 
