@@ -1,19 +1,13 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2017-2022 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import sys
 from time import perf_counter_ns
 
 
-if sys.version_info.major == 3:
-    unicode = str
-
-
-class mutable_string(object):
+class mutable_string:
 
     def __init__(self, value):
-        assert isinstance(value, str) or isinstance(value, unicode)
+        assert isinstance(value, str)
         self.target = value
 
     def __getattr__(self, attr):
@@ -23,10 +17,10 @@ class mutable_string(object):
         return self.target[key]
 
     def __setitem__(self, key, value):
-        assert isinstance(value, str) or isinstance(value, unicode)
+        assert isinstance(value, str)
         tmp = list(self.target)
         tmp[key] = value
-        self.target = ("" if isinstance(self.target, str) else u"").join(tmp)
+        self.target = "".join(tmp)
 
     def __delitem__(self, key):
         tmp = list(self.target)
@@ -46,16 +40,13 @@ class mutable_string(object):
         return repr(self.target)
 
     def __eq__(self, other):
-        if isinstance(self.target, unicode):
-            return self.target == unicode(other)
-        else:
-            return self.target == str(other)
+        return self.target == str(other)
 
     def __hash__(self):
         return hash(self.target)
 
 
-class observable(object):
+class observable:
     """
     Wraps any container object such that on inserting, updating or deleting,
     an observer is notified with a payload of the target. All other special
