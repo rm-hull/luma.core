@@ -268,12 +268,24 @@ def create_device(args, display_types=None):
     return device
 
 
-def create_parser(description):
+def create_parser(description, parser=None, autocomplete=True):
     """
     Create and return command-line argument parser.
+
+    :param description: Application description.
+    :type description: str
+
+    :param parser: Pre-created instance of ArgumentParser.
+    :type parser: argparse.ArgumentParser, optional
+
+    :param autocomplete: Initialize argcomplete on the parser, defaults to True.
+    :type autocomplete: bool
+
+    :rtype: argparse.ArgumentParser
     """
-    parser = argparse.ArgumentParser(description=description,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    if parser is None:
+        parser = argparse.ArgumentParser(description=description,
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     display_types = get_display_types()
     display_choices = [display for k, v in display_types.items() for display in v]
@@ -349,10 +361,11 @@ def create_parser(description):
         emulator_group.add_argument('--loop', type=int, default=0, help='Repeat loop, zero=forever (gifanim emulator only)')
         emulator_group.add_argument('--max-frames', type=int, help='Maximum frames to record (gifanim emulator only)')
 
-    try:  # pragma: no cover
-        import argcomplete
-        argcomplete.autocomplete(parser)
-    except ImportError:
-        pass
+    if autocomplete:
+        try:  # pragma: no cover
+            import argcomplete
+            argcomplete.autocomplete(parser)
+        except ImportError:
+            pass
 
     return parser
