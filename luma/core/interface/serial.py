@@ -735,7 +735,7 @@ class aip31068(i2c):
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
         `smbus2 <https://pypi.org/project/smbus2>`_ is used
-    :type bus:
+    :type bus: object
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
     :param address: I²C address, default: ``0x3E``.
@@ -762,7 +762,7 @@ class pca9633(i2c):
 
     :param bus: A *smbus* implementation, if ``None`` is supplied (default),
         `smbus2 <https://pypi.org/project/smbus2>`_ is used
-    :type bus:
+    :type bus: object
     :param port: I²C port number, usually 0 or 1 (default).
     :type port: int
     :param address: I²C address, default: ``0x60``.
@@ -844,7 +844,7 @@ class pca9633(i2c):
             self._write(self.REG_GREEN_PWM, green)
             self._write(self.REG_BLUE_PWM, blue)
 
-        if amber:
+        if amber is not None:
             assert 0 <= amber <= 255
             self._color['a'] = amber
             if self._backlight_enabled:
