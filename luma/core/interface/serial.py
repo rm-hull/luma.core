@@ -727,3 +727,128 @@ class pcf8574(i2c):
                     'I2C device not found on address: 0x{0:02X}'.format(self._addr))
             else:  # pragma: no cover
                 raise
+
+class aip31068(i2c):
+    """
+    I²C interface to provide :py:func:`data` and :py:func:`command` methods
+    for a device using an AiP31068 LCD controller.
+
+    :param bus: A *smbus* implementation, if ``None`` is supplied (default),
+        `smbus2 <https://pypi.org/project/smbus2>`_ is used
+    :type bus:
+    :param port: I²C port number, usually 0 or 1 (default).
+    :type port: int
+    :param address: I²C address, default: ``0x3E``.
+    :type address: int
+    :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
+    :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
+    :raises luma.core.error.DevicePermissionError: Permission to access I2C device
+        denied.
+
+    .. note::
+       1. Only one of ``bus`` OR ``port`` arguments should be supplied;
+          if both are, then ``bus`` takes precedence.
+       2. If ``bus`` is provided, there is an implicit expectation
+          that it has already been opened.
+    """
+    def __init__(self, bus=None, port=1, address=0x3E):
+        super().__init__(bus, port, address)
+
+        self._bitmode = 8 # AiP31068 only supports 8-bit mode
+
+class pca9633(i2c):
+    """
+    I²C interface for a device using a PCA9633 backlight driver.
+
+    :param bus: A *smbus* implementation, if ``None`` is supplied (default),
+        `smbus2 <https://pypi.org/project/smbus2>`_ is used
+    :type bus:
+    :param port: I²C port number, usually 0 or 1 (default).
+    :type port: int
+    :param address: I²C address, default: ``0x60``.
+    :type address: int
+    :raises luma.core.error.DeviceAddressError: I2C device address is invalid.
+    :raises luma.core.error.DeviceNotFoundError: I2C device could not be found.
+    :raises luma.core.error.DevicePermissionError: Permission to access I2C device
+        denied.
+
+    .. note::
+       1. Only one of ``bus`` OR ``port`` arguments should be supplied;
+          if both are, then ``bus`` takes precedence.
+       2. If ``bus`` is provided, there is an implicit expectation
+          that it has already been opened.
+    """
+
+    REG_MODE1       = 0x00
+    REG_MODE2       = 0x01
+
+    REG_RED_PWM     = 0x04 # PWM2
+    REG_GREEN_PWM   = 0x03 # PWM1
+    REG_BLUE_PWM    = 0x02 # PWM0
+    REG_AMBER_PWM   = 0x05 # PWM3
+    REG_GRP_PWM     = 0x06 # GRPPWM
+
+    REG_LEDOUT      = 0x08
+
+    def __init__(self, bus=None, port=1, address=0x60):
+        super().__init__(bus, port, address)
+
+        self._bitmode = 8
+        self._brightness = 255 # 0 to 255
+        self._color = {'r': 255,
+                       'g': 255,
+                       'b': 255,
+                       'a': 255 }
+        self._backlight_enabled = False
+
+        # Initialization
+        self._write(self.REG_MODE1, 0x00)  # Default MODE1 settings
+        self._write(self.REG_MODE2, 0x00)  # Default MODE2 settings
+        self._write(self.REG_LEDOUT, 0xff) # Enable all 4 LEDs to be controllable both individually and with the GRPPWM register
+
+        self._write(self.REG_RED_PWM, 0)   # Set all LEDs off until enabled
+        self._write(self.REG_GREEN_PWM, 0)
+        self._write(self.REG_BLUE_PWM, 0)
+        self._write(self.REG_AMBER_PWM, 0)
+
+    def __call__(self, is_enabled):
+        """
+        Toggle the LCD Backlight
+
+        :param is_enabled: Turn on or off the backlight.
+        :type is_enabled: bool
+        """
+        assert is_enabled in (True, False)
+        self._backlight_enabled = is_enabled
+
+        if is_enabled:
+            self.set_color(self._color['r'], self._color['g'], self._color['b'], self._color['a'])
+            self.set_brightness(self._brightness)
+        else:
+            self._write(self.REG_GRP_PWM, 0)
+
+    def set_brightness(self, brightness):
+        assert 0 <= brightness <= 255
+        self._brightness = brightness
+        if self._backlight_enabled:
+            self._write(self.REG_GRP_PWM, self._brightness)
+    
+    def set_color(self, red, green, blue, amber=None):
+        assert 0 <= red   <= 255
+        assert 0 <= green <= 255
+        assert 0 <= blue  <= 255
+        self._color['r'], self._color['g'], self._color['b'] = red, green, blue
+
+        if self._backlight_enabled:
+            self._write(self.REG_RED_PWM, red)
+            self._write(self.REG_GREEN_PWM, green)
+            self._write(self.REG_BLUE_PWM, blue)
+
+        if amber:
+            assert 0 <= amber <= 255
+            self._color['a'] = amber
+            if self._backlight_enabled:
+                self._write(self.REG_AMBER_PWM, amber)
+
+    def _write(self, register, data):
+        self._bus.write_byte_data(i2c_addr=self._addr, register=register, value=data)
