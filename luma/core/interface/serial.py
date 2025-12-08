@@ -728,6 +728,7 @@ class pcf8574(i2c):
             else:  # pragma: no cover
                 raise
 
+
 class aip31068(i2c):
     """
     I²C interface to provide :py:func:`data` and :py:func:`command` methods
@@ -754,7 +755,8 @@ class aip31068(i2c):
     def __init__(self, bus=None, port=1, address=0x3E):
         super().__init__(bus, port, address)
 
-        self._bitmode = 8 # AiP31068 only supports 8-bit mode
+        self._bitmode = 8  # AiP31068 only supports 8-bit mode
+
 
 class pca9633(i2c):
     """
@@ -779,34 +781,34 @@ class pca9633(i2c):
           that it has already been opened.
     """
 
-    REG_MODE1       = 0x00
-    REG_MODE2       = 0x01
+    REG_MODE1 = 0x00
+    REG_MODE2 = 0x01
 
-    REG_RED_PWM     = 0x04 # PWM2
-    REG_GREEN_PWM   = 0x03 # PWM1
-    REG_BLUE_PWM    = 0x02 # PWM0
-    REG_AMBER_PWM   = 0x05 # PWM3
-    REG_GRP_PWM     = 0x06 # GRPPWM
+    REG_RED_PWM = 0x04    # PWM2
+    REG_GREEN_PWM = 0x03  # PWM1
+    REG_BLUE_PWM = 0x02   # PWM0
+    REG_AMBER_PWM = 0x05  # PWM3
+    REG_GRP_PWM = 0x06    # GRPPWM
 
-    REG_LEDOUT      = 0x08
+    REG_LEDOUT = 0x08
 
     def __init__(self, bus=None, port=1, address=0x60):
         super().__init__(bus, port, address)
 
         self._bitmode = 8
-        self._brightness = 255 # 0 to 255
+        self._brightness = 255  # 0 to 255
         self._color = {'r': 255,
                        'g': 255,
                        'b': 255,
-                       'a': 255 }
+                       'a': 255}
         self._backlight_enabled = False
 
         # Initialization
-        self._write(self.REG_MODE1, 0x00)  # Default MODE1 settings
-        self._write(self.REG_MODE2, 0x00)  # Default MODE2 settings
-        self._write(self.REG_LEDOUT, 0xff) # Enable all 4 LEDs to be controllable both individually and with the GRPPWM register
+        self._write(self.REG_MODE1, 0x00)   # Default MODE1 settings
+        self._write(self.REG_MODE2, 0x00)   # Default MODE2 settings
+        self._write(self.REG_LEDOUT, 0xff)  # Enable all 4 LEDs to be controllable both individually and with the GRPPWM register
 
-        self._write(self.REG_RED_PWM, 0)   # Set all LEDs off until enabled
+        self._write(self.REG_RED_PWM, 0)    # Set all LEDs off until enabled
         self._write(self.REG_GREEN_PWM, 0)
         self._write(self.REG_BLUE_PWM, 0)
         self._write(self.REG_AMBER_PWM, 0)
@@ -832,11 +834,11 @@ class pca9633(i2c):
         self._brightness = brightness
         if self._backlight_enabled:
             self._write(self.REG_GRP_PWM, self._brightness)
-    
+
     def set_color(self, red, green, blue, amber=None):
-        assert 0 <= red   <= 255
+        assert 0 <= red <= 255
         assert 0 <= green <= 255
-        assert 0 <= blue  <= 255
+        assert 0 <= blue <= 255
         self._color['r'], self._color['g'], self._color['b'] = red, green, blue
 
         if self._backlight_enabled:
