@@ -29,7 +29,7 @@ def setup_function():
 
 
 def test_init():
-    controller = pca9633(bus=smbus)
+    backlight = pca9633(bus=smbus)
 
     calls = [call(i2c_addr = ANY, register = REG_MODE1, value = ANY)] + \
         [call(i2c_addr = ANY, register = REG_MODE2, value = ANY)] + \
@@ -39,8 +39,8 @@ def test_init():
 
 
 def test_enable_backlight():
-    controller = pca9633(bus=smbus)
-    controller(True)
+    backlight = pca9633(bus=smbus)
+    backlight(True)
 
     calls = [call(i2c_addr = ANY, register = REG_RED_PWM, value = 255)] + \
         [call(i2c_addr = ANY, register = REG_GREEN_PWM, value = 255)] + \
@@ -50,9 +50,9 @@ def test_enable_backlight():
 
 
 def test_set_brightness():
-    controller = pca9633(bus=smbus)
-    controller(True)
-    controller.set_brightness(128)
+    backlight = pca9633(bus=smbus)
+    backlight(True)
+    backlight.set_brightness(128)
 
     calls = [call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)]
 
@@ -60,9 +60,9 @@ def test_set_brightness():
 
 
 def test_set_color():
-    controller = pca9633(bus=smbus)
-    controller(True)
-    controller.set_color(0,64,128)
+    backlight = pca9633(bus=smbus)
+    backlight(True)
+    backlight.set_color(0,64,128)
 
     calls = [call(i2c_addr = ANY, register = REG_RED_PWM, value = 0)] + \
         [call(i2c_addr = ANY, register = REG_GREEN_PWM, value = 64)] + \
@@ -72,9 +72,9 @@ def test_set_color():
 
 
 def test_set_brightness_with_backlight_disabled():
-    controller = pca9633(bus=smbus)
-    controller(False)
-    controller.set_brightness(128)
+    backlight = pca9633(bus=smbus)
+    backlight(False)
+    backlight.set_brightness(128)
 
     calls = call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)
 
@@ -82,9 +82,9 @@ def test_set_brightness_with_backlight_disabled():
 
 
 def test_set_color_with_backlight_disabled():
-    controller = pca9633(bus=smbus)
-    controller(False)
-    controller.set_color(1,64,128)
+    backlight = pca9633(bus=smbus)
+    backlight(False)
+    backlight.set_color(1,64,128)
 
     calls = [call(i2c_addr = ANY, register = REG_RED_PWM, value = 1)] + \
         [call(i2c_addr = ANY, register = REG_GREEN_PWM, value = 64)] + \
@@ -94,8 +94,32 @@ def test_set_color_with_backlight_disabled():
         assert c not in smbus.write_byte_data.mock_calls
 
 
+def test_brightness_restored_when_enabled():
+    backlight = pca9633(bus=smbus)
+    backlight(False)
+    backlight.set_brightness(128)
+    backlight(True)
+
+    calls = call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)
+
+    smbus.write_byte_data.assert_has_calls(calls)
+
+
+def test_color_restored_when_enabled():
+    backlight = pca9633(bus=smbus)
+    backlight(False)
+    backlight.set_color(1,64,128)
+    backlight(True)
+
+    calls = [call(i2c_addr = ANY, register = REG_RED_PWM, value = 1)] + \
+        [call(i2c_addr = ANY, register = REG_GREEN_PWM, value = 64)] + \
+        [call(i2c_addr = ANY, register = REG_BLUE_PWM, value = 128)]
+    
+    smbus.write_byte_data.assert_has_calls(calls)
+
+
 def test_cleanup():
-    controller = pca9633(bus=smbus)
-    controller._managed = True
-    controller.cleanup()
+    backlight = pca9633(bus=smbus)
+    backlight._managed = True
+    backlight.cleanup()
     smbus.close.assert_called_once()
