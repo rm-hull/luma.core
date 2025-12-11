@@ -9,9 +9,6 @@ Tests for the :py:class:`luma.core.interface.serial.pca9633` class.
 
 from unittest.mock import Mock, call, ANY
 from luma.core.interface.serial import pca9633
-# import luma.core.error
-
-# import pytest
 
 REG_MODE1 = 0x00
 REG_MODE2 = 0x01
