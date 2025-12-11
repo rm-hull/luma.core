@@ -76,7 +76,7 @@ def test_set_brightness_with_backlight_disabled():
     backlight(False)
     backlight.set_brightness(128)
 
-    calls = call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)
+    calls = [call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)]
 
     assert calls not in smbus.write_byte_data.mock_calls
 
@@ -100,7 +100,7 @@ def test_brightness_restored_when_enabled():
     backlight.set_brightness(128)
     backlight(True)
 
-    calls = call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)
+    calls = [call(i2c_addr = ANY, register = REG_GRP_PWM, value = 128)]
 
     smbus.write_byte_data.assert_has_calls(calls)
 
