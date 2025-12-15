@@ -123,21 +123,13 @@ def test_color_gradual():
     backlight.set_color(255, 255, 255)
     backlight.set_color(250, 250, 250, duration=1, wait=True)
 
-    calls = [call(i2c_addr=ANY, register=REG_RED_PWM, value=254)] + \
-        [call(i2c_addr=ANY, register=REG_GREEN_PWM, value=254)] + \
-        [call(i2c_addr=ANY, register=REG_BLUE_PWM, value=254)] + \
-        [call(i2c_addr=ANY, register=REG_RED_PWM, value=253)] + \
-        [call(i2c_addr=ANY, register=REG_GREEN_PWM, value=253)] + \
-        [call(i2c_addr=ANY, register=REG_BLUE_PWM, value=253)] + \
-        [call(i2c_addr=ANY, register=REG_RED_PWM, value=252)] + \
-        [call(i2c_addr=ANY, register=REG_GREEN_PWM, value=252)] + \
-        [call(i2c_addr=ANY, register=REG_BLUE_PWM, value=252)] + \
-        [call(i2c_addr=ANY, register=REG_RED_PWM, value=251)] + \
-        [call(i2c_addr=ANY, register=REG_GREEN_PWM, value=251)] + \
-        [call(i2c_addr=ANY, register=REG_BLUE_PWM, value=251)] + \
-        [call(i2c_addr=ANY, register=REG_RED_PWM, value=250)] + \
-        [call(i2c_addr=ANY, register=REG_GREEN_PWM, value=250)] + \
-        [call(i2c_addr=ANY, register=REG_BLUE_PWM, value=250)]
+    calls = []
+    for value in range(254, 249, -1):
+        calls.extend([
+            call(i2c_addr=ANY, register=REG_RED_PWM, value=value),
+            call(i2c_addr=ANY, register=REG_GREEN_PWM, value=value),
+            call(i2c_addr=ANY, register=REG_BLUE_PWM, value=value),
+        ])
 
     smbus.write_byte_data.assert_has_calls(calls)
 

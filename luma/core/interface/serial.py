@@ -790,6 +790,12 @@ class pca9633(i2c):
     REG_AMBER_PWM = 0x05  # PWM3
     REG_GRP_PWM = 0x06    # GRPPWM
 
+    _reg_map = {'red': REG_RED_PWM,
+                'green': REG_GREEN_PWM,
+                'blue': REG_BLUE_PWM,
+                'amber': REG_AMBER_PWM,
+                'brightness': REG_GRP_PWM}
+
     REG_LEDOUT = 0x08
 
     def __init__(self, bus=None, port=1, address=0x60):
@@ -822,7 +828,7 @@ class pca9633(i2c):
         self._backlight_enabled = is_enabled
 
         if is_enabled:
-            self._set_pwm(self._color | self._brightness)
+            self._set_pwm({**self._color, **self._brightness})  # Join the two dicts
         else:
             self._set_pwm({'brightness': 0})
 
@@ -866,19 +872,12 @@ class pca9633(i2c):
         if self._backlight_enabled:
             self.transition(self._color, new_color, duration, self._set_pwm)(wait)
 
-        self._color = new_color
+        self._color.update(new_color)
 
     def _set_pwm(self, pwm_values):
-        reg_map = {'red': self.REG_RED_PWM,
-                   'green': self.REG_GREEN_PWM,
-                   'blue': self.REG_BLUE_PWM,
-                   'amber': self.REG_AMBER_PWM,
-                   'brightness': self.REG_GRP_PWM}
-
-        assert pwm_values.keys() <= reg_map.keys()
-
+        assert pwm_values.keys() <= self._reg_map.keys()
         for c in pwm_values:
-            self._write(reg_map[c], pwm_values[c])
+            self._write(self._reg_map[c], pwm_values[c])
 
     def _write(self, register, data):
         self._bus.write_byte_data(i2c_addr=self._addr, register=register, value=data)
