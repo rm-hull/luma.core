@@ -163,8 +163,8 @@ class dummy(device):
     testing. Supports 24-bit color depth.
     """
 
-    def __init__(self, width=128, height=64, rotate=0, mode="RGB", **kwargs):
-        super(dummy, self).__init__(serial_interface=noop())
+    def __init__(self, width=128, height=64, rotate=0, mode="RGB", serial_interface=None, **kwargs):
+        super(dummy, self).__init__(serial_interface=serial_interface or noop(), **kwargs)
         self.capabilities(width, height, rotate, mode)
         self.image = None
 
