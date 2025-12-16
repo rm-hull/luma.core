@@ -4,6 +4,9 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
+| **2.5.3**  | * Added support for AiP31068 and PCA9633                            | 2025/12/16 |
+|            | * Updated dummy device to pass arbitrary serial interface to super  |            |
++------------+---------------------------------------------------------------------+------------+
 | **2.5.2**  | * cmdline.create_parser(): Allow pre-created parser                 | 2025/11/07 |
 |            | * Remove python2 compatibility code from util.py                    |            |
 |            | * Remove deprecated entries from setup.cfg                          |            |
