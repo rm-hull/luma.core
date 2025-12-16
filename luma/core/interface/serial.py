@@ -790,28 +790,32 @@ class pca9633(i2c):
     REG_AMBER_PWM = 0x05  # PWM3
     REG_GRP_PWM = 0x06    # GRPPWM
 
+    _reg_map = {'red': REG_RED_PWM,
+                'green': REG_GREEN_PWM,
+                'blue': REG_BLUE_PWM,
+                'amber': REG_AMBER_PWM,
+                'brightness': REG_GRP_PWM}
+
     REG_LEDOUT = 0x08
 
     def __init__(self, bus=None, port=1, address=0x60):
         super().__init__(bus, port, address)
 
         self._bitmode = 8
-        self._brightness = 255  # 0 to 255
-        self._color = {'r': 255,
-                       'g': 255,
-                       'b': 255,
-                       'a': 255}
         self._backlight_enabled = False
+
+        self._brightness = {'brightness': 255}  # 0 to 255
+        self._color = {'red': 255,
+                       'green': 255,
+                       'blue': 255,
+                       'amber': 255}
 
         # Initialization
         self._write(self.REG_MODE1, 0x00)   # Default MODE1 settings
         self._write(self.REG_MODE2, 0x00)   # Default MODE2 settings
         self._write(self.REG_LEDOUT, 0xff)  # Enable all 4 LEDs to be controllable both individually and with the GRPPWM register
 
-        self._write(self.REG_RED_PWM, 0)    # Set all LEDs off until enabled
-        self._write(self.REG_GREEN_PWM, 0)
-        self._write(self.REG_BLUE_PWM, 0)
-        self._write(self.REG_AMBER_PWM, 0)
+        self._set_pwm({'red': 0, 'green': 0, 'blue': 0, 'amber': 0})  # Set all LEDs off until enabled
 
     def __call__(self, is_enabled):
         """
@@ -824,33 +828,104 @@ class pca9633(i2c):
         self._backlight_enabled = is_enabled
 
         if is_enabled:
-            self.set_color(self._color['r'], self._color['g'], self._color['b'], self._color['a'])
-            self.set_brightness(self._brightness)
+            self._set_pwm({**self._color, **self._brightness})  # Join the two dicts
         else:
-            self._write(self.REG_GRP_PWM, 0)
+            self._set_pwm({'brightness': 0})
 
-    def set_brightness(self, brightness):
+    def set_brightness(self, brightness, duration=0, wait=True):
+        """
+        Sets the backlight's brightness.
+
+        :param brightness: Brightness value (0-255)
+        :param duration: If set, the brightness is changed gradually over the specified amount of time (in seconds). Otherwise the change is instantaneous. For the gradual change to look consistent, the brightness shouldn't have been changed externally.
+        :param wait: If True, waits until the brightness transition completes before returning. If False, the method returns immediately while the transition is left running in the background.
+        """
         assert 0 <= brightness <= 255
-        self._brightness = brightness
-        if self._backlight_enabled:
-            self._write(self.REG_GRP_PWM, self._brightness)
 
-    def set_color(self, red, green, blue, amber=None):
+        if self._backlight_enabled:
+            self.transition(self._brightness, {'brightness': brightness}, duration, self._set_pwm)(wait)
+
+        self._brightness = {'brightness': brightness}
+
+    def set_color(self, red, green, blue, amber=None, duration=0, wait=True):
+        """
+        Sets the backlight's color.
+
+        :param red: Red value (0-255)
+        :param blue: Blue value (0-255)
+        :param green: Green value (0-255)
+        :param amber: Amber value (0-255) (optional)
+        :param duration: If set, the color is changed gradually over the specified amount of time (in seconds). Otherwise the change is instantaneous. For the gradual change to look consistent, the color shouldn't have been changed externally.
+        :param wait: If True, waits until the color transition completes before returning. If False, the method returns immediately while the transition is left running in the background.
+        """
         assert 0 <= red <= 255
         assert 0 <= green <= 255
         assert 0 <= blue <= 255
-        self._color['r'], self._color['g'], self._color['b'] = red, green, blue
 
-        if self._backlight_enabled:
-            self._write(self.REG_RED_PWM, red)
-            self._write(self.REG_GREEN_PWM, green)
-            self._write(self.REG_BLUE_PWM, blue)
+        new_color = {}
+        new_color['red'], new_color['green'], new_color['blue'] = red, green, blue
 
         if amber is not None:
             assert 0 <= amber <= 255
-            self._color['a'] = amber
-            if self._backlight_enabled:
-                self._write(self.REG_AMBER_PWM, amber)
+            new_color['amber'] = amber
+
+        if self._backlight_enabled:
+            self.transition(self._color, new_color, duration, self._set_pwm)(wait)
+
+        self._color.update(new_color)
+
+    def _set_pwm(self, pwm_values):
+        assert pwm_values.keys() <= self._reg_map.keys()
+        for c in pwm_values:
+            self._write(self._reg_map[c], pwm_values[c])
 
     def _write(self, register, data):
         self._bus.write_byte_data(i2c_addr=self._addr, register=register, value=data)
+
+    class transition:
+        from luma.core.sprite_system import framerate_regulator
+        from multiprocessing import Process
+
+        def __init__(self, start_state, end_state, duration, step_callback):
+            self._step_callback = step_callback
+            self._start_state = start_state if duration > 0 else end_state
+            self._end_state = end_state
+            assert self._end_state.keys() <= self._start_state.keys()
+            self._step_count = self._get_step_count(self._start_state, self._end_state)
+            self._distances = self._get_distances(self._start_state, self._end_state)
+            self._regulator = self.framerate_regulator((self._step_count / duration) if duration > 0 else 0)
+
+        def __call__(self, wait, *args, **kwds):
+            if wait:
+                self._run_steps()
+            else:
+                process = self.Process(target=self._run_steps)
+                process.start()
+
+        def _get_step_count(self, start_state, end_state):
+            step_count = 1  # Create at least one step for instantaneous changes
+            for k in end_state:
+                step_count = max(step_count, abs(end_state[k] - start_state[k]))
+
+            return step_count
+
+        def _get_distances(self, start_state, end_state):
+            distances = {}
+            for k in end_state:
+                distances[k] = end_state[k] - start_state[k]
+
+            return distances
+
+        def _get_step(self, step_number):
+            assert step_number <= self._step_count
+            step = {}
+            for k in self._end_state:
+                step[k] = self._start_state[k] + int(step_number / self._step_count * self._distances[k])
+
+            return step
+
+        def _run_steps(self):
+            for i in range(self._step_count):
+                step = self._get_step(i + 1)
+                with self._regulator:
+                    self._step_callback(step)

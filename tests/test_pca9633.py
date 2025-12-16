@@ -9,6 +9,7 @@ Tests for the :py:class:`luma.core.interface.serial.pca9633` class.
 
 from unittest.mock import Mock, call, ANY
 from luma.core.interface.serial import pca9633
+from luma.core.util import perf_counter
 
 REG_MODE1 = 0x00
 REG_MODE2 = 0x01
@@ -114,6 +115,35 @@ def test_color_restored_when_enabled():
         [call(i2c_addr=ANY, register=REG_BLUE_PWM, value=128)]
 
     smbus.write_byte_data.assert_has_calls(calls)
+
+
+def test_color_gradual():
+    backlight = pca9633(bus=smbus)
+    backlight(True)
+    backlight.set_color(255, 255, 255)
+    backlight.set_color(250, 250, 250, duration=1, wait=True)
+
+    calls = []
+    for value in range(254, 249, -1):
+        calls.extend([
+            call(i2c_addr=ANY, register=REG_RED_PWM, value=value),
+            call(i2c_addr=ANY, register=REG_GREEN_PWM, value=value),
+            call(i2c_addr=ANY, register=REG_BLUE_PWM, value=value),
+        ])
+
+    smbus.write_byte_data.assert_has_calls(calls)
+
+
+def test_color_gradual_duration():
+    backlight = pca9633(bus=smbus)
+    backlight(True)
+    before = perf_counter()
+    backlight.set_color(250, 250, 250, duration=1, wait=True)
+    after = perf_counter()
+
+    duration = after - before
+
+    assert .9 <= duration <= 1.1
 
 
 def test_cleanup():
