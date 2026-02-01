@@ -12,8 +12,8 @@ luma.core
 .. image:: https://github.com/rm-hull/luma.core/actions/workflows/main.yml/badge.svg
    :target: https://github.com/rm-hull/luma.core/actions/workflows/main.yml
 
-.. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
-   :target: https://coveralls.io/github/rm-hull/luma.core?branch=master
+.. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=main
+   :target: https://coveralls.io/github/rm-hull/luma.core?branch=main
 
 .. image:: https://readthedocs.org/projects/luma-core/badge/?version=latest
    :target: https://luma-core.readthedocs.io/en/latest/
