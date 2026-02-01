@@ -37,7 +37,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install swig python3-setuptools python3-dev
+      - uses: actions/cache@v5
+        id: lgcache
+        with:
+          path: ${{ runner.temp }}/lg
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
       - name: Install lg library
+        if: steps.lgcache.outputs.cache-hit != 'true'
         run: |
           cd $RUNNER_TEMP
           wget http://abyz.me.uk/lg/lg.zip
