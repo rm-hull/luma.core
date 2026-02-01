@@ -34,14 +34,26 @@ jobs:
       - name: Install Python packages
         run: pip install --upgrade setuptools pip wheel tox coveralls
       - name: Install system dependencies
-        run: sudo apt-get install swig python3-setuptools python3-dev
-      - name: Install lg library
+        run: |
+          sudo apt-get update
+          sudo apt-get install swig python3-setuptools python3-dev
+      - name: Setup lg cache
+        uses: actions/cache@v5
+        id: lgcache
+        with:
+          path: ${{ runner.temp }}/lg
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Download and build lg library
+        if: steps.lgcache.outputs.cache-hit != 'true'
         run: |
           cd $RUNNER_TEMP
           wget http://abyz.me.uk/lg/lg.zip
           unzip lg.zip
           cd lg
           make
+      - name: Install lg library
+        run: |
+          cd $RUNNER_TEMP/lg
           sudo make install
       - name: Run tests
         env:
