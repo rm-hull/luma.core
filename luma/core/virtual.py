@@ -62,17 +62,18 @@ class viewport(mixin.capabilities):
         self._position = (0, 0)
         self._hotspots = []
         self._dither = dither
+        self._dirty = False
 
     def display(self, image):
         assert image.mode == self.mode
         assert image.size == self.size
 
         self._backing_image.paste(image)
-        self.refresh()
+        self.refresh(force=True)
 
     def set_position(self, xy):
         self._position = xy
-        self.refresh()
+        self.refresh(force=True)
 
     def add_hotspot(self, hotspot, xy):
         """
@@ -99,6 +100,7 @@ class viewport(mixin.capabilities):
         self._hotspots.remove((hotspot, xy))
         eraser = Image.new(self.mode, hotspot.size)
         self._backing_image.paste(eraser, xy)
+        self._dirty = True
 
     def is_overlapping_viewport(self, hotspot, xy):
         """
@@ -110,7 +112,7 @@ class viewport(mixin.capabilities):
         l2, t2, r2, b2 = calc_bounds(self._position, self._device)
         return range_overlap(l1, r1, l2, r2) and range_overlap(t1, b1, t2, b2)
 
-    def refresh(self):
+    def refresh(self, force=False):
         should_wait = False
         for hotspot, xy in self._hotspots:
             if hotspot.should_redraw() and self.is_overlapping_viewport(hotspot, xy):
@@ -120,11 +122,13 @@ class viewport(mixin.capabilities):
         if should_wait:
             pool.wait_completion()
 
-        im = self._backing_image.crop(box=self._crop_box())
-        if self._dither:
-            im = im.convert(self._device.mode)
+        if force or should_wait or self._dirty:
+            im = self._backing_image.crop(box=self._crop_box())
+            if self._dither:
+                im = im.convert(self._device.mode)
 
-        self._device.display(im)
+            self._device.display(im)
+            self._dirty = False
 
     def _crop_box(self):
         (left, top) = self._position
