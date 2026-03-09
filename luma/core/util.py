@@ -1,7 +1,13 @@
-# Copyright (c) 2017-2022 Richard Hull and contributors
+# Copyright (c) 2017-2026 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 from time import perf_counter_ns
+from PIL.Image import Image
+
+
+has_flattened_data = False
+if hasattr(Image, 'get_flattened_data') and callable(Image.get_flattened_data):
+    has_flattened_data = True
 
 
 class mutable_string:
@@ -154,3 +160,13 @@ def perf_counter():
     .. versionadded:: 2.4.0
     """
     return perf_counter_ns() / 1e9
+
+
+def get_flattened_data(img):
+    """
+    .. versionadded:: 2.5.4
+    """
+    if has_flattened_data:
+        return img.get_flattened_data
+
+    return img.getdata
