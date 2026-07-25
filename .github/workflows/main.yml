@@ -25,7 +25,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-v2-
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         id: setuppy
         with:
           python-version: 3.${{ matrix.python-minor-version }}
