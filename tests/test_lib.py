@@ -4,6 +4,12 @@
 # See LICENSE.rst for details.
 
 
+import sys
+from unittest.mock import Mock
+
+import pytest
+
+import luma.core.error
 from luma.core.lib import spidev, rpi_gpio
 
 
@@ -42,3 +48,15 @@ def test_multi():
     t = MultiLibTest()
     for method in ['__spidev__', '__rpi_gpio__']:
         assertMethod(t, method)
+
+
+def test_rpi_gpio_unrecognized_runtime_error(monkeypatch):
+    fake_gpio = Mock(unsafe=True)
+    fake_gpio.setmode.side_effect = RuntimeError('some other platform-specific message')
+    fake_rpi = Mock(GPIO=fake_gpio)
+    monkeypatch.setitem(sys.modules, 'RPi', fake_rpi)
+    monkeypatch.setitem(sys.modules, 'RPi.GPIO', fake_gpio)
+
+    t = RpiGpioTest()
+    with pytest.raises(luma.core.error.UnsupportedPlatform):
+        t.__rpi_gpio__()

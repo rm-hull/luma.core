@@ -23,11 +23,9 @@ def __rpi_gpio__(self):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         return GPIO
-    except RuntimeError as e:
-        if str(e) in ['This module can only be run on a Raspberry Pi!',
-                      'Module not imported correctly!']:
-            raise luma.core.error.UnsupportedPlatform(
-                'GPIO access not available')
+    except RuntimeError:
+        raise luma.core.error.UnsupportedPlatform(
+            'GPIO access not available')
 
 
 def rpi_gpio(Class):
