@@ -4,7 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.6.0**  | * Raise UnsupportedPlatform for any RPi.GPIO RuntimeError           | TBD        |
+| **2.6.0**  | * Raise UnsupportedPlatform for any RPi.GPIO RuntimeError           | 2026/08/03 |
+|            | * Optimize viewport to skip redundant refreshes                     |            |
 |            | * Drop support for Python 3.8                                       |            |
 +------------+---------------------------------------------------------------------+------------+
 | **2.5.3**  | * Added support for AiP31068 and PCA9633                            | 2025/12/16 |
