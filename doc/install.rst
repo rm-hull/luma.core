@@ -25,7 +25,7 @@ virtual environment with::
 
   $ ~/luma-env/bin/python -m pip install luma.core
 
-Test if it worked by printing the luma.core version number:
+Test if it worked by printing the luma.core version number::
 
   $ ~/luma-env/bin/python -c "import luma.core;print(luma.core.__version__)"
   2.5.3
