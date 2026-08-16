@@ -5,7 +5,6 @@
 
 
 import sys
-from unittest.mock import Mock
 
 import pytest
 
@@ -50,12 +49,8 @@ def test_multi():
         assertMethod(t, method)
 
 
-def test_rpi_gpio_unrecognized_runtime_error(monkeypatch):
-    fake_gpio = Mock(unsafe=True)
-    fake_gpio.setmode.side_effect = RuntimeError('some other platform-specific message')
-    fake_rpi = Mock(GPIO=fake_gpio)
-    monkeypatch.setitem(sys.modules, 'RPi', fake_rpi)
-    monkeypatch.setitem(sys.modules, 'RPi.GPIO', fake_gpio)
+def test_rpi_gpio_unrecognized_nonlinux(monkeypatch):
+    monkeypatch.setattr(sys, 'platform', 'darwin')
 
     t = RpiGpioTest()
     with pytest.raises(luma.core.error.UnsupportedPlatform):

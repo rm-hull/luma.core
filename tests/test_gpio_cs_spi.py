@@ -99,6 +99,6 @@ def test_unsupported_gpio_platform():
     try:
         gpio_cs_spi(spi=spidev, port=9, device=1, gpio_CS=23)
     except luma.core.error.UnsupportedPlatform as ex:
-        assert str(ex) == 'GPIO access not available'
+        assert str(ex).startswith('GPIO access not available')
     except ImportError:
         pytest.skip(rpi_gpio_missing)

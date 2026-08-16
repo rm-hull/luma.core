@@ -87,7 +87,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 linkcheck_ignore = [
     r'http://gnu.ethz.ch/',
     r'http://www.avrfreaks.net/',
-    r'https://www.createjs.com/'
+    r'https://www.createjs.com/',
+
+    # https://github.com/badges/shields/issues/12109
+    # https://github.com/lemurheavy/coveralls-public/issues/1858
+    r'https://coveralls.io/',
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
