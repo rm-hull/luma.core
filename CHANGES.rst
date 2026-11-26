@@ -4,7 +4,8 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.6.1**  | * Drop support for Python 3.9                                       | TBA        |
+| **2.6.1**  | * Fix I2C LCD construction in the command-line factory              | TBA        |
+|            | * Drop support for Python 3.9                                       |            |
 +------------+---------------------------------------------------------------------+------------+
 | **2.6.0**  | * Raise UnsupportedPlatform for any RPi.GPIO RuntimeError           | 2026/08/03 |
 |            | * Optimize viewport to skip redundant refreshes                     |            |
