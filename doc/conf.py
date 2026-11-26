@@ -87,10 +87,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 linkcheck_ignore = [
     r'http://gnu.ethz.ch/',
     r'http://www.avrfreaks.net/',
-    r'https://www.createjs.com/',
-    r'https://coveralls.io/',
-    r'https://pypi.org/'
+    r'https://www.createjs.com/'
 ]
+
+# exclude index linkcheck
+linkcheck_exclude_documents = [r'^index$']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
