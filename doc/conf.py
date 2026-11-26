@@ -88,7 +88,8 @@ linkcheck_ignore = [
     r'http://gnu.ethz.ch/',
     r'http://www.avrfreaks.net/',
     r'https://www.createjs.com/',
-    r'https://coveralls.io/'
+    r'https://coveralls.io/',
+    r'https://pypi.org/'
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
