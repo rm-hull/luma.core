@@ -346,7 +346,8 @@ def test_create_device_oled():
             skip_unsupported_platform(e)
 
 
-def test_create_device_lcd():
+@pytest.mark.parametrize("interface_name", ["spi", "i2c"])
+def test_create_device_lcd(interface_name):
     """
     :py:func:`luma.core.cmdline.create_device` supports LCD displays.
     """
@@ -360,6 +361,9 @@ def test_create_device_lcd():
 
     module_mock = Mock()
     module_mock.lcd.device.lcd1234.return_value = display_name
+    args.interface = interface_name
+    args.i2c_port = 1
+    args.i2c_address = 0x3e
     with patch.dict('sys.modules', **{
             # mock spidev and luma.lcd packages
             'fake_gpio': module_mock,
@@ -369,8 +373,14 @@ def test_create_device_lcd():
             'luma.lcd.aux': module_mock,
             'luma.lcd.device': module_mock
         }):
-        device = cmdline.create_device(args, display_types=display_types)
+        with patch('smbus2.SMBus'):
+            device = cmdline.create_device(args, display_types=display_types)
         assert device == display_name
+        kwargs = module_mock.lcd.device.lcd1234.call_args.kwargs
+        if interface_name == 'spi':
+            assert kwargs['gpio'] is kwargs['serial_interface']._gpio
+        else:
+            assert kwargs['gpio'] is None
 
 
 def test_create_device_led_matrix():
