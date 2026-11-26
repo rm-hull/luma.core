@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-minor-version: [9, 10, 11, 12, 13, 14, 15-dev]
+        python-minor-version: [10, 11, 12, 13, 14, 15-dev]
     name: Python 3.${{ matrix.python-minor-version }}
     steps:
       - uses: actions/checkout@v7
@@ -36,25 +36,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install swig python3-setuptools python3-dev
-      - name: Setup lg cache
-        uses: actions/cache@v6
-        id: lgcache
-        with:
-          path: ${{ runner.temp }}/lg
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: Download and build lg library
-        if: steps.lgcache.outputs.cache-hit != 'true'
-        run: |
-          cd $RUNNER_TEMP
-          wget http://abyz.me.uk/lg/lg.zip
-          unzip lg.zip
-          cd lg
-          make
-      - name: Install lg library
-        run: |
-          cd $RUNNER_TEMP/lg
-          sudo make install
+          sudo apt-get install swig python3-setuptools python3-dev liblgpio-dev python3-rpi-lgpio
       - name: Run tests
         env:
           TOX_ENV: py3${{ matrix.python-minor-version }}
