@@ -36,25 +36,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install swig python3-setuptools python3-dev
-      - name: Setup lg cache
-        uses: actions/cache@v6
-        id: lgcache
-        with:
-          path: ${{ runner.temp }}/lg
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: Download and build lg library
-        if: steps.lgcache.outputs.cache-hit != 'true'
-        run: |
-          cd $RUNNER_TEMP
-          wget http://abyz.me.uk/lg/lg.zip
-          unzip lg.zip
-          cd lg
-          make
-      - name: Install lg library
-        run: |
-          cd $RUNNER_TEMP/lg
-          sudo make install
+          sudo apt-get install swig python3-setuptools python3-dev python3-lgpio
       - name: Run tests
         env:
           TOX_ENV: py3${{ matrix.python-minor-version }}
