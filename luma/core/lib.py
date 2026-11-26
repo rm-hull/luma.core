@@ -2,7 +2,9 @@
 # Copyright (c) 2017-18 Richard Hull and contributors
 # See LICENSE.rst for details.
 
-import luma.core.error
+import sys
+
+from luma.core.error import UnsupportedPlatform
 
 
 __all__ = ["rpi_gpio", "spidev"]
@@ -16,16 +18,10 @@ def __spidev__(self):  # pragma: no cover
 
 
 def __rpi_gpio__(self):
-    # RPi.GPIO _really_ doesn't like being run on anything other than
-    # a Raspberry Pi... this is imported here so we can swap out the
-    # implementation for a mock
-    try:  # pragma: no cover
-        import RPi.GPIO as GPIO
-        GPIO.setmode(GPIO.BCM)
-        return GPIO
-    except RuntimeError:
-        raise luma.core.error.UnsupportedPlatform(
-            'GPIO access not available')
+    if not sys.platform.startswith("linux"):
+        raise UnsupportedPlatform("GPIO access not available")
+    from luma.core.gpio import global_instance
+    return global_instance
 
 
 def rpi_gpio(Class):
