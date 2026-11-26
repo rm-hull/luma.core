@@ -4,8 +4,10 @@ ChangeLog
 +------------+---------------------------------------------------------------------+------------+
 | Version    | Description                                                         | Date       |
 +============+=====================================================================+============+
-| **2.6.1**  | * Fix I2C LCD construction in the command-line factory              | TBA        |
+| **2.7.0**  | * Replace deprecated Pillow getdata() with get_flattened_data()     | TBA        |
+|            | * Fix I2C LCD construction in the command-line factory              |            |
 |            | * Drop support for Python 3.9                                       |            |
+|            | * Pillow 12.1.0 or newer is required now                            |            |
 +------------+---------------------------------------------------------------------+------------+
 | **2.6.0**  | * Raise UnsupportedPlatform for any RPi.GPIO RuntimeError           | 2026/08/03 |
 |            | * Optimize viewport to skip redundant refreshes                     |            |
