@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2023 Richard Hull and contributors
+# Copyright (c) 2017-2026 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 # luma.core documentation build configuration file, created by
@@ -87,7 +87,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 linkcheck_ignore = [
     r'http://gnu.ethz.ch/',
     r'http://www.avrfreaks.net/',
-    r'https://www.createjs.com/'
+    r'https://www.createjs.com/',
+    r'https://coveralls.io/'
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
