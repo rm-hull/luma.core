@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2023 Richard Hull and contributors
+# Copyright (c) 2017-2026 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 # luma.core documentation build configuration file, created by
@@ -93,6 +93,9 @@ linkcheck_ignore = [
     # https://github.com/lemurheavy/coveralls-public/issues/1858
     r'https://coveralls.io/',
 ]
+
+# exclude index linkcheck
+linkcheck_exclude_documents = [r'^index$']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'

@@ -243,7 +243,7 @@ def create_device(args, display_types=None):
         import luma.lcd.device
         Device = getattr(luma.lcd.device, args.display)
         interface = getattr(make_interface(args), args.interface)()
-        backlight_params = dict(gpio=interface._gpio, gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
+        backlight_params = dict(gpio=getattr(interface, "_gpio", None), gpio_LIGHT=args.gpio_backlight, active_low=args.backlight_active == "low")
         framebuffer = getattr(luma.core.framebuffer, args.framebuffer)(num_segments=args.num_segments, debug=args.debug)
         params = dict(vars(args), framebuffer=framebuffer, **backlight_params)
         device = Device(serial_interface=interface, **params)
