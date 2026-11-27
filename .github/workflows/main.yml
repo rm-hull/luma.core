@@ -29,6 +29,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
+          sudo apt-get install zlib1g-dev libjpeg-dev libtiff-dev libfreetype-dev liblcms2-dev libwebp-dev libopenjp2-7-dev
           sudo apt-get install swig python3-setuptools python3-dev liblgpio-dev python3-rpi-lgpio
       - name: Run tests
         env:
