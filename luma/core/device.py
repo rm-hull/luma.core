@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020 Richard Hull and contributors
+# Copyright (c) 2017-2026 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 import os
@@ -255,7 +255,7 @@ class linux_framebuffer(device):
                     yield int(value)
 
     def __toRGB565(self, image):
-        for r, g, b in image.getdata():
+        for r, g, b in image.get_flattened_data():
             yield g << 3 & 0xE0 | b >> 3
             yield r & 0xF8 | g >> 5
 

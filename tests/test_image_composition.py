@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-18 Richard Hull and contributors
+# Copyright (c) 2017-2026 Richard Hull and contributors
 # See LICENSE.rst for details.
 
 """
@@ -120,14 +120,14 @@ def test_image_count():
 
 def test_refresh_no_images():
     ic = ImageComposition(dummy())
-    ic_img_before = list(ic().getdata())
+    ic_img_before = list(ic().get_flattened_data())
     ic.refresh()
-    assert ic_img_before == list(ic().getdata())
+    assert ic_img_before == list(ic().get_flattened_data())
 
 
 def test_refresh():
     ic = ImageComposition(dummy())
-    ic_img_before = list(ic().getdata())
+    ic_img_before = list(ic().get_flattened_data())
     img = Image.new("RGB", (25, 25))
     draw = ImageDraw.Draw(img)
     draw.rectangle((10, 10, 20, 20), outline="white")
@@ -135,4 +135,4 @@ def test_refresh():
     ci = ComposableImage(img)
     ic.add_image(ci)
     ic.refresh()
-    assert ic_img_before != list(ic().getdata())
+    assert ic_img_before != list(ic().get_flattened_data())
